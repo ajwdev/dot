@@ -1,0 +1,21 @@
+[alias]
+  st = status
+  co = checkout
+  ls = log --oneline
+  ca = commit --amend -C HEAD
+  dc = diff --cached
+  unstage = reset HEAD --
+  switch = !legit switch \"$@\"
+  branches = !legit branches
+  sprout = !legit sprout \"$@\"
+  unpublish = !legit unpublish \"$@\"
+  harvest = !legit harvest \"$@\"
+  sync = !legit sync \"$@\"
+  publish = !legit publish \"$@\"
+  graft = !legit graft \"$@\"
+
+  bclean = "!f(){ git branch --merged master | awk '$NF !~ /master/ {print $NF}' | xargs git branch -d; }; f"
+[diff]
+  tool = meld
+[push]
+  default = simple
