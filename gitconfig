@@ -10,6 +10,9 @@
   ls = log --oneline
   ca = commit --amend -C HEAD
   dc = diff --cached
+  poh = push origin HEAD
+  pohf = push origin HEAD --force-with-lease
+  pom = push origin master
   unstage = reset HEAD --
   bclean = "!f(){ git branch --merged master | awk '$NF !~ /master/ {print $NF}' | xargs git branch -d; }; f"
 [diff]
