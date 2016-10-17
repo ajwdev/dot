@@ -1,0 +1,31 @@
+alias hyper alt;cmd
+
+config defaultToCurrentScreen true
+# Shows app icons and background apps, spreads icons in the same place.
+config windowHintsShowIcons true
+config windowHintsIgnoreHiddenWindows false
+config windowHintsSpread true
+#config nudgePercentOf screenSize
+#config resizePercentOf screenSize
+config secondsBetweenRepeat 0.1
+config checkDefaultsOnLoad true
+
+alias full move screenOriginX;screenOriginY screenSizeX;screenSizeY
+alias lefthalf move screenOriginX;screenOriginY screenSizeX/2;screenSizeY
+alias righthalf move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY
+bind e:cmd hint ASDFGHJKLQWERTYUIOPCVBN
+bind g:${hyper} grid padding:5 0:16,12
+
+bind h:${hyper} ${lefthalf}
+bind l:${hyper} ${righthalf}
+bind n:${hyper} ${full}
+bind right:${hyper} focus right
+bind left:${hyper} focus left
+bind up:${hyper} focus up
+bind down:${hyper} focus down
+
+bind c:${hyper} focus 'Google Chrome'
+bind v:${hyper} focus 'MacVim'
+bind t:${hyper} focus 'Terminal'
+bind f:${hyper} focus 'Finder'
+bind ]:${hyper} focus 'Twitter'
