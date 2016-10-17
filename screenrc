@@ -1,0 +1,24 @@
+# Make screen work with my xterms
+termcapinfo xterm ti@:te@
+termcapinfo xterm-color ti@:te@
+
+# Change escape combination to Ctrl+\
+#escape \034\034
+
+# Turn off the annoying bell
+vbell off
+
+# Disable startup message
+startup_message off
+
+# Restore terminal contents after running programs that
+# take up the full terminal (less for example)
+altscreen on
+
+
+hardstatus on
+hardstatus alwayslastline
+
+defscrollback 10000
+
+bind b eval "writebuf /tmp/screen-pbcopy" "exec /usr/bin/osascript -e 'tell application \"System Events\"' -e 'set the clipboard to (read posix file \"/tmp/screen-pbcopy\" as text)' -e 'end tell'"
