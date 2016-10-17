@@ -125,7 +125,7 @@ zstyle ':vcs_info:*' formats       '(%F{2}%b%f)'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
 precmd () { vcs_info }
 
-[ $UID != 0 ] && PS1=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}$ '
+[ $UID != 0 ] && PS1=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
 
 #PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 #export PATH=$HOME/.rbenv/bin:$PATH
