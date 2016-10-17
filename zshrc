@@ -111,6 +111,19 @@ function _errno {
   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
 }
 
+function profile-userspace {
+  if [ -z "${1}" ]; then
+    echo "Please specify an application name" >&2
+    return 1
+  fi
+  sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
+}
+
+function notify {
+  osascript -e "display notification 'Done: "$@"' with title '$@'"
+}
+
+alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
 
 # Nodejs
 export PATH=/usr/local/share/npm/bin:$PATH
