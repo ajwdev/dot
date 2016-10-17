@@ -1,3 +1,4 @@
+export ANSIBLE_NOCOWS=1
 export SVN_EDITOR=/usr/bin/vim
 export SSL_CERT_FILE=/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt
 export GOPATH=$HOME/source/go
