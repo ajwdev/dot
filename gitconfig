@@ -1,3 +1,9 @@
+[core]
+  editor = /usr/bin/vim
+  excludesfile = /Users/andrew/.gitignore_global
+[user]
+  name = Andrew Williams
+  email = williams.andrew@gmail.com
 [alias]
   st = status
   co = checkout
@@ -5,15 +11,6 @@
   ca = commit --amend -C HEAD
   dc = diff --cached
   unstage = reset HEAD --
-  switch = !legit switch \"$@\"
-  branches = !legit branches
-  sprout = !legit sprout \"$@\"
-  unpublish = !legit unpublish \"$@\"
-  harvest = !legit harvest \"$@\"
-  sync = !legit sync \"$@\"
-  publish = !legit publish \"$@\"
-  graft = !legit graft \"$@\"
-
   bclean = "!f(){ git branch --merged master | awk '$NF !~ /master/ {print $NF}' | xargs git branch -d; }; f"
 [diff]
   tool = meld
