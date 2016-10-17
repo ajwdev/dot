@@ -107,7 +107,7 @@ function chef-whois {
   knife search "ipaddress:${1} or cloud_public_ipv4:${1} or cloud_local_ipv4:${1}"
 }
 
-function errno {
+function _errno {
   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
 }
 
