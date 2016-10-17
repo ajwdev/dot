@@ -140,10 +140,6 @@ precmd () { vcs_info }
 
 [ $UID != 0 ] && PS1=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
 
-#PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-#export PATH=$HOME/.rbenv/bin:$PATH
-eval "$(rbenv init -)"
-
 # Amazon EC2 command line
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.7.1.0/libexec"
