@@ -1,0 +1,27 @@
+Host github.com
+    GSSAPIAuthentication no
+    ForwardX11 no
+
+Host !hop.example.com !test-kitchen.example.com !*.int.example.com *.example.com *.ci.example.com
+    ProxyCommand ssh -At awilliams@hop.example.com nc %h %p 2> /dev/null
+    User awilliams
+    GSSAPIAuthentication no
+    ForwardAgent yes
+    TCPKeepAlive yes
+    VisualHostKey yes
+
+Host hop.example.com *.int.example.com
+    User awilliams
+    GSSAPIAuthentication no
+    ForwardAgent yes
+    TCPKeepAlive yes
+    VisualHostKey yes
+
+Host *
+    ForwardAgent yes
+    ForwardX11 yes
+    ForwardX11Trusted yes
+    TCPKeepAlive yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 10
+    VisualHostKey yes
