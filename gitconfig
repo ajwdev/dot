@@ -145,3 +145,6 @@
 
 [push]
   default = simple
+
+[commit]
+	verbose = true
