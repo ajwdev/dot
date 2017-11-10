@@ -17,51 +17,51 @@ endif
 runtime macros/matchit.vim
 
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
 
-call vundle#begin()
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'bling/vim-airline'
-Plugin 'godlygeek/tabular'
-"Plugin 'jeetsukumaran/vim-buffergator'
-Plugin 'mileszs/ack.vim'
-Plugin 'kien/ctrlp.vim'
-Plugin 'kana/vim-textobj-user'
-Plugin 'nelstrom/vim-textobj-rubyblock'
-Plugin 'rizzatti/dash.vim'
-Plugin 'rizzatti/funcoo.vim'
-Plugin 'tpope/vim-fugitive'
-"Plugin 'tpope/vim-bundler'
-"Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-rails'
-"Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-jdaddy' " JSON text objects and pretty printing
-Plugin 'AndrewRadev/splitjoin.vim'
-"Plugin 'plan9-for-vimspace/plan9-for-vimspace'
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'Lokaltog/vim-easymotion'
+Plug 'godlygeek/tabular'
+Plug 'mileszs/ack.vim'
+Plug 'kien/ctrlp.vim'
+Plug 'rizzatti/dash.vim'
+Plug 'rizzatti/funcoo.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-jdaddy' " JSON text objects and pretty printing
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'Shougo/deoplete.nvim'
+Plug 'w0rp/ale'
+Plug 'mbbill/undotree'
+Plug 'yssl/QFEnter'
+
+Plug 'kana/vim-textobj-indent'
+Plug 'nelstrom/vim-textobj-rubyblock'
+Plug 'kana/vim-textobj-user'
+Plug 'wellle/targets.vim'
 
 " Syntax
-"Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-rbenv'
-Plugin 'pangloss/vim-javascript'
-Plugin 'fatih/vim-go.git'
-Plugin 'rust-lang/rust.vim'
-Plugin 'treycordova/rustpeg.vim'
-Plugin 'hashivim/vim-terraform'
+Plug 'vim-ruby/vim-ruby', { 'for': 'rust' }
+Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'treycordova/rustpeg.vim', { 'for': 'rust' }
+Plug 'hashivim/vim-terraform'
+Plug 'derekwyatt/vim-scala'
+Plug 'ensime/ensime-vim'
 
-" Colorschemes
-Plugin 'wombat'
-Plugin 'molokai'
-Plugin 'mayansmoke'
-Plugin 'altercation/vim-colors-solarized'
-
-call vundle#end()
+" Colorschemes / Appearance
+Plug 'bling/vim-airline'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'jnurmine/zenburn'
+call plug#end()
 
 set wildmenu
 set wildmode=list:longest,full
