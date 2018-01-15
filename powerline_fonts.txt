@@ -1,0 +1,2 @@
+dnf install powerline-fonts
+# Also follow instructions here: https://github.com/powerline/fonts
