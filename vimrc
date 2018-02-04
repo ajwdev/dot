@@ -1,7 +1,6 @@
 if !has('nvim')
-  set nocompatible
-  set ttyfast
   set ttymouse=xterm2
+  " set termguicolors
 endif
 
 let encoding_loaded=0
@@ -35,10 +34,22 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-jdaddy' " JSON text objects and pretty printing
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'Shougo/deoplete.nvim'
 Plug 'w0rp/ale'
 Plug 'mbbill/undotree'
 Plug 'yssl/QFEnter'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  " Vim 8
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'ervandew/supertab'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'sebastianmarkow/deoplete-rust'
+Plug 'fishbullet/deoplete-ruby'
 
 Plug 'kana/vim-textobj-indent'
 Plug 'nelstrom/vim-textobj-rubyblock'
@@ -52,9 +63,11 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'treycordova/rustpeg.vim', { 'for': 'rust' }
-Plug 'hashivim/vim-terraform'
-Plug 'derekwyatt/vim-scala'
-Plug 'ensime/ensime-vim'
+Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
+Plug 'ensime/ensime-vim', { 'for': 'scala', 'do': ':UpdateRemotePlugins' }
+" Plug 'vhakulinen/neovim-intellij-complete-deoplete', { 'for': 'scala' }
+Plug 'maverickg/stan.vim'
+" Plug 'hashivim/vim-terraform'
 
 " Colorschemes / Appearance
 Plug 'bling/vim-airline'
@@ -104,10 +117,11 @@ set wildmenu
 set showcmd
 set nowrap          " Dont wrap lines
 set number          " Show line numbers
-set ruler           
+set ruler
 set hidden
 set autoread
-set noautowrite
+" set noautowrite
+set autowrite
 set splitright      " Make new split-windows open to the right
 
 " Enable mouse in all modes
@@ -122,14 +136,15 @@ iabbrev jsut just
 
 set t_Co=256  " 256 terminal colors
 
-if has('gui_running') 
+if has('gui_running')
   "set background=dark
-  colorscheme solarized 
+  " colorscheme solarized
   set cursorline
   set guioptions-=T " Remove toolbar
   set guifont=Meslo\ LG\ M\ for\ Powerline:h14
   set belloff=all
 endif
+colorscheme zenburn
 
 let g:airline_powerline_fonts = 1
 
@@ -142,16 +157,15 @@ map <space> <leader>
 " autocmd!
 
 " Autindent, shift two characters, expand tabs to spaces
-autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai ts=2 sw=2 sts=2 et
-autocmd FileType shell,rust set ai ts=4 sw=4 sts=4 et
+autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber set ai ts=2 sw=2 sts=2 et
+autocmd FileType shell,rust,javascript set ai ts=4 sw=4 sts=4 et
 autocmd Filetype c,python set ai ts=4 sw=4 sts=4 noet
 " Autindent, shift 8 characters, use real tabs
 "autocmd Filetype go set ai ts=8 sw=8 sts=8 noet
 autocmd Filetype go set ai ts=4 sw=4 sts=4 noet
 
 " Remove whitespace on save
-autocmd BufWritePre *.py,*.sh,*.rb,*.go :%s/\s\+$//e
-autocmd BufRead .git/COMMIT_EDITMSG set spell
+autocmd BufWritePre *.py,*.sh,*.rb,*.go,*.rs,*.scala :%s/\s\+$//e
 
 " For Windows Wix package files
 autocmd BufRead *.wx[sil].erb set ft=xml
@@ -160,12 +174,12 @@ autocmd BufRead *.wx[sil].erb set ft=xml
 autocmd BufReadPost fugitive://* set bufhidden=delete
 
 " Add '..' mapping for moving back to parent directory in Fugitive Git browser
-autocmd User fugitive 
+autocmd User fugitive
   \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
   \   nnoremap <buffer> .. :edit %:h<CR> |
   \ endif
 
-" Only for Neovim. Automatically switch to insert mode when 
+" Only for Neovim. Automatically switch to insert mode when
 " entering a terminal buffer
 autocmd BufEnter term://* :startinsert
 
@@ -177,46 +191,103 @@ autocmd FileType help wincmd L
 
 autocmd! BufWritePost .vimrc source ~/.vimrc
 
+" let EnErrorStyle='Error'
+" let g:EnErrorStyle='Error'
+" hi EnErrorStyle cterm=bold ctermfg=167 ctermbg=236 gui=bold guifg=#e37170 guibg=#3d3535
+hi EnErrorStyle cterm=underline ctermfg=167 gui=underline guifg=#e37170 guibg=#3d3535
+au BufWritePost *.scala :EnTypeCheck
+
 let g:linter_toggle = 1
 function! ToggleLinting()
-  let g:linter_toggle = !g:linter_toggle 
+  let g:linter_toggle = !g:linter_toggle
   " Close and clear the quickfix
   cclose
   cexpr []
 
-  let g:go_metalinter_autosave = g:linter_toggle
+  " let g:go_metalinter_autosave = g:linter_toggle
   " TODO Add Ruby, Rust, and Javascript linters
 endfunction
 
 nnoremap <F3> :call ToggleLinting()<CR>
 nnoremap <F4> :NERDTreeToggle<CR>
 
+" Rainbow parens
+" let g:rainbow_active = 1
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+"Ctrl P
+" let g:ctrlp_custom_ignore = 'target\|node_modules\|DS_Store\|git'
+
+
+"Deoplete
+let g:deoplete#enable_at_startup = 1
+set completeopt-=preview
+let g:deoplete#sources={}
+" let g:deoplete#sources._=['buffer', 'member', 'tag', 'file', 'omni', 'ultisnips']
+" let g:deoplete#omni#input_patterns={}
+" let g:deoplete#omni#input_patterns.scala = [
+"   \ '[^. *\t]\.\w*',
+"   \ '[:\[,] ?\w*',
+"   \ '^import .*'
+"   \]
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources.scala = ['buffer', 'tags', 'omni']
+let g:deoplete#omni#input_patterns = {}
+let g:deoplete#omni#input_patterns.scala = ['[^. *\t0-9]\.\w*',': [A-Z]\w', '[\[\t\( ][A-Za-z]\w*']
+" let g:deoplete#omni#input_patterns = {}
+" let g:deoplete#omni#input_patterns.scala = ['[^. *\t0-9]\.\w*',': [A-Z]\w', '[\[\t\( ][A-Za-z]\w*']
+
+"Supertab
+" Use enter to accept completion
+" inoremap <expr> <Space> pumvisible() ? "\<C-y>" : " "
+let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabLongestHighlight=1
+
 " Syntastic
 " Check files when I open them
-let g:syntastic_check_on_open = 1
-" Dont automatically open the localwindow but do automatically close it
-" when the errors are gone
-let g:syntastic_auto_loc_list = 2
-" Drop Syntastic errors in the localwindow. This can conflict
-" with other plugins but I do not believe it does in my setup.
-let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" " Dont automatically open the localwindow but do automatically close it
+" " when the errors are gone
+" let g:syntastic_auto_loc_list = 2
+" " Drop Syntastic errors in the localwindow. This can conflict
+" " with other plugins but I do not believe it does in my setup.
+" let g:syntastic_always_populate_loc_list = 1
 
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_ruby_exec='/Users/andrew/.rbenv/shims/ruby'
+" let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_ruby_exec='/Users/andrew/.rbenv/shims/ruby'
 
 " vim-go
 let g:go_fmt_autosave = 1
 let g:go_metalinter_autosave = 1
 let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+" let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+let g:go_list_type = "quickfix"
+let g:go_fmt_command = "goimports"
+
+" ALE specific
+let g:ale_linters = {'go': ['gometalinter', 'errcheck', 'gofmt'], 'scala': ['scalac']}
 
 " Go declarations in vim-go
-map <leader>Gd :GoDecls<CR>
-map <leader>GD :GoDeclsDir<CR>
-map <leader>Gb :GoBuild<CR>
-map <leader>Ga :GoAlternate<CR>
-map <leader>Gi :GoImpl<CR>
-map <leader>Gp :GoPlay<CR>
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+autocmd FileType go nmap <Leader>r :GoRun<CR>
+autocmd FileType go map <leader>Gd :GoDecls<CR>
+autocmd FileType go map <leader>GD :GoDeclsDir<CR>
+autocmd FileType go map <leader>Gb :GoBuild<CR>
+autocmd FileType go map <leader>Ga :GoAlternate<CR>
+autocmd FileType go map <leader>Gi :GoImpl<CR>
+autocmd FileType go map <leader>Gp :GoPlay<CR>
 
+autocmd FileType scala nnoremap <buffer> <silent> gd :EnDeclaration<cr>
+autocmd FileType scala nnoremap <buffer> <silent> <C-]> :EnDeclaration<cr>
+autocmd FileType scala nnoremap <buffer> <silent> <C-w>gd :EnDeclarationSplit v<cr>
 
 " Command mode
 cmap Set set
@@ -230,7 +301,7 @@ cnoremap X x
 map Y yg_
 
 " Ack
-map <leader>a :Ack 
+map <leader>a :Ack
 
 " Dash
 " TODO Do something different on non-osx
