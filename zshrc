@@ -1,52 +1,79 @@
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+
+zplug "rupa/z", use:z.sh
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug load
+
 DIRSTACKSIZE=5
 HISTSIZE=4000
 SAVEHIST=4000
 HISTFILE=~/.history
 
-bindkey -e
-
-setopt APPEND_HISTORY     # Append to history file instead of overwriting
-setopt EXTENDED_HISTORY   # Save timestamps in history
-setopt HIST_IGNORE_DUPS   # Dont save command in history if its a duplicate of the previous command
-setopt HIST_NO_STORE      # don't save history cmd in history
-
-setopt AUTO_CD            # cd if no matching command
-setopt AUTOPUSHD          # Turn cd into pushd for all situations 
-setopt PUSHD_IGNORE_DUPS  # Don't push multiple copies of the same directory onto the directory stack
-setopt EXTENDED_GLOB 
-setopt NUMERIC_GLOB_SORT  # Sort numerically first, before alpha
-setopt NOMATCH            # Raise error if a glob did not match files instead passing that string back as an argument
-setopt PRINT_EXIT_VALUE   # Print status code on non-zero returns
-setopt MULTIOS            # Allow multiple redirection operators
+### Zsh options
+setopt APPEND_HISTORY    # Append to history file instead of overwriting
+setopt EXTENDED_HISTORY  # Save timestamps in history
+setopt HIST_IGNORE_DUPS  # Dont save command in history if its a duplicate of the previous command
+setopt HIST_NO_STORE     # Don't save history calls in history
+setopt AUTO_CD           # cd if no matching command is found
+setopt AUTOPUSHD         # Turn cd into pushd for all situations
+setopt PUSHD_IGNORE_DUPS # Don't push multiple copies of the same directory onto the directory stack
+setopt EXTENDED_GLOB
+setopt NUMERIC_GLOB_SORT # Sort numerically first, before alpha
+setopt NOMATCH           # Raise error if a glob did not match files instead passing that string back as an argument
+setopt PRINT_EXIT_VALUE  # Print status code on non-zero returns
+setopt MULTIOS           # Allow multiple redirection operators
+setopt LIST_TYPES        # Show file types in list with trailing identifying mark
+setopt PROMPT_SUBST      # Perform substitutions in prompt
+setopt PROMPT_PERCENT    # Percents are special in prompts
 setopt CORRECT           # Try to correct the spelling of commands
-#setopt CORRECT_ALL        # Try to correct the spelling of all arguments in a line
-setopt LIST_TYPES         # Show file types in list
 
-# XXX Not sure about these yet
-setopt PROMPT_SUBST
-setopt PROMPT_PERCENT
-#setopt HASH_CMDS # save cmd location to skip PATH lookup
-
+unsetopt CORRECT_ALL # Dont try and spelling check everything
 unsetopt BEEP NOTIFY
 
-autoload -U select-word-style
-select-word-style bash
+# Disable shell flow control. Gives ctrl+s and ctrl+q back to the shell
+which stty &>/dev/null
+if [[ "$?" -eq 0 ]]; then
+  stty -ixon
+  setopt noflowcontrol
+fi
 
+### Zsh completions
+fpath+=~/.zfunc
 zmodload zsh/complist
-autoload -Uz compinit
-compinit
+autoload -Uz compinit && compinit
 
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 zstyle ':completion:*' menu select
+# Automatically update PATH entries
+zstyle ':completion:*' rehash true
+# Show message while waiting for completion
+# XXX This ends up showing a blip of text everytime you tab complete :/
+# zstyle ':completion:*' show-completer true
+# Keep directories and files separated
+zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*:*:kill:*' menu yes select
-zstyle ':completion:*:kill:*'   force-list always
+zstyle ':completion:*:kill:*' force-list always
 zstyle ':completion:*:manuals' separate-sections true
 
-# Set any special aliases
-source ~/.gnu_aliases.sh
-`uname -s`_aliases
+
+### Key bindings
+bindkey -e  # Use Emacs bindings
+
+# forward-word and backward-word should function like Bash
+# where we move between path components instead of the entire path
+autoload -Uz select-word-style
+select-word-style bash
+
+# This will open the current line in $EDITOR for advanced editing
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
+
+zmodload zsh/deltochar
+bindkey "\ez" zap-to-char
 
 alias mv='nocorrect mv'       # no spelling correction on mv
 alias cp='nocorrect cp'       # no spelling correction on cp
@@ -55,17 +82,39 @@ alias knife='nocorrect /opt/chefdk/bin/knife'
 alias kitchen='nocorrect /opt/chefdk/bin/kitchen'
 alias chef='nocorrect /opt/chefdk/bin/chef'
 alias rspec='nocorrect rspec'
-alias ls='ls -G'
+alias l='ls -l'
 alias ll='ls -lh'
 alias la='ls -lha'
 alias bex='nocorrect bundle exec'
 alias less='less -R'  # Send raw ascii control codes (ex: colors)
 
-alias ..='pushd ..'
-alias ....='pushd ../..'
-alias ......='pushd ../../..'
+alias -g ....='../..'
+alias -g ......='../../..'
+
+alias find=gfind
+alias tar=gnutar
+
+alias g='grep'
+alias -g G='|& grep'
+
+for i in {1..9}; do
+  alias a$i="awk '{print \$$i}'"
+  alias -g A$i="| awk '{print \$$i}'"
+done
+
+# Shortcut for opening non-executable source
+for ext in c cc S ld rs go js lua elm xml json yaml yml md; do
+  alias -s $ext="$EDITOR"
+done
+
+alias -s git='git clone'
 
 alias gh="open \`git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e's/:/\//' -e 's/git@/http:\/\//'\`"
+alias awk='gawk'
+# alias gh="open \`git remote -v | awk '$2 ~ /git@github.com/ && $3 ~ /fetch/ {print $2}' | sed -e's/:/\//' -e 's/git@/https:\/\//'\`"
+
+alias k=kubectl
+alias kc=kubectl
 
 # If MacVim is installed, use that binary
 # Prioritize version in home directory if possible
@@ -74,42 +123,28 @@ if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
 elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
     alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
 fi
-export EDITOR="vim"
 
-export WORKUSER='awilliams'
-
-function hop() {
-  ssh -Xat $WORKUSER@hop.intoxitrack.net
-}
+zmodload zsh/system
 
 function gethostbyname() {
-    python -c "import socket; print socket.gethostbyname('${1}')"
+  if [ -z "${1}" ]; then
+    echo "Please specify a hostname" >&2
+    return 1
+  fi
+
+  python -c "import socket; print socket.gethostbyname('${1}')"
 }
 
 function webserver {
-    port="${1:-3000}"
-    ruby -r webrick -e "s = WEBrick::HTTPServer.new(:Port => $port, :DocumentRoot => Dir.pwd); trap('INT') { s.shutdown }; s.start"
+  port="${1:-3000}"
+  ruby -r webrick -e "s = WEBrick::HTTPServer.new(Port: $port, DocumentRoot: Dir.pwd); trap('INT') { s.shutdown }; s.start"
 }
 
-function clear-chef-vendor {
-  for b in $(git branch | egrep 'chef-vendor-.+'); do git branch -D $b; done
-}
 
-function remote-chef {
-  knife ssh -a cloud.public_ipv4 -x awilliams "name:${1}" 'sudo sv 1 /service/chef-client && tail -F /service/chef-client/log/main/current'
-}
-
-function chef-whois {
-  if [ -z "${1}" ]; then
-    echo "Please specify an IP address" >&2
-    return 1
-  fi
-  knife search "ipaddress:${1} or cloud_public_ipv4:${1} or cloud_local_ipv4:${1}"
-}
-
-function _errno {
-  cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
-}
+# This functionality is replicated by syserror in zsh/system module
+# function _errno {
+#   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
+# }
 
 function profile-userspace {
   if [ -z "${1}" ]; then
@@ -119,37 +154,53 @@ function profile-userspace {
   sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
 }
 
+function idea {
+ open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
+}
+
 function notify {
   osascript -e "display notification 'Done: "$@"' with title '$@'"
 }
 
 alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
 
-# Nodejs
-export PATH=/usr/local/share/npm/bin:$PATH
-
-autoload -Uz promptinit
-promptinit
+function hex-to-bin {
+  ruby -e "puts '%.8b' % ${1}"
+}
 
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:*' actionformats '(%F{2}%b%F{3}|%F{1}%a%f)'
-zstyle ':vcs_info:*' formats       '(%F{2}%b%f)'
-zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' formats       '(%F{2}%b%f%m)'
+zstyle ':vcs_info:*' actionformats '(%F{2}%b%f%m|%F{1}%a%f)'
+zstyle ':vcs_info:*+*:*' debug false
+function +vi-git-stash() {
+  git show-ref stash &>/dev/null
+  if [[ "$?" -eq 0 ]]; then
+    hook_com[misc]="|%F{orange}%BS%b%f"
+  else
+    hook_com[misc]=
+  fi
+}
+zstyle ':vcs_info:git*+set-message:*' hooks git-stash
 precmd () { vcs_info }
 
-[ $UID != 0 ] && PS1=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
 
-# Amazon EC2 command line
-export JAVA_HOME="$(/usr/libexec/java_home)"
-export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.7.1.0/libexec"
-export EC2_AMITOOL_HOME="/usr/local/Cellar/ec2-ami-tools/1.5.3/libexec"
+if [ -z $SSH_CLIENT ]; then
+  [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
+else
+  # Show hostname in SSH sessions
+  [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n@%m:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
+fi
 
-# The next line updates PATH for the Google Cloud SDK.
-source '/Users/andrew/google-cloud-sdk/path.zsh.inc'
-#
-# # The next line enables bash completion for gcloud.
-source '/Users/andrew/google-cloud-sdk/completion.zsh.inc'
+# GPG Agent stuff
+export GPG_TTY=$(tty)
+# unset SSH_AGENT_PID
+# if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+#   export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
+# fi
 
-# Aws completion
-source /usr/local/share/zsh/site-functions/_aws
+alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
+
+# export PATH=$HOME/.rbenv/bin:$PATH
+type rbenv &>/dev/null && eval "$(rbenv init -)"
+
