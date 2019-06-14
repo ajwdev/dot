@@ -99,10 +99,38 @@ if [[ "$(uname)" == "Darwin" ]]; then
   alias xargs=gxargs
   alias find=gfind
   alias tar=gtar
-  
+  alias awk='gawk'
+  alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
+
+  # If MacVim is installed, use that binary
+  # Prioritize version in home directory if possible
+  if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
+      alias vim="nocorrect $HOME/Applications/MacVim.app/Contents/MacOS/Vim"
+  elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
+      alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
+  fi
+
+  function profile-userspace {
+    if [ -z "${1}" ]; then
+      echo "Please specify an application name" >&2
+      return 1
+    fi
+    sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
+  }
+
+  function idea {
+    open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
+  }
+
   function j8 {
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
   }
+
+
+  function notify {
+    osascript -e "display notification 'Done: "$@"' with title '$@'"
+  }
+
 elif [[ "$(uname)" == "Linux" ]]; then
     alias open='xdg-open'
 
@@ -131,8 +159,8 @@ alias -s git='git clone'
 alias -s json='jq .'
 
 alias gtt='pushd $(git rev-parse --show-toplevel)'
-alias awk='gawk'
 
+# Kubernetes things
 alias k=kubectl
 alias Gp='kubectl get pods'
 alias Gs='kubectl get svc'
@@ -156,14 +184,6 @@ function pr {
   open $(github_url)/pull/new/$(git rev-parse --abbrev-ref HEAD)
 }
 
-# If MacVim is installed, use that binary
-# Prioritize version in home directory if possible
-if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-    alias vim="nocorrect $HOME/Applications/MacVim.app/Contents/MacOS/Vim"
-elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-    alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
-fi
-
 zmodload zsh/system
 
 function gethostbyname() {
@@ -185,29 +205,8 @@ function webserver {
 # function _errno {
 #   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
 # }
-
-function profile-userspace {
-  if [ -z "${1}" ]; then
-    echo "Please specify an application name" >&2
-    return 1
-  fi
-  sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
-}
-
-# function ksecret {
-#   kubectl get secrets -n kube-system kiam-server-tls -o 'go-template={{index .data "server.pem"}}' | base64 -D | openssl x509 -noout -text
-# }
-
-function idea {
- open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
-}
-
 function utc {
   TZ=utc date
-}
-
-function notify {
-  osascript -e "display notification 'Done: "$@"' with title '$@'"
 }
 
 alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
@@ -246,8 +245,6 @@ export GPG_TTY=$(tty)
 # if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
 #   export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 # fi
-
-alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
 
 # export PATH=$HOME/.rbenv/bin:$PATH
 type rbenv &>/dev/null && eval "$(rbenv init -)"
