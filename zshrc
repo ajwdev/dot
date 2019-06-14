@@ -2,7 +2,11 @@ export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 zplug "rupa/z", use:z.sh
-zplug "zsh-users/zsh-syntax-highlighting"
+# Set the priority when loading
+# e.g., zsh-syntax-highlighting must be loaded
+# after executing compinit command and sourcing other plugins
+# (If the defer tag is given 2 or above, run after compinit command)
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug load
 
 DIRSTACKSIZE=5
@@ -99,6 +103,15 @@ if [[ "$(uname)" == "Darwin" ]]; then
   function j8 {
     export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
   }
+elif [[ "$(uname)" == "Linux" ]]; then
+    alias open='xdg-open'
+
+    function loopback-audio() {
+        pactl unload-module module-loopback || true
+        pactl load-module module-loopback
+        # TODO How can determine if muted?
+        pactl set-sink-mute 1 toggle
+    }
 fi
 
 alias g='grep'
