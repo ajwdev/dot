@@ -2,7 +2,11 @@ export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 zplug "rupa/z", use:z.sh
-zplug "zsh-users/zsh-syntax-highlighting"
+# Set the priority when loading
+# e.g., zsh-syntax-highlighting must be loaded
+# after executing compinit command and sourcing other plugins
+# (If the defer tag is given 2 or above, run after compinit command)
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug load
 
 DIRSTACKSIZE=5
@@ -91,8 +95,54 @@ alias less='less -R'  # Send raw ascii control codes (ex: colors)
 alias -g ....='../..'
 alias -g ......='../../..'
 
-alias find=gfind
-alias tar=gnutar
+alias gtt='pushd $(git rev-parse --show-toplevel)'
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias xargs=gxargs
+  alias find=gfind
+  alias tar=gtar
+  alias awk='gawk'
+  alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
+
+  # If MacVim is installed, use that binary
+  # Prioritize version in home directory if possible
+  if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
+      alias vim="nocorrect $HOME/Applications/MacVim.app/Contents/MacOS/Vim"
+  elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
+      alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
+  fi
+
+  function profile-userspace {
+    if [ -z "${1}" ]; then
+      echo "Please specify an application name" >&2
+      return 1
+    fi
+    sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
+  }
+
+  function idea {
+    open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
+  }
+
+  function j8 {
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+  }
+
+
+  function notify {
+    osascript -e "display notification 'Done: "$@"' with title '$@'"
+  }
+
+elif [[ "$(uname)" == "Linux" ]]; then
+    alias open='xdg-open'
+
+    function loopback-audio() {
+        pactl unload-module module-loopback || true
+        pactl load-module module-loopback
+        # TODO How can determine if muted?
+        pactl set-sink-mute 1 toggle
+    }
+fi
 
 alias g='grep'
 alias -g G='|& grep'
@@ -108,21 +158,31 @@ for ext in c cc S ld rs go js lua elm xml json yaml yml md; do
 done
 
 alias -s git='git clone'
+alias -s json='jq .'
 
-alias gh="open \`git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e's/:/\//' -e 's/git@/http:\/\//'\`"
-alias awk='gawk'
-# alias gh="open \`git remote -v | awk '$2 ~ /git@github.com/ && $3 ~ /fetch/ {print $2}' | sed -e's/:/\//' -e 's/git@/https:\/\//'\`"
-
+# Kubernetes things
 alias k=kubectl
-alias kc=kubectl
+alias Gp='kubectl get pods'
+alias Gs='kubectl get svc'
+alias Gd='kubectl get deployments'
+alias Gi='kubectl get ingress'
 
-# If MacVim is installed, use that binary
-# Prioritize version in home directory if possible
-if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-    alias vim="nocorrect $HOME/Applications/MacVim.app/Contents/MacOS/Vim"
-elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-    alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
-fi
+alias -g J='-o json'
+alias -g Y='-o yaml'
+alias -g W='-o wide'
+alias -g N='-o name'
+
+function github_url {
+  git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//'
+}
+
+function gh {
+  open $(github_url)
+}
+
+function pr {
+  open $(github_url)/pull/new/$(git rev-parse --abbrev-ref HEAD)
+}
 
 zmodload zsh/system
 
@@ -145,21 +205,8 @@ function webserver {
 # function _errno {
 #   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
 # }
-
-function profile-userspace {
-  if [ -z "${1}" ]; then
-    echo "Please specify an application name" >&2
-    return 1
-  fi
-  sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
-}
-
-function idea {
- open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
-}
-
-function notify {
-  osascript -e "display notification 'Done: "$@"' with title '$@'"
+function utc {
+  TZ=utc date
 }
 
 alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
@@ -199,8 +246,23 @@ export GPG_TTY=$(tty)
 #   export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
 # fi
 
-alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
-
 # export PATH=$HOME/.rbenv/bin:$PATH
 type rbenv &>/dev/null && eval "$(rbenv init -)"
 
+# added by travis gem
+[ -f /Users/awilliams/.travis/travis.sh ] && source /Users/awilliams/.travis/travis.sh
+
+
+alias ensime="ctags -Re . & sbt clean ensimeConfig test:compile ensimeServerIndex"
+
+function deployment-to-role {
+  kubectl get deployments --all-namespaces -o json | \
+    jq -r '.items[] | select(.spec.template.metadata.annotations."iam.amazonaws.com/role" != null) | "\(.metadata.name): \(.spec.template.metadata.annotations."iam.amazonaws.com/role")"'
+}
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/awilliams/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/awilliams/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/awilliams/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/awilliams/google-cloud-sdk/completion.zsh.inc'; fi
