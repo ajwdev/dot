@@ -95,6 +95,8 @@ alias less='less -R'  # Send raw ascii control codes (ex: colors)
 alias -g ....='../..'
 alias -g ......='../../..'
 
+alias gtt='pushd $(git rev-parse --show-toplevel)'
+
 if [[ "$(uname)" == "Darwin" ]]; then
   alias xargs=gxargs
   alias find=gfind
@@ -157,8 +159,6 @@ done
 
 alias -s git='git clone'
 alias -s json='jq .'
-
-alias gtt='pushd $(git rev-parse --show-toplevel)'
 
 # Kubernetes things
 alias k=kubectl
