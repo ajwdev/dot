@@ -1,4 +1,5 @@
-export ZPLUG_HOME=/usr/local/opt/zplug
+# export ZPLUG_HOME=/usr/local/opt/zplug
+export ZPLUG_HOME=/opt/homebrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 zplug "rupa/z", use:z.sh
@@ -7,6 +8,7 @@ zplug "rupa/z", use:z.sh
 # after executing compinit command and sourcing other plugins
 # (If the defer tag is given 2 or above, run after compinit command)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug "plugins/urlutils", from:oh-my-zsh
 zplug load
 
 DIRSTACKSIZE=5
@@ -15,10 +17,12 @@ SAVEHIST=4000
 HISTFILE=~/.history
 
 ### Zsh options
-setopt APPEND_HISTORY    # Append to history file instead of overwriting
+# setopt APPEND_HISTORY    # Append to history file instead of overwriting
+setopt INC_APPEND_HISTORY    # Append to history file instead of overwriting
 setopt EXTENDED_HISTORY  # Save timestamps in history
 setopt HIST_IGNORE_DUPS  # Dont save command in history if its a duplicate of the previous command
 setopt HIST_NO_STORE     # Don't save history calls in history
+setopt HIST_IGNORE_SPACE # Don't save commands with a leading space to history
 setopt AUTO_CD           # cd if no matching command is found
 setopt AUTOPUSHD         # Turn cd into pushd for all situations
 setopt PUSHD_IGNORE_DUPS # Don't push multiple copies of the same directory onto the directory stack
@@ -102,6 +106,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
   alias find=gfind
   alias tar=gtar
   alias awk='gawk'
+  alias sed='gsed'
   alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
 
   # If MacVim is installed, use that binary
@@ -144,8 +149,10 @@ elif [[ "$(uname)" == "Linux" ]]; then
     }
 fi
 
-alias g='grep'
 alias -g G='|& grep'
+alias -g L='|& less'
+
+alias cat=bat
 
 for i in {1..9}; do
   alias a$i="awk '{print \$$i}'"
@@ -162,10 +169,10 @@ alias -s json='jq .'
 
 # Kubernetes things
 alias k=kubectl
-alias Gp='kubectl get pods'
-alias Gs='kubectl get svc'
-alias Gd='kubectl get deployments'
-alias Gi='kubectl get ingress'
+alias kgp='kubectl get pods'
+alias kgs='kubectl get svc'
+alias kgd='kubectl get deployments'
+alias kgi='kubectl get ingress'
 
 alias -g J='-o json'
 alias -g Y='-o yaml'
@@ -209,6 +216,13 @@ function utc {
   TZ=utc date
 }
 
+function t {
+  echo "Local: $(date)"
+  echo "UTC:   $(utc)"
+  echo "Offset: $(date +"%Z %z")"
+}
+
+
 alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
 
 function hex-to-bin {
@@ -233,7 +247,8 @@ precmd () { vcs_info }
 
 
 if [ -z $SSH_CLIENT ]; then
-  [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
+    [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
+    # [ $UID != 0 ] && PROMPT=$'\U2029[%{\e[1;31m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ \U2029'
 else
   # Show hostname in SSH sessions
   [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n@%m:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
@@ -247,7 +262,7 @@ export GPG_TTY=$(tty)
 # fi
 
 # export PATH=$HOME/.rbenv/bin:$PATH
-type rbenv &>/dev/null && eval "$(rbenv init -)"
+# type rbenv &>/dev/null && eval "$(rbenv init -)"
 
 # added by travis gem
 [ -f /Users/awilliams/.travis/travis.sh ] && source /Users/awilliams/.travis/travis.sh
@@ -261,8 +276,81 @@ function deployment-to-role {
 }
 
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/awilliams/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/awilliams/google-cloud-sdk/path.zsh.inc'; fi
+function crow-dbg {
+  curl -L -s ${1}/results.json | jq -r '.suitesFailed[] | .testsFailed[] | .testName'
+}
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/awilliams/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/awilliams/google-cloud-sdk/completion.zsh.inc'; fi
+function fh() {
+  print -z $(fc -l 1 | fzf +s --tac | cut -d\  -f 4-)
+}
+
+function gosum-unmerge {
+  if [ ! -f ./go.sum ]; then
+    echo "go.sum not found" >&1
+    return 1
+  fi
+
+  gsed -i -e '/<<<<<<</d' -e '/>>>>>>>/d' -e '/=======/d' ./go.sum
+  go mod tidy
+}
+
+function kc {
+  if [ ! -z "$1" ]; then
+    RESULTS=$(find ~/.kube/ ~/.kube/tmp/ -maxdepth 1 -type f -exec basename {} \; | egrep -v '^config$' | sort | fzf -f $1)
+  else
+    RESULTS=$(find ~/.kube/ ~/.kube/tmp/ -maxdepth 1 -type f -exec basename {} \; | egrep -v '^config$' | sort | fzf)
+  fi
+
+  # if [[ $(echo $RESULTS | tr -d '[:space:]') -eq "" ]]; then
+  #   echo "no matches found" >&2
+  #   return 1
+  # fi
+
+  if [[ $(echo $RESULTS | wc -l) -ne 1 ]]; then
+    echo "multiple matches:\n$RESULTS" >&2
+    return 1
+  fi
+
+  eval "$(echo export KUBECONFIG=~/.kube/$RESULTS)"
+  echo "Selected $RESULTS" >&2
+  tm=$(kubectl config view --raw -o json | jq -r '.users[0].user."client-certificate-data" | @base64d' | openssl x509 -noout -text | awk -F' : ' '/Not After/ {print $2}')
+  echo "Expires: $(gdate '+%b %d %H:%m:%S %Y %Z' -d $tm)" >&2
+}
+
+function kubeconfig {
+  if [ -z $1 ]; then
+    echo "must specify cluster name" >&1
+    return 1
+  fi
+
+  $(kc bluemgmt && kubectl get secrets -n e880b8e1f1b61fadc821cba0510174165aca9bfa $1-kubeconfig J | jq -r '.data.value | @base64d' > ~/.kube/$1)
+}
+
+function kubeconfig-clean {
+  ls -1 ~/.kube/tmp/
+  rm ~/.kube/tmp/*
+}
+
+
+alias alsamixer='ssh -Xt andrew@192.168.1.86 alsamixer'
+
+alias rgv='rg -g "!vendor"'
+alias y2j='ruby -ryaml -rjson -e "YAML.load_stream(ARGF.file.read) { |x| puts x.to_json }"'
+
+function acme() {
+  PATH=$PLAN9/bin:$PATH $PLAN9/bin/acme
+}
+
+source $HOME/.zshrc.local
+
+export DOCKER_SCAN_SUGGEST=false
+
+function jwt {
+  jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
+}
+
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
