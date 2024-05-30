@@ -1,4 +1,6 @@
-# export ZPLUG_HOME=/usr/local/opt/zplug
+#!/usr/bin/env zsh
+
+# TODO Make this work on Linux
 export ZPLUG_HOME=/opt/homebrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
@@ -17,7 +19,6 @@ SAVEHIST=4000
 HISTFILE=~/.history
 
 ### Zsh options
-# setopt APPEND_HISTORY    # Append to history file instead of overwriting
 setopt INC_APPEND_HISTORY    # Append to history file instead of overwriting
 setopt EXTENDED_HISTORY  # Save timestamps in history
 setopt HIST_IGNORE_DUPS  # Dont save command in history if its a duplicate of the previous command
@@ -83,152 +84,10 @@ bindkey "^X^E" edit-command-line
 zmodload zsh/deltochar
 bindkey "\ez" zap-to-char
 
-alias mv='nocorrect mv'       # no spelling correction on mv
-alias cp='nocorrect cp'       # no spelling correction on cp
-alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
-alias knife='nocorrect /opt/chefdk/bin/knife'
-alias kitchen='nocorrect /opt/chefdk/bin/kitchen'
-alias chef='nocorrect /opt/chefdk/bin/chef'
-alias rspec='nocorrect rspec'
-alias l='ls -l'
-alias ll='ls -lh'
-alias la='ls -lha'
-alias bex='nocorrect bundle exec'
-alias less='less -R'  # Send raw ascii control codes (ex: colors)
-
-alias -g ....='../..'
-alias -g ......='../../..'
-
-alias gtt='pushd $(git rev-parse --show-toplevel)'
-
-if [[ "$(uname)" == "Darwin" ]]; then
-  alias xargs=gxargs
-  alias find=gfind
-  alias tar=gtar
-  alias awk='gawk'
-  alias sed='gsed'
-  alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
-
-  # If MacVim is installed, use that binary
-  # Prioritize version in home directory if possible
-  if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-      alias vim="nocorrect $HOME/Applications/MacVim.app/Contents/MacOS/Vim"
-  elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-      alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
-  fi
-
-  function profile-userspace {
-    if [ -z "${1}" ]; then
-      echo "Please specify an application name" >&2
-      return 1
-    fi
-    sudo dtrace -n "profile-97 /execname == \"${1}\"/ { @[ustack()] = count(); }"
-  }
-
-  function idea {
-    open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
-  }
-
-  function j8 {
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-  }
-
-
-  function notify {
-    osascript -e "display notification 'Done: "$@"' with title '$@'"
-  }
-
-elif [[ "$(uname)" == "Linux" ]]; then
-    alias open='xdg-open'
-
-    function loopback-audio() {
-        pactl unload-module module-loopback || true
-        pactl load-module module-loopback
-        # TODO How can determine if muted?
-        pactl set-sink-mute 1 toggle
-    }
-fi
-
-alias -g G='|& grep'
-alias -g L='|& less'
-
-alias cat=bat
-
-for i in {1..9}; do
-  alias a$i="awk '{print \$$i}'"
-  alias -g A$i="| awk '{print \$$i}'"
-done
-
-# Shortcut for opening non-executable source
-for ext in c cc S ld rs go js lua elm xml json yaml yml md; do
-  alias -s $ext="$EDITOR"
-done
-
-alias -s git='git clone'
-alias -s json='jq .'
-
-# Kubernetes things
-alias k=kubectl
-alias kgp='kubectl get pods'
-alias kgs='kubectl get svc'
-alias kgd='kubectl get deployments'
-alias kgi='kubectl get ingress'
-
-alias -g J='-o json'
-alias -g Y='-o yaml'
-alias -g W='-o wide'
-alias -g N='-o name'
-
-function github_url {
-  git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//'
-}
-
-function gh {
-  open $(github_url)
-}
-
-function pr {
-  open $(github_url)/pull/new/$(git rev-parse --abbrev-ref HEAD)
-}
-
+# Add syserror function for looking up standard error codes
 zmodload zsh/system
 
-function gethostbyname() {
-  if [ -z "${1}" ]; then
-    echo "Please specify a hostname" >&2
-    return 1
-  fi
-
-  python -c "import socket; print socket.gethostbyname('${1}')"
-}
-
-function webserver {
-  port="${1:-3000}"
-  ruby -r webrick -e "s = WEBrick::HTTPServer.new(Port: $port, DocumentRoot: Dir.pwd); trap('INT') { s.shutdown }; s.start"
-}
-
-
-# This functionality is replicated by syserror in zsh/system module
-# function _errno {
-#   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
-# }
-function utc {
-  TZ=utc date
-}
-
-function t {
-  echo "Local: $(date)"
-  echo "UTC:   $(utc)"
-  echo "Offset: $(date +"%Z %z")"
-}
-
-
-alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
-
-function hex-to-bin {
-  ruby -e "puts '%.8b' % ${1}"
-}
-
+# Git info in prompt
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' formats       '(%F{2}%b%f%m)'
@@ -245,7 +104,6 @@ function +vi-git-stash() {
 zstyle ':vcs_info:git*+set-message:*' hooks git-stash
 precmd () { vcs_info }
 
-
 if [ -z $SSH_CLIENT ]; then
     [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
     # [ $UID != 0 ] && PROMPT=$'\U2029[%{\e[1;31m%}%n:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ \U2029'
@@ -254,34 +112,87 @@ else
   [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n@%m:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
 fi
 
-# GPG Agent stuff
 export GPG_TTY=$(tty)
-# unset SSH_AGENT_PID
-# if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-#   export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
-# fi
 
-# export PATH=$HOME/.rbenv/bin:$PATH
-# type rbenv &>/dev/null && eval "$(rbenv init -)"
+# Use fzf for search history
+if command -v fzf &>/dev/null; then
+  source <(fzf --zsh)
+fi
 
-# added by travis gem
-[ -f /Users/awilliams/.travis/travis.sh ] && source /Users/awilliams/.travis/travis.sh
+# no spelling correction on some commands
+alias mv='nocorrect mv'
+alias cp='nocorrect cp'
+alias mkdir='nocorrect mkdir'
 
+# I can't retrain my brain to use bat
+if command -v bat &>/dev/null; then
+  alias cat=bat
+fi
 
-alias ensime="ctags -Re . & sbt clean ensimeConfig test:compile ensimeServerIndex"
+alias ll='ls -lh'
+alias la='ls -lha'
+alias less='less -R'  # Send raw ascii control codes (ex: colors)
 
-function deployment-to-role {
-  kubectl get deployments --all-namespaces -o json | \
-    jq -r '.items[] | select(.spec.template.metadata.annotations."iam.amazonaws.com/role" != null) | "\(.metadata.name): \(.spec.template.metadata.annotations."iam.amazonaws.com/role")"'
+# Global and suffix aliases
+alias -g ....='../..'
+alias -g ......='../../..'
+alias -g G='|& grep'
+alias -g L='|& less'
+
+# Shortcuts for printing a numbered column
+# Ex: echo "foo bar baz" | c2
+#   > bar
+for i in {1..9}; do
+  alias c$i="awk '{print \$$i}'"
+  alias -g C$i="| awk '{print \$$i}'"
+done
+
+# Shortcut for opening non-executable source
+for ext in c cc S ld rs go js lua elm xml json yaml yml; do
+  alias -s $ext="$EDITOR"
+done
+
+if command -v mdcat &>/dev/null; then
+  alias -s md=mdcat
+fi
+alias -s git='git clone'
+alias -s json='jq .'
+
+alias cdroot='pushd $(git rev-parse --show-toplevel)'
+
+function github_url {
+  git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//'
+}
+
+function pr {
+  open $(github_url)/pull/new/$(git rev-parse --abbrev-ref HEAD)
 }
 
 
-function crow-dbg {
-  curl -L -s ${1}/results.json | jq -r '.suitesFailed[] | .testsFailed[] | .testName'
+function gethostbyname() {
+  if [ -z "${1}" ]; then
+    echo "Please specify a hostname" >&2
+    return 1
+  fi
+
+  python -c "import socket; print socket.gethostbyname('${1}')"
 }
 
-function fh() {
-  print -z $(fc -l 1 | fzf +s --tac | cut -d\  -f 4-)
+function webserver {
+  port="${1:-3000}"
+  ruby -r webrick -e "s = WEBrick::HTTPServer.new(Port: $port, DocumentRoot: Dir.pwd); trap('INT') { s.shutdown }; s.start"
+}
+
+function utc {
+  TZ=utc date
+}
+
+alias now="when 'now in utc -> stl'"
+
+alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
+
+function hex-to-bin {
+  ruby -e "puts '%.8b' % ${1}"
 }
 
 function gosum-unmerge {
@@ -294,63 +205,51 @@ function gosum-unmerge {
   go mod tidy
 }
 
-function kc {
-  if [ ! -z "$1" ]; then
-    RESULTS=$(find ~/.kube/ ~/.kube/tmp/ -maxdepth 1 -type f -exec basename {} \; | egrep -v '^config$' | sort | fzf -f $1)
-  else
-    RESULTS=$(find ~/.kube/ ~/.kube/tmp/ -maxdepth 1 -type f -exec basename {} \; | egrep -v '^config$' | sort | fzf)
-  fi
+# Kubernetes things
+alias k=kubectl
+alias kar='kubectl api-resources'
 
-  # if [[ $(echo $RESULTS | tr -d '[:space:]') -eq "" ]]; then
-  #   echo "no matches found" >&2
-  #   return 1
-  # fi
+# This are designed for kubernetes but end up working with other commands
+alias -g J='-o json'
+alias -g Y='-o yaml'
+alias -g W='-o wide'
+alias -g N='-o name'
 
-  if [[ $(echo $RESULTS | wc -l) -ne 1 ]]; then
-    echo "multiple matches:\n$RESULTS" >&2
-    return 1
-  fi
-
-  eval "$(echo export KUBECONFIG=~/.kube/$RESULTS)"
-  echo "Selected $RESULTS" >&2
-  tm=$(kubectl config view --raw -o json | jq -r '.users[0].user."client-certificate-data" | @base64d' | openssl x509 -noout -text | awk -F' : ' '/Not After/ {print $2}')
-  echo "Expires: $(gdate '+%b %d %H:%m:%S %Y %Z' -d $tm)" >&2
+function kc() {
+	result=$(kubectl config get-contexts -o name | fzf-tmux -p \
+        --info=inline --layout=reverse --header-lines=1  \
+        --prompt "Current: '$(kubectl config current-context)'> " \
+        --header "╱ Enter (select context) ╱ CTRL-X (run one-off command with context)\n\n" \
+        --preview-window up:follow \
+        --preview="$HOME/bin/libexec/fzf_kube_preview.sh {}" \
+        # --bind 'ctrl-x:execute:kubectl logs --all-containers --namespace {1} {2}) > /dev/tty' \
+      ) 
+	if [ ! -z $result ]
+	then
+		kubectl config use-context $result
+	fi
 }
-
-function kubeconfig {
-  if [ -z $1 ]; then
-    echo "must specify cluster name" >&1
-    return 1
-  fi
-
-  $(kc bluemgmt && kubectl get secrets -n e880b8e1f1b61fadc821cba0510174165aca9bfa $1-kubeconfig J | jq -r '.data.value | @base64d' > ~/.kube/$1)
-}
-
-function kubeconfig-clean {
-  ls -1 ~/.kube/tmp/
-  rm ~/.kube/tmp/*
-}
-
-
-alias alsamixer='ssh -Xt andrew@192.168.1.86 alsamixer'
-
-alias rgv='rg -g "!vendor"'
-alias y2j='ruby -ryaml -rjson -e "YAML.load_stream(ARGF.file.read) { |x| puts x.to_json }"'
 
 function acme() {
   PATH=$PLAN9/bin:$PATH $PLAN9/bin/acme
 }
 
-source $HOME/.zshrc.local
-
-export DOCKER_SCAN_SUGGEST=false
+alias y2j='ruby -ryaml -rjson -e "YAML.load_stream(ARGF.file.read) { |x| puts x.to_json }"'
 
 function jwt {
   jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
 }
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ "$(uname)" == "Darwin" ]]; then
+  # Prefer gnu userland
+  alias xargs=gxargs
+  alias find=gfind
+  alias tar=gtar
+  alias awk=gawk
+  alias sed=gsed
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+  alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
+fi
+
+# Local changes mostly for work stuff
+[[ -f "$HOME/.zshrc.local" ]] && source $HOME/.zshrc.local
