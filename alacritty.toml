@@ -1,0 +1,74 @@
+live_config_reload = true
+
+[colors.bright]
+black = "0x4f4f4f"
+blue = "0x7cb8bb"
+cyan = "0x93e0e3"
+green = "0x5f7f5f"
+magenta = "0xdc8cc3"
+red = "0xdca3a3"
+white = "0xdcdccc"
+yellow = "0xe0cf9f"
+
+[colors.cursor]
+cursor = "0xdcdccc"
+text = "0x3f3f3f"
+
+[colors.normal]
+black = "0x3f3f3f"
+blue = "0x7cb8bb"
+cyan = "0x93e0e3"
+green = "0x5f7f5f"
+magenta = "0xdc8cc3"
+red = "0xdca3a3"
+white = "0xdcdccc"
+yellow = "0xe0cf9f"
+
+[colors.primary]
+background = "0x3f3f3f"
+foreground = "0xdcdccc"
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "JetbrainsMono Nerd Font"
+style = "Medium"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "NumpadAdd"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "F"
+mods = "Command|Control"
+
+[[keyboard.bindings]]
+chars = "\u001Bf"
+key = "F"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bb"
+key = "B"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bd"
+key = "D"
+mods = "Alt"
+
+[window]
+decorations = "full"
