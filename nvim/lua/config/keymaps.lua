@@ -1,38 +1,25 @@
 -- TODO Make this native lua and/or tie them into lazy loading keymaps
+--
+-- Page up and down, re-centering the cursor in the middle
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
-vim.cmd [[
-cmap Qall qall
-cmap Wall wall
-cmap Vsp vsp
-cmap w!! w !sudo tee % >/dev/null
+-- In visual, allow us to move the highlighted block of tax
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
-" Yank to end of line
-map Y yg_
+-- Indent with tab/shift-tab and reselect
+vim.keymap.set("v", "<Tab>", ">gv")
+vim.keymap.set("v", "<S-Tab>", "<gv")
 
-" Fugitive mappings
-nmap <leader>gb :Gbrowse<cr>
-nmap <leader>gl :Glog -- %<cr>
-nmap <leader>gs :Gstatus<cr>
-nmap <leader>ge :Gedit<cr>
-nmap <leader>gd :Gdiff<cr>
-nmap <leader>gc :Gcommit<cr>
-cnoremap gw Gwrite
+ -- Yank to end of line
+vim.keymap.set("n", "Y", "yg_")
 
-" Disable search highlights
-nmap <leader>h <ESC>:noh<CR>
+vim.keymap.set("c", "w!!", "w !sudo tee % >/dev/null")
 
-vmap <Tab> >gv
-vmap <S-Tab> <gv
+-- Typing is hard
+vim.keymap.set("c", "Qall", "qall")
+vim.keymap.set("c", "Wall", "wall")
 
-nnoremap <F3> :UndotreeToggle<CR>
-nnoremap <F4> :NERDTreeToggle<CR>
-nnoremap <F5> :Twilight<CR>
-nnoremap <F9> :lua require("dapui").toggle()<CR>
 
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-noremap <leader>b <ESC>:Buffers<CR>
-noremap <leader>f <ESC>:Files<CR>
-nmap <C-P> :Files<CR>
-]]
+vim.keymap.set("c", "Chmod", "!chmod +x %")

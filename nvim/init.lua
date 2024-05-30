@@ -32,16 +32,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
-require("lazy").setup("config.plugins", {
-  -- TODO Doesnt work yet, but OK with that for now
-  --defaults = { lazy = true },
+require("lazy").setup("plugins", {
   performance = {
     rtp = {
       disabled_plugins = {
         'gzip',
         'matchit',
-        'matchparen',
+        -- The only plugin out the defaults I still like
+        -- This can probably be done with Treesitter now. Look into it
+        -- 'matchparen',
         'netrwPlugin',
         'tarPlugin',
         'tohtml',

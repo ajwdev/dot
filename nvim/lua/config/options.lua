@@ -12,10 +12,11 @@ opt.mouse = "a"
 -- bells (both audidle and visual) are annoying
 opt.belloff = "all"
 
--- Smaller updatetime for CursorHold & CursorHoldI
-opt.updatetime = 300
+opt.timeout = true
 -- Timeout for mapper sequeneces
 opt.timeoutlen = 350
+-- Smaller updatetime for CursorHold & CursorHoldI
+opt.updatetime = 300
 
 -- Use a global status line
 opt.laststatus = 3
@@ -75,6 +76,8 @@ opt.shiftwidth = 2
 opt.tabstop = 2
 opt.softtabstop = 2
 
+opt.textwidth = 78
+
 -- TODO Review these
 opt.wildmode = "list:longest,full"
 opt.wildignore = { "*.swp", "*.bak", "*.pyc", "*.class" }
@@ -82,7 +85,7 @@ opt.wildoptions = "pum"
 
 -- Toggle paste mode with f2.
 -- TODO Not needed as much in Neovim. Maybe we can remove this?
-opt.pastetoggle="<F2>"
+-- opt.pastetoggle="<F2>"
 
 -- Options for completion mode in-order:
 -- * Display popup menu even for a single completion item
@@ -100,6 +103,11 @@ opt.formatoptions = opt.formatoptions
   - "o" -- O and o should not continue comments
   + "r" -- But newlines should
   + "j" -- Auto-remove comments when joining lines
-  + "n" -- When formatting text, recognize numbered lists and wrap accordingly
-  + "1" -- Dont break lines after a one character word
-  + "p" -- Dont break lines at single spaces that follow periods
+  -- + "n" -- When formatting text, recognize numbered lists and wrap accordingly
+  -- + "1" -- Dont break lines after a one character word
+  -- + "p" -- Dont break lines at single spaces that follow periods
+
+-- Enable spelling
+opt.spell = true
+-- Only spellcheck designated areas such as comments. These are typically defined by Treesitter queries
+opt.spelloptions = "noplainbuffer"
