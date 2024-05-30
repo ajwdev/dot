@@ -37,4 +37,4 @@ require('nvim-lightbulb').update_lightbulb {
         text_unavailable = ""
     }
 }
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua require('nvim-lightbulb').update_lightbulb()]]

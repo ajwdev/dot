@@ -19,24 +19,8 @@ augroup END
 vim.cmd [[
 augroup YankHighlight
   autocmd!
-  autocmd TextYankPost * silent! lua vim.highlight.on_yank { timeout = 500 }
+  autocmd TextYankPost * silent! lua vim.highlight.on_yank { timeout = 400 }
 augroup end
-]]
-
-
--- Fugitive
-vim.cmd [[
-augroup fugitiveBuffers
-autocmd!
-" Autoclose Fugitive buffers
-autocmd BufReadPost fugitive://* set bufhidden=delete
-
-" Add '..' mapping for moving back to parent directory in Fugitive Git browser
-autocmd User fugitive
-  \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-  \   nnoremap <buffer> .. :edit %:h<CR> |
-  \ endif
-augroup END
 ]]
 
 
@@ -60,7 +44,7 @@ local windowGrp = nvim_create_augroup("WindowMagic", { clear = true })
 nvim_create_autocmd(
   "FileType",
   {
-    pattern = { "help", "startuptime", "qf", "lspinfo" },
+    pattern = { "help", "startuptime", "qf", "lspinfo", "fugitiveblame" },
     command = [[nnoremap <buffer><silent> q :close<CR>]],
     group = windowGrp,
   }
@@ -99,3 +83,23 @@ augroup Fzf
   au FileType fzf tunmap <buffer> <Esc>
 augroup END
 ]]
+
+-- This is needed to load the tilt_lsp
+vim.cmd [[
+autocmd BufRead Tiltfile setf=tiltfile
+]]
+
+vim.cmd [[
+autocmd BufRead *kubeconfig set ft=yaml
+]]
+
+-- Copied from https://github.com/tjdevries/config.nvim/blob/c48edd3572c7b68b356ef7c54c41167b1f46e47c/plugin/terminal.lua
+-- Set local settings for terminal buffers
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("custom-term-open", {}),
+  callback = function()
+    vim.opt_local.set.number = false
+    vim.opt_local.set.relativenumber = false
+    vim.opt_local.set.scrolloff = 0
+  end,
+})
