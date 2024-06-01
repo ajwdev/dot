@@ -62,41 +62,28 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       keywords = {
+        -- Mostly for Rust
         SAFETY = { icon = " ", color = "warning" },
       },
       highlight = {
-        pattern = [[.*<(KEYWORDS)\s*:?]], -- pattern or table of patterns, used for highlighting (vim regex)
-        keyword = "bg", -- "fg" or "bg" or empty
+        pattern = [[.*<(KEYWORDS)\s*:?]], -- colon should be optional
+        keyword = "bg",                   -- Only highlight the keyword, not the space around it
       },
     }
   },
-  --  {
-  --    "folke/flash.nvim",
-  --    event = "VeryLazy",
-  --    opts = {},
-  --    -- stylua: ignore
-  --    keys = {
-  --      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-  --      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-  --      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-  --      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-  --      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-  --    },
-  -- },
-  --  TODO Super annoying at the moment. Review more later
-  --  {
-  --    "folke/flash.nvim",
-  --    event = "VeryLazy",
-  --    opts = {},
-  --    -- stylua: ignore
-  --    keys = {
-  --      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-  --      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-  --      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-  --      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-  --      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-  --    },
-  -- },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {},
+    -- stylua: ignore
+    keys = {
+      { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+      { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+      { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+      { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+    },
+  },
   -- Make this lazy as it will get required by the LSP configuration
   { 'folke/neodev.nvim', lazy = true },
 }

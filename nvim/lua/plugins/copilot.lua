@@ -5,6 +5,7 @@ return {
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
+        -- Use cmp for completion
         suggestion = { enabled = false },
         panel = { enabled = false },
       })
