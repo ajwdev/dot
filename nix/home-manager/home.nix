@@ -1,7 +1,15 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
-{ inputs, outputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   # You can import other home-manager modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/home-manager):
@@ -9,7 +17,6 @@
 
     # Or modules exported from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModules.default
-
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
@@ -106,7 +113,7 @@
     # networking tools
     iperf3
     ldns # replacement of `dig`, it provide the command `drill`
-    ipcalc  # it is a calculator for the IPv4/v6 addresses
+    ipcalc # it is a calculator for the IPv4/v6 addresses
     # system call monitoring
     strace # system call monitoring
     ltrace # library call monitoring
@@ -122,7 +129,7 @@
     gawk
     lsof
     mtr
-    dnsutils  # `dig` + `nslookup`
+    dnsutils # `dig` + `nslookup`
     socat
     nmap
     file

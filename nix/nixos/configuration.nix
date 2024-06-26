@@ -1,7 +1,15 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 
-{ inputs, outputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
@@ -17,8 +25,6 @@
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
   ];
-
-
 
   nixpkgs = {
     # You can add overlays here
@@ -56,9 +62,13 @@
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
-        # Enable flakes and new 'nix' command
+      # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
-      trusted-users = [ "root" "andrew" "@wheel" ];
+      trusted-users = [
+        "root"
+        "andrew"
+        "@wheel"
+      ];
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
     };
@@ -68,15 +78,18 @@
     efi = {
       canTouchEfiVariables = true;
       efiSysMountPoint = "/boot";
-     };
+    };
     grub = {
-       efiSupport = true;
-       device = "nodev";
-       useOSProber = true;
+      efiSupport = true;
+      device = "nodev";
+      useOSProber = true;
     };
   };
 
-  boot.supportedFilesystems = [ "btrfs" "nfs" ];
+  boot.supportedFilesystems = [
+    "btrfs"
+    "nfs"
+  ];
 
   boot.kernel.sysctl = {
     "kernel.sysrq" = 1;
@@ -85,7 +98,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "tomservo";
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   services.avahi = {
     enable = true;
@@ -96,7 +109,10 @@
     };
   };
 
-  services.udev.packages = [ pkgs.yubikey-personalization pkgs.rtl-sdr ];
+  services.udev.packages = [
+    pkgs.yubikey-personalization
+    pkgs.rtl-sdr
+  ];
   security.pam.services = {
     login.u2fAuth = true;
     sudo.u2fAuth = true;
@@ -128,7 +144,6 @@
   # Enable the Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
-
 
   services.displayManager.defaultSession = "plasma";
   environment.plasma6.excludePackages = with pkgs; [
@@ -167,125 +182,125 @@
   # };
 
   # List packages installed in system profile. To search, run:
-    environment.systemPackages = with pkgs; [
-      home-manager
+  environment.systemPackages = with pkgs; [
+    home-manager
 
-      vim
-      git
-      wget
-      curl
-      pv
-      rsync
-      screen
-      gnused
-      gnutar
-      gawk
-      lsof
-      mtr
-      dnsutils  # `dig` + `nslookup`
-      socat
-      nmap
-      file
-      which
-      killall
-      ethtool
-      pciutils
-      usbutils
-      pulseaudio
-      pkg-config
-      gcc
-      parted # Also contains partprobe
-      nfs-utils
+    vim
+    git
+    wget
+    curl
+    pv
+    rsync
+    screen
+    gnused
+    gnutar
+    gawk
+    lsof
+    mtr
+    dnsutils # `dig` + `nslookup`
+    socat
+    nmap
+    file
+    which
+    killall
+    ethtool
+    pciutils
+    usbutils
+    pulseaudio
+    pkg-config
+    gcc
+    parted # Also contains partprobe
+    nfs-utils
 
-      # nix related
-      nurl
-      nix-index
-      cachix
-      # it provides the command `nom` works just like `nix`
-      # with more details log output
-      nix-output-monitor
+    # nix related
+    nurl
+    nix-index
+    nixfmt-rfc-style
+    cachix
+    # it provides the command `nom` works just like `nix`
+    # with more details log output
+    nix-output-monitor
 
-      # Gaming packages
-      wineWowPackages.waylandFull
-      winetricks
-      cabextract
-      gamescope
-      glxinfo
-      lutris
-      dosbox
-      # ksp package manager for mods
-      ckan
-      protonup-qt
-      vulkan-tools
+    # Gaming packages
+    wineWowPackages.waylandFull
+    winetricks
+    cabextract
+    gamescope
+    glxinfo
+    lutris
+    dosbox
+    # ksp package manager for mods
+    ckan
+    protonup-qt
+    vulkan-tools
 
-      k3b
-      kcalc
-      cdrkit
-      wl-clipboard
+    k3b
+    kcalc
+    cdrkit
+    wl-clipboard
 
-      neofetch
-      gnupg
+    neofetch
+    gnupg
 
-      # archives
-      zip
-      xz
-      unzip
-      p7zip
-      zstd
-      zlib
+    # archives
+    zip
+    xz
+    unzip
+    p7zip
+    zstd
+    zlib
 
-      # btop  # replacement of htop/nmon
-      iotop # io monitoring
-      iftop # network monitoring
+    # btop  # replacement of htop/nmon
+    iotop # io monitoring
+    iftop # network monitoring
 
-      # system call monitoring
-      strace # system call monitoring
-      ltrace # library call monitoring
-      lsof # list open files
+    # system call monitoring
+    strace # system call monitoring
+    ltrace # library call monitoring
+    lsof # list open files
 
-      # system tools
-      sysstat
-      lm_sensors # for `sensors` command
+    # system tools
+    sysstat
+    lm_sensors # for `sensors` command
 
-      vlc
-      makemkv
-      handbrake
-      libdvdcss
-      ffmpeg
+    vlc
+    makemkv
+    handbrake
+    libdvdcss
+    ffmpeg
 
-      ghidra
+    ghidra
 
-      wofi
-      # asg
+    wofi
+    # asg
 
-      firefox
-      brave
-      discord
+    firefox
+    brave
+    discord
 
-      blender-hip
+    blender-hip
 
-      fuse
-      libguestfs
-      tunctl
-      dpdk
+    fuse
+    libguestfs
+    tunctl
+    dpdk
 
-      blackmagic
+    blackmagic
 
-      rtl-sdr
-      rtl_433
+    rtl-sdr
+    rtl_433
 
+    awscli
+    aws-vault
 
-      awscli
-      aws-vault
+    # productivity
+    unstable.obsidian
 
-      # productivity
-      unstable.obsidian
+    unstable.signal-desktop
 
-      unstable.signal-desktop
-
-      saleae-logic
-      gqrx
-    ];
+    saleae-logic
+    gqrx
+  ];
 
   environment.enableDebugInfo = true;
 
@@ -333,9 +348,29 @@
   users.users.andrew = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "andrew" "plugdev" "docker" "wheel" "video" "audio" "cdrom" "dialout" "networkmanager" "libvirtd" "gamemode" ];
+    extraGroups = [
+      "andrew"
+      "plugdev"
+      "docker"
+      "wheel"
+      "video"
+      "audio"
+      "cdrom"
+      "dialout"
+      "networkmanager"
+      "libvirtd"
+      "gamemode"
+    ];
     shell = pkgs.zsh;
-    packages = with pkgs; [ tmux vim git wget curl rsync screen ];
+    packages = with pkgs; [
+      tmux
+      vim
+      git
+      wget
+      curl
+      rsync
+      screen
+    ];
   };
 
   users.groups.andrew.gid = 1000;
@@ -346,9 +381,9 @@
     package = pkgs.unstable._1password;
   };
   programs._1password-gui = {
-   enable = true;
-   polkitPolicyOwners = ["andrew"];
-   package = pkgs.unstable._1password-gui;
+    enable = true;
+    polkitPolicyOwners = [ "andrew" ];
+    package = pkgs.unstable._1password-gui;
   };
 
   programs.steam = {
@@ -357,7 +392,12 @@
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     # See https://dee.underscore.world/blog/running-ksp-under-nixos/
     package = pkgs.steam.override {
-      extraPkgs = (pkgs: [ pkgs.corefonts pkgs.vistafonts ]);
+      extraPkgs = (
+        pkgs: [
+          pkgs.corefonts
+          pkgs.vistafonts
+        ]
+      );
     };
   };
 
