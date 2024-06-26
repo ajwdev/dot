@@ -329,10 +329,14 @@
   users.groups.andrew.gid = 1000;
 
   # TODO I can't get these to work in the home manager file. I dont know why
-  programs._1password.enable = true;
-  programs._1password-gui = {
+  programs._1password = {
     enable = true;
-    polkitPolicyOwners = ["andrew"];
+    package = pkgs.unstable._1password;
+  };
+  programs._1password-gui = {
+   enable = true;
+   polkitPolicyOwners = ["andrew"];
+   package = pkgs.unstable._1password-gui;
   };
 
   programs.steam = {
