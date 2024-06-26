@@ -24,7 +24,7 @@
       outputs.overlays.unstable-packages
 
       # You can also add overlays exported from other flakes:
-      inputs.neovim-nightly-overlay.overlays.default
+      # inputs.neovim-nightly-overlay.overlays.default
 
       inputs.zig.overlays.default
 
@@ -94,7 +94,9 @@
     zsh
     zplug
     tmux
-    neovim
+    # neovim
+    inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
+
     yubikey-manager
 
     # utils
