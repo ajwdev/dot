@@ -29,7 +29,7 @@
       outputs.overlays.unstable-packages
 
       # You can also add overlays exported from other flakes:
-      inputs.neovim-nightly-overlay.overlays.default
+      # inputs.neovim-nightly-overlay.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {
@@ -38,21 +38,13 @@
       #   });
       # })
     ];
+
     # Configure your nixpkgs instance
     config = {
       # Disable if you don't want unfree packages
       allowUnfree = true;
-      # NOTE This is for ZFS specifically
-      allowBroken = true;
-      # allowUnfree = lib.mkForce true;
-      # allowUnfreePredicate = (pkg: true);
     };
   };
-
-  # TODO figure this out. Apparently related to obsidian
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-  ];
 
   nix = {
     # This will add each flake input as a registry
@@ -113,11 +105,6 @@
   time.timeZone = "America/Chicago";
 
   i18n.defaultLocale = "en_US.UTF-8";
-  #console = {
-  #  #font = "Lat2-Terminus16";
-  #  #keyMap = "us";
-  #  useXkbConfig = true; # use xkbOptions in tty.
-  #};
 
   services.fwupd.enable = true;
 
@@ -129,15 +116,11 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    # extraPackages = with pkgs; [
-    #   amdvlk
-    # ];
-    extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
+    extraPackages = with pkgs; [
+      vaapiVdpau
+      libvdpau-va-gl
     ];
   };
-
-# For 32 bit applications 
 
   hardware.rtl-sdr.enable = true;
 
@@ -168,7 +151,6 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    #jack.enable = true;
   };
   # rtkit is optional but recommended
   security.rtkit.enable = true;
@@ -187,7 +169,6 @@
       git
       wget
       curl
-      nurl
       pv
       rsync
       screen
@@ -212,17 +193,15 @@
       parted # Also contains partprobe
       nfs-utils
 
+      nurl
+      nix-index
+      cachix
+
       wineWowPackages.waylandFull
       winetricks
       gamescope
       # steam
       lutris
-      # (lutris.override {
-      #   extraPkgs = pkgs: [
-      #     wget
-      #   ];
-      # })
-
 
       k3b
       kcalc
@@ -301,30 +280,21 @@
 
   environment.enableDebugInfo = true;
 
+  # https://nixos.wiki/wiki/Fonts
   fonts.packages = with pkgs; [
-    # noto-fonts
-    # noto-fonts-cjk
-    # noto-fonts-emoji
-    # liberation_ttf
     fira-code
     fira-code-symbols
-    # mplus-outline-fonts.githubRelease
-    # dina-font
-    # proggyfonts
     jetbrains-mono
     corefonts
     vistafonts
   ];
+  fonts.fontDir.enable = true;
 
   programs.zsh.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
   virtualisation.libvirtd.enable = true;
   virtualisation.docker.enable = true;
@@ -369,6 +339,7 @@
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    # See https://dee.underscore.world/blog/running-ksp-under-nixos/
     package = pkgs.steam.override {
       extraPkgs = (pkgs: [ pkgs.corefonts pkgs.vistafonts ]);
     };
@@ -379,7 +350,6 @@
   programs.ssh.startAgent = true;
   programs.gnupg.agent = {
     enable = true;
-    # enableSSHSupport = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
