@@ -13,44 +13,31 @@
   boot.kernelModules = [ "kvm-amd" "sg" ];
   boot.extraModulePackages = [ ];
 
+
   fileSystems."/" =
-    { device = "rpool/nixos/root";
-      fsType = "zfs";
+    { device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+      fsType = "btrfs";
+      options = [ "subvol=rootfs" ];
     };
 
-  fileSystems."/home/andrew" =
-    { device = "rpool/nixos/home/andrew";
-      fsType = "zfs";
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+      fsType = "btrfs";
+      options = [ "subvol=home" ];
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+      fsType = "btrfs";
+      options = [ "subvol=nix" "noatime" "compress=zstd" ];
     };
 
   fileSystems."/boot" =
-    { device = "bpool/nixos/root";
-      fsType = "zfs";
-    };
-
-  fileSystems."/var/lib" =
-    { device = "rpool/nixos/var/lib";
-      fsType = "zfs";
-    };
-
-  fileSystems."/var/log" =
-    { device = "rpool/nixos/var/log";
-      fsType = "zfs";
-    };
-
-  fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/8E9B-025E";
       fsType = "vfat";
     };
 
-  fileSystems."/nix/store" =
-    { device = "rpool/nixos/nix/store";
-      fsType = "zfs";
-    };
-
-  #swapDevices =
-  #  [ { device = "/dev/disk/by-uuid/89b500a6-266f-41de-9d9c-a4e95c110afb"; }
-  #  ];
+  swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

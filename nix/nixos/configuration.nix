@@ -74,7 +74,7 @@
   boot.loader = {
     efi = {
       canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi";
+      efiSysMountPoint = "/boot";
      };
     grub = {
        efiSupport = true;
@@ -83,20 +83,15 @@
     };
   };
 
-  boot.supportedFilesystems = [ "zfs" "nfs" ];
+  boot.supportedFilesystems = [ "btrfs" "nfs" ];
 
-  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-  # TODO I couldn't get the amdgpu drivers to work with the "latest" ZFS
-  # kernel. This still works though so :shrug:
-  # boot.kernelPackages = pkgs.linuxPackages_6_5;
   boot.kernel.sysctl = {
     "kernel.sysrq" = 1;
   };
 
-  services.zfs.autoSnapshot.enable = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "tomservo";
-  networking.hostId = "3775b9a8"; # Needed for zfs/zpool ownership
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   services.avahi = {
@@ -333,7 +328,6 @@
 
   virtualisation.libvirtd.enable = true;
   virtualisation.docker.enable = true;
-  virtualisation.docker.storageDriver = "zfs";
 
   hardware.flipperzero.enable = true;
 
