@@ -58,6 +58,7 @@
     settings = {
         # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
+      trusted-users = [ "root" "andrew" "@wheel" ];
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
     };
