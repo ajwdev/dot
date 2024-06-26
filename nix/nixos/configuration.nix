@@ -325,7 +325,7 @@
   users.users.andrew = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "andrew" "plugdev" "docker" "wheel" "video" "audio" "cdrom" "dialout" "networkmanager" "libvirtd" ];
+    extraGroups = [ "andrew" "plugdev" "docker" "wheel" "video" "audio" "cdrom" "dialout" "networkmanager" "libvirtd" "gamemode" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
       firefox
@@ -355,6 +355,8 @@
       extraPkgs = (pkgs: [ pkgs.corefonts pkgs.vistafonts ]);
     };
   };
+
+  programs.gamemode.enable = true;
 
   services.flatpak.enable = true;
 
