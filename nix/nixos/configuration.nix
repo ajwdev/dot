@@ -153,16 +153,18 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-  # rtkit is optional but recommended
+
+  # rtkit is optional but recommended. Allows programs to request realtime
+  # scheduling.
   security.rtkit.enable = true;
 
   # Enable CUPS
   services.printing.enable = true;
   hardware.bluetooth.enable = true;
 
-  environment.variables = rec {
-    AMD_DEBUG = "dcc";
-  };
+  # environment.variables = rec {
+  #   AMD_DEBUG = "dcc";
+  # };
 
   # List packages installed in system profile. To search, run:
     environment.systemPackages = with pkgs; [
@@ -190,21 +192,31 @@
       pciutils
       usbutils
       pulseaudio
-      vulkan-tools
       pkg-config
       gcc
       parted # Also contains partprobe
       nfs-utils
 
+      # nix related
       nurl
       nix-index
       cachix
+      # it provides the command `nom` works just like `nix`
+      # with more details log output
+      nix-output-monitor
 
+      # Gaming packages
       wineWowPackages.waylandFull
       winetricks
+      cabextract
       gamescope
-      # steam
+      glxinfo
       lutris
+      dosbox
+      # ksp package manager for mods
+      ckan
+      protonup-qt
+      vulkan-tools
 
       k3b
       kcalc
@@ -221,16 +233,6 @@
       p7zip
       zstd
       zlib
-
-      # nix related
-      #
-      # it provides the command `nom` works just like `nix`
-      # with more details log output
-      nix-output-monitor
-
-      # productivity
-      # hugo # static site generator
-      # glow # markdown previewer in terminal
 
       # btop  # replacement of htop/nmon
       iotop # io monitoring
@@ -254,31 +256,35 @@
       ghidra
 
       wofi
-      eww
+      # asg
 
+      firefox
       brave
-      obsidian
       discord
-      dosbox
-      ckan
 
       blender-hip
 
       fuse
       libguestfs
-      virt-manager
+      tunctl
+      dpdk
 
       blackmagic
 
-      wofi
       rtl-sdr
       rtl_433
 
-      protonup-qt
-      cabextract
 
       awscli
       aws-vault
+
+      # productivity
+      unstable.obsidian
+
+      unstable.signal-desktop
+
+      saleae-logic
+      gqrx
     ];
 
   environment.enableDebugInfo = true;
@@ -329,10 +335,7 @@
     uid = 1000;
     extraGroups = [ "andrew" "plugdev" "docker" "wheel" "video" "audio" "cdrom" "dialout" "networkmanager" "libvirtd" "gamemode" ];
     shell = pkgs.zsh;
-    packages = with pkgs; [
-      firefox
-      tmux
-    ];
+    packages = with pkgs; [ tmux vim git wget curl rsync screen ];
   };
 
   users.groups.andrew.gid = 1000;
