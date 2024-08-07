@@ -30,6 +30,7 @@
   };
 
   programs.gamemode.enable = true;
+  programs.gamescope.enable = true;
 
   # This was needed to troubleshoot a crash. Not sure its needed anymore
   # environment.variables = {

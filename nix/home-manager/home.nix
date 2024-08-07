@@ -158,6 +158,10 @@
     # gomod2nix.packages.${system}.default
 
     # ruby
+    unstable.arduino-ide
+    unstable.arduino-cli
+
+    unstable.tree-sitter
   ];
 
   programs.rbenv.enable = true;

@@ -20,6 +20,7 @@
     ./virt.nix
     ./sdr.nix
     ./desktop.nix
+    ./power.nix
   ];
 
   nixpkgs = {
@@ -78,6 +79,7 @@
       efiSupport = true;
       device = "nodev";
       useOSProber = true;
+      memtest86.enable = true;
     };
   };
 
@@ -120,6 +122,10 @@
     dpdk
     blackmagic
     saleae-logic
+
+    libimobiledevice
+    ifuse # optional, to mount using 'ifuse'
+    idevicerestore
   ];
 
   environment.enableDebugInfo = true;
@@ -133,12 +139,8 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-    AllowHybridSleep=no
-    AllowSuspendThenHibernate=no
-  '';
+
+  services.usbmuxd.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";

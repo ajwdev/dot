@@ -80,6 +80,10 @@
   };
 
 
+  programs.usbtop.enable = true;
+  programs.ryzen-monitor-ng.enable = true;
+  programs.rog-control-center.enable = true;
+
   programs.ssh.startAgent = true;
   programs.gnupg.agent = {
     enable = true;
@@ -102,4 +106,6 @@
     login.u2fAuth = true;
     sudo.u2fAuth = true;
   };
+
+
 }

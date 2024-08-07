@@ -26,6 +26,7 @@
       curl
       rsync
       screen
+      google-chrome
     ];
   };
 
