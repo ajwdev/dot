@@ -18,6 +18,9 @@
 
     zig.url = "github:mitchellh/zig-overlay";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+
+    # TODO https://stylix.danth.me/installation.html
+    # stylix.url = "github:danth/stylix";
   };
 
   outputs =
