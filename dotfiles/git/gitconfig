@@ -1,6 +1,5 @@
 [core]
-  editor = /usr/bin/vim
-  excludesfile = /Users/andrew/.gitignore_global
+  excludesfile = ~/.gitignore_global
 [user]
   name = Andrew Williams
   email = williams.andrew@gmail.com

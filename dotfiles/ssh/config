@@ -1,6 +1,7 @@
 Host github.com
+    User git
     GSSAPIAuthentication no
-    ForwardX11 no
+    VisualHostKey no
 
 Host tomservo tomservo.local tomservo.localdomain
     User andrew
