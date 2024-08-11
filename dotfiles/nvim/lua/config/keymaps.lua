@@ -20,6 +20,3 @@ vim.keymap.set("c", "w!!", "w !sudo tee % >/dev/null")
 -- Typing is hard
 vim.keymap.set("c", "Qall", "qall")
 vim.keymap.set("c", "Wall", "wall")
-
-
-vim.keymap.set("c", "Chmod", "!chmod +x %")

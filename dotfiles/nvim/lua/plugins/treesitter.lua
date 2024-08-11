@@ -17,8 +17,8 @@ return {
           "ruby",
           "html",
           "css",
-          "markdown",
-          "markdown_inline",
+          -- TODO Check in on this one, it may have an upstream bug
+          --"markdown",
           "racket",
           "sql",
           "bash",

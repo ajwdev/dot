@@ -92,14 +92,3 @@ autocmd BufRead Tiltfile setf=tiltfile
 vim.cmd [[
 autocmd BufRead *kubeconfig set ft=yaml
 ]]
-
--- Copied from https://github.com/tjdevries/config.nvim/blob/c48edd3572c7b68b356ef7c54c41167b1f46e47c/plugin/terminal.lua
--- Set local settings for terminal buffers
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = vim.api.nvim_create_augroup("custom-term-open", {}),
-  callback = function()
-    vim.opt_local.set.number = false
-    vim.opt_local.set.relativenumber = false
-    vim.opt_local.set.scrolloff = 0
-  end,
-})

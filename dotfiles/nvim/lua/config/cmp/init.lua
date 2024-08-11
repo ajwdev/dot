@@ -51,8 +51,8 @@ cmp.setup({
   },
 
   mapping = {
-    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
-    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
+    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
+    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
@@ -61,7 +61,7 @@ cmp.setup({
     ['<C-s>'] = cmp.mapping.complete({
       config = {
         sources = {
-          { name = "luasnip" }
+          { name = "luasnip"}
         }
       }
     }),
@@ -80,8 +80,8 @@ cmp.setup({
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
-        -- elseif has_words_before() then
-        --   cmp.complete()
+      -- elseif has_words_before() then
+      --   cmp.complete()
       else
         fallback()
       end
@@ -105,7 +105,7 @@ cmp.setup({
         buffer = "[Buffer]",
         nvim_lsp = "[LSP]",
         luasnip = "[LuaSnip]",
-        -- TODO What about neodev?
+		-- TODO What about neodev?
         nvim_lua = "[Lua]",
       })
     })
@@ -131,11 +131,10 @@ cmp.setup({
   sources = {
     { name = 'nvim_lsp_signature_help' },
     { name = 'nvim_lsp' },
-    { name = "copilot", },
     { name = 'luasnip' },
     { name = 'nvim_lua' },
     { name = 'path' },
-    -- Don't show buffer sources until I hit five characters
+	-- Don't show buffer sources until I hit five characters
     { name = 'buffer', keyword_length = 5 },
   },
 })

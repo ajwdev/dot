@@ -18,5 +18,3 @@ tls
 upsert
 localhost
 baz
-kubernetes
-unmarshal

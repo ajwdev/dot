@@ -23,11 +23,10 @@ return {
     autocmd BufReadPost fugitive://* set bufhidden=delete
 
     " Add '..' mapping for moving back to parent directory in Fugitive Git browser
-    " autocmd User fugitive
-    "   \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-    "   \   nnoremap <buffer> q :bd<CR> |
-    "   \ endif
-    autocmd User FugitiveTree,FugitiveBlob  nnoremap <buffer> q :bd<CR>
+    autocmd User fugitive
+      \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+      \   nnoremap <buffer> .. :edit %:h<CR> |
+      \ endif
     augroup END
     ]]
   end

@@ -13,13 +13,6 @@ return {
         'vxpm/ferris.nvim',
         opts = {},
       },
-      -- Autoformatting
-      "stevearc/conform.nvim",
-      -- Schema information
-      "b0o/SchemaStore.nvim",
-      -- "williamboman/mason.nvim",
-      -- "williamboman/mason-lspconfig.nvim",
-      -- "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     config = function()
       require 'config.lsp'
