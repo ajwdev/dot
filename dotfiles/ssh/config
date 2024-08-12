@@ -1,0 +1,16 @@
+Host github.com
+    User git
+    GSSAPIAuthentication no
+    VisualHostKey no
+
+Host tomservo tomservo.local tomservo.localdomain
+    User andrew
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host *
+    ForwardAgent yes
+    TCPKeepAlive yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 10
+    VisualHostKey yes
