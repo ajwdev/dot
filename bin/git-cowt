@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+usage() { echo "${0} <branch name>"; }
+
+ECHO=
+
+while getopts "nhv" o; do
+  case "${o}" in
+    n)
+      ECHO="echo DRY RUN: " 
+      ;;
+    v)
+      set -x
+      ;;
+    h)
+      usage
+      exit 0
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+if [ -z ${1} ]; then
+    echo "must specify a ref" >&2
+    exit 1
+fi
+
+wtdir=.worktrees
+
+${ECHO}git worktree add ${wtdir}/${1} ${1}
+
+if [ -z ${ECHO} ]; then
+  echo "Created worktree ${wtdir}/${1}"
+fi

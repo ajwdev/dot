@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+usage() { echo "TODO"; }
+
+ECHO=
+MSG=
+
+while getopts "nhvm:" o; do
+  case "${o}" in
+    n)
+      ECHO="echo DRY RUN:" 
+      ;;
+    v)
+      set -x
+      ;;
+    m)
+        MSG=" ${OPTARG}"
+        ;;
+    h)
+      usage
+      exit 0
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+if [ -z "$(git diff --cached)" ]; then
+    echo "no files staged" >&2
+    exit 1
+fi
+
+if grep -i '^\!WIP' <(git log --pretty=format:%s -1) >/dev/null; then
+    ${ECHO} git commit --amend -C HEAD
+else
+    ${ECHO} git commit -m '!WIP'"${MSG}"
+fi
+

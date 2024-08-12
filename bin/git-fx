@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+usage() { echo "TODO"; }
+
+ECHO=
+FZF=fzf-tmux
+
+while getopts "nhvT" o; do
+  case "${o}" in
+    n)
+      ECHO="echo DRY RUN:" 
+      ;;
+    v)
+      set -x
+      ;;
+    T)
+      # Dont use tmux fzf
+      FZF=fzf
+      ;;
+    h)
+      usage
+      exit 0
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+COMMIT=$(git log --reverse --oneline origin/HEAD..HEAD | fzf-tmux --tac | awk '{print $1}')
+
+if [ -z $COMMIT ]; then
+    return 0
+fi
+
+${ECHO} git commit --fixup $COMMIT
