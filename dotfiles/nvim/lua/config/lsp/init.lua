@@ -175,7 +175,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts("Rename symbol under cursor"))
     buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts("Execute LSP code action"))
-    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts("Format buffer"))
+    buf_set_keymap("n", "<space>F", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", opts("Format buffer"))
   end
 })
 
