@@ -13,6 +13,7 @@ return {
         'vxpm/ferris.nvim',
         opts = {},
       },
+      "b0o/SchemaStore.nvim",
     },
     config = function()
       require 'config.lsp'
