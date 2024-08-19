@@ -7,6 +7,7 @@ return {
   -- TODO What should the type be here?
   { 'cappyzawa/starlark.vim', ft = "starlark" },
   { 'ziglang/zig.vim', ft = "zig" },
+  { 'aliou/bats.vim', ft = "bats" }
   -- { 'uber/prototool', { 'rtp':'vim/prototool' }
   -- { 'vim-ruby/vim-ruby', ft = 'ruby' }
   -- { 'tpope/vim-rbenv', ft = 'ruby' }
