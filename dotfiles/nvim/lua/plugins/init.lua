@@ -168,6 +168,17 @@ return {
   },
 
   {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      highlight = {
+        keyword = "bg",
+        pattern = [[<(KEYWORDS).*:?\s]], -- TODO Still doesnt quite work like I want
+      },
+    }
+  },
+
+  {
     'iamcco/markdown-preview.nvim',
     ft = "markdown",
     build = 'cd app && yarn install',
