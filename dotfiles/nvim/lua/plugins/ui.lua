@@ -16,18 +16,20 @@ return {
     lazy = false,
     dependencies = {
       'kyazdani42/nvim-web-devicons',
+      'AndreM222/copilot-lualine',
     },
     config = function()
       -- TODO I'd like the filename in the winbar to show a path instead of basename
       require('lualine').setup {
         sections = {
+          lualine_b = { 'copilot', 'branch', 'diff', 'diagnostics'},
           lualine_c = {
             {
               'filename',
               -- Absolute path with tilde for home directory
               path = 3,
             }
-          }
+          },
         }
 
       }
