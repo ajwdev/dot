@@ -7,18 +7,6 @@ return {
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
   {
-    'numToStr/Comment.nvim',
-    event = 'BufReadPost',
-    config = function()
-      require('Comment').setup {}
-
-      local ft = require('Comment.ft')
-      -- I want an extra space after the comment delimiter in Lua
-      ft.set("lua", { "-- %s", "--[[ %s ]]--" })
-    end,
-  },
-
-  {
     "lewis6991/gitsigns.nvim",
     config = function()
       require('gitsigns').setup()
