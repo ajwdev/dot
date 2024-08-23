@@ -2,29 +2,88 @@ return {
   {
     'folke/which-key.nvim',
     event = "VeryLazy",
-    priority = 20,
-    init = function()
-      vim.o.timeout = true
-    end,
-    opts = {},
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
   },
+
   {
     "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
+      open_no_results = true,
     },
-    config = function()
-      vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
-      vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
-      vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
-      vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
-      vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
-      -- vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
-    end
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle focus=true filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle focus=true<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+      -- LSP things
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=bottom<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=true win.position=bottom<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cr",
+        "<cmd>Trouble lsp_references toggle focus=true win.position=bottom<cr>",
+        desc = "LSP References (Trouble)",
+      },
+      {
+        "<leader>cd",
+        "<cmd>Trouble lsp_definitions toggle focus=true win.position=bottom<cr>",
+        desc = "LSP Definitions (Trouble)",
+      },
+      {
+        "<leader>cD",
+        "<cmd>Trouble lsp_type_definitions toggle focus=true win.position=bottom<cr>",
+        desc = "LSP Type definitions (Trouble)",
+      },
+      {
+        "<leader>ci",
+        "<cmd>Trouble lsp_implementations toggle focus=true win.position=bottom<cr>",
+        desc = "LSP Implementations (Trouble)",
+      },
+      {
+        "<leader>cci",
+        "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=bottom<cr>",
+        desc = "LSP Incoming Calls (Trouble)",
+      },
+      {
+        "<leader>cco",
+        "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=bottom<cr>",
+        desc = "LSP Outgoing Calls (Trouble)",
+      },
+    },
   },
+
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -34,37 +93,10 @@ return {
       },
       highlight = {
         pattern = [[.*<(KEYWORDS)\s*:?]], -- pattern or table of patterns, used for highlighting (vim regex)
-        keyword = "bg", -- "fg" or "bg" or empty
+        keyword = "bg",                   -- "fg" or "bg" or empty
       },
     }
   },
-  --  {
-  --    "folke/flash.nvim",
-  --    event = "VeryLazy",
-  --    opts = {},
-  --    -- stylua: ignore
-  --    keys = {
-  --      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-  --      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-  --      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-  --      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-  --      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-  --    },
-  -- },
-  --  TODO Super annoying at the moment. Review more later
-  --  {
-  --    "folke/flash.nvim",
-  --    event = "VeryLazy",
-  --    opts = {},
-  --    -- stylua: ignore
-  --    keys = {
-  --      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-  --      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-  --      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-  --      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-  --      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-  --    },
-  -- },
-  -- Make this lazy as it will get required by the LSP configuration
+
   { 'folke/neodev.nvim', lazy = true },
 }

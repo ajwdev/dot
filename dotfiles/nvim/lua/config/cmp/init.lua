@@ -105,7 +105,7 @@ cmp.setup({
         buffer = "[Buffer]",
         nvim_lsp = "[LSP]",
         luasnip = "[LuaSnip]",
-		-- TODO What about neodev?
+        -- TODO What about neodev?
         nvim_lua = "[Lua]",
       })
     })
@@ -129,6 +129,7 @@ cmp.setup({
 
   -- Order of sources matters (highest priority -> lowest)
   sources = {
+    { name = "copilot", group_index = 2 },
     { name = 'nvim_lsp_signature_help' },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },

@@ -7,18 +7,6 @@ return {
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
   {
-    'numToStr/Comment.nvim',
-    event = 'BufReadPost',
-    config = function()
-      require('Comment').setup {}
-
-      local ft = require('Comment.ft')
-      -- I want an extra space after the comment delimiter in Lua
-      ft.set("lua", { "-- %s", "--[[ %s ]]--" })
-    end,
-  },
-
-  {
     "lewis6991/gitsigns.nvim",
     config = function()
       require('gitsigns').setup()
@@ -52,6 +40,28 @@ return {
         },
       })
     end,
+  },
+
+    { -- Collection of various small independent plugins/modules
+    'echasnovski/mini.nvim',
+    config = function()
+      -- Better Around/Inside textobjects
+      --
+      -- Examples:
+      --  - va)  - [V]isually select [A]round [)]paren
+      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
+      --  - ci'  - [C]hange [I]nside [']quote
+      require('mini.ai').setup { n_lines = 500 }
+
+      -- Add/delete/replace surroundings (brackets, quotes, etc.)
+      --
+      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+      -- - sd'   - [S]urround [D]elete [']quotes
+      -- - sr)'  - [S]urround [R]eplace [)] [']
+      -- require('mini.surround').setup()
+
+      require('mini.icons').setup {}
+    end
   },
 
   {
@@ -144,17 +154,6 @@ return {
       })
       vim.keymap.set("c", "AV<CR>", "<cmd>OtherVSplit<CR>", { silent = true })
     end
-  },
-
-  {
-    "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-      highlight = {
-        keyword = "bg",
-        pattern = [[<(KEYWORDS).*:?\s]], -- TODO Still doesnt quite work like I want
-      },
-    }
   },
 
   {
