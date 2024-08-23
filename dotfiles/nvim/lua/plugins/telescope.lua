@@ -1,7 +1,6 @@
 return {
   {
     'nvim-telescope/telescope.nvim',
-    -- tag = '0.1.4',
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
@@ -26,9 +25,14 @@ return {
       require("telescope").setup{
         defaults = {
           mappings = {
+            n = {
+              ['<c-d>'] = require('telescope.actions').delete_buffer
+            },
             i = {
               -- Close telescope window
               ["<esc>"] = actions.close,
+              -- Delete buffer
+              ['<C-d>'] = actions.delete_buffer,
               -- Clear prompt
               ["<C-u>"] = false,
             },
