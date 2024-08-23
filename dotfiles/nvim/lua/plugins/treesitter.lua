@@ -113,6 +113,8 @@ return {
 
             set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
+              ["]r"] = { query = "@x.return", desc = "Next return statement", query_group = "locals" },
+              ["]R"] = { query = "@x.returnargs", desc = "Next return value(s)", query_group = "locals" },
               ["]f"] = "@function.outer",
               ["]c"] = { query = "@class.outer", desc = "Next class start" },
               --
@@ -132,6 +134,8 @@ return {
               ["]c"] = "@class.outer",
             },
             goto_previous_start = {
+              ["[r"] = { query = "@x.return", desc = "Previous return statement", query_group = "locals" },
+              ["[R"] = { query = "@x.returnargs", desc = "Previous return value(s)", query_group = "locals" },
               ["[s"] = { query = "@scope", desc = "Previous scope" },
               ["[f"] = "@function.outer",
               ["[C"] = { query = "@class.outer", desc = "Previous class start" },
