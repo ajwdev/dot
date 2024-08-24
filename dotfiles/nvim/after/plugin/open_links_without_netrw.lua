@@ -1,3 +1,5 @@
+-- TODO I think Neovim 0.10 does this by default now. Consider fixing
+
 local open_command = 'xdg-open'
 if vim.fn.has('mac') == 1 then
   open_command = 'open'
