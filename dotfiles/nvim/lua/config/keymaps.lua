@@ -14,3 +14,9 @@ vim.keymap.set("c", "w!!", "w !sudo tee % >/dev/null")
 -- Typing is hard
 vim.keymap.set("c", "Qall", "qall")
 vim.keymap.set("c", "Wall", "wall")
+
+-- Create blank splits. Similar to my tmux bindings
+vim.keymap.set("n", "<C-w>|", "<cmd>vnew<cr>")
+vim.keymap.set("n", "<C-w>-", "<cmd>new<cr>")
+
+vim.keymap.set("n", "<C-w>gf", "<cmd>vsp<cr><cmd>normal gf<cr>")
