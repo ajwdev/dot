@@ -9,6 +9,10 @@ return {
       },
     },
     config = function()
+      local open_with_trouble = require("trouble.sources.telescope").open
+      -- Use this to add more results without clearing the trouble list
+      -- local add_to_trouble = require("trouble.sources.telescope").add
+
       require('telescope').setup {
         extensions = {
           fzf = {
@@ -26,7 +30,8 @@ return {
         defaults = {
           mappings = {
             n = {
-              ['<c-d>'] = require('telescope.actions').delete_buffer
+              ['<c-d>'] = require('telescope.actions').delete_buffer,
+              ["<c-t>"] = open_with_trouble,
             },
             i = {
               -- Close telescope window
@@ -35,6 +40,7 @@ return {
               ['<C-d>'] = actions.delete_buffer,
               -- Clear prompt
               ["<C-u>"] = false,
+              ["<c-t>"] = open_with_trouble,
             },
           },
         }
