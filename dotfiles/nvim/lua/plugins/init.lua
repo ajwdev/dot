@@ -2,10 +2,6 @@
 -- local WindowStyle = myutil.WindowStyle
 
 return {
-  'nvim-lua/plenary.nvim',
-
-  { "nvim-tree/nvim-web-devicons", lazy = true },
-
   {
     "lewis6991/gitsigns.nvim",
     event = 'BufReadPost',
