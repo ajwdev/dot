@@ -70,9 +70,14 @@ return {
     },
     config = function()
       require("oil").setup {
-        columns = { "icon" },
+        columns = {
+          "icon",
+          "permissions",
+          "size",
+          "mtime",
+        },
         keymaps = {
-          ["<C-v>"] = "actions.select_split",
+          ["<C-v>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
         },
         view_options = {
           show_hidden = true,
