@@ -28,6 +28,16 @@ return {
     cmd = "Trouble",
     keys = {
       {
+        "]d",
+        function() require("trouble").next() end,
+        desc = "Next Item (Trouble)",
+      },
+      {
+        "[d",
+        function() require("trouble").prev() end,
+        desc = "Previous Item (Trouble)",
+      },
+      {
         "<leader>xx",
         "<cmd>Trouble diagnostics toggle focus=true filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
