@@ -49,42 +49,42 @@ return {
       },
       -- LSP things
       {
-        "<leader>cl",
+        "<leader>xl",
         "<cmd>Trouble lsp toggle focus=false win.position=bottom<cr>",
         desc = "LSP Definitions / references / ... (Trouble)",
       },
       {
-        "<leader>cs",
+        "<leader>xs",
         "<cmd>Trouble symbols toggle focus=true win.position=bottom<cr>",
         desc = "Symbols (Trouble)",
       },
       {
-        "<leader>cr",
+        "<leader>xr",
         "<cmd>Trouble lsp_references toggle focus=true win.position=bottom<cr>",
         desc = "LSP References (Trouble)",
       },
       {
-        "<leader>cd",
+        "<leader>xd",
         "<cmd>Trouble lsp_definitions toggle focus=true win.position=bottom<cr>",
         desc = "LSP Definitions (Trouble)",
       },
       {
-        "<leader>cD",
+        "<leader>xD",
         "<cmd>Trouble lsp_type_definitions toggle focus=true win.position=bottom<cr>",
         desc = "LSP Type definitions (Trouble)",
       },
       {
-        "<leader>ci",
+        "<leader>xi",
         "<cmd>Trouble lsp_implementations toggle focus=true win.position=bottom<cr>",
         desc = "LSP Implementations (Trouble)",
       },
       {
-        "<leader>cci",
+        "<leader>xci",
         "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=bottom<cr>",
         desc = "LSP Incoming Calls (Trouble)",
       },
       {
-        "<leader>cco",
+        "<leader>xco",
         "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=bottom<cr>",
         desc = "LSP Outgoing Calls (Trouble)",
       },
