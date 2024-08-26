@@ -6,11 +6,6 @@ local luasnip = require('luasnip')
 local myutil = require("config.util")
 local WindowStyle = myutil.WindowStyle
 
-local has_words_before = function()
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  return (vim.api.nvim_buf_get_lines(0, cursor[1] - 1, cursor[1], true)[1] or ''):sub(cursor[2], cursor[2]):match('%s')
-end
-
 cmp.setup({
   enabled = function()
     local buftype = vim.api.nvim_buf_get_option(0, "buftype")
@@ -51,12 +46,10 @@ cmp.setup({
   },
 
   mapping = {
-    ['<Down>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-    ['<Up>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), {'i'}),
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+    ['<C-k>'] = cmp.mapping.select_prev_item(),
+    ['<C-j>'] = cmp.mapping.select_next_item(),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
     -- Switch to only showing snippet sources
     ['<C-s>'] = cmp.mapping.complete({
       config = {
@@ -71,6 +64,10 @@ cmp.setup({
       behavior = cmp.ConfirmBehavior.Insert,
       select = true,
     }),
+    ['<C-y>'] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Insert,
+      select = true,
+    }),
     ['<CR>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Insert,
       select = true,
@@ -80,8 +77,6 @@ cmp.setup({
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
-      -- elseif has_words_before() then
-      --   cmp.complete()
       else
         fallback()
       end
