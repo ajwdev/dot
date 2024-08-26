@@ -2,12 +2,9 @@ Treesitter
 Postgres
 TODO
 json
-olympus
 EKS
 eks
-nodepool
 gRPC
-TMC
 amd64
 stormking
 aws
@@ -18,3 +15,4 @@ tls
 upsert
 localhost
 baz
+tmux
