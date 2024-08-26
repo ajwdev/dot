@@ -180,22 +180,6 @@ return {
   },
 
   {
-    'nvim-treesitter/nvim-treesitter-refactor',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
-    config = function()
-      require('nvim-treesitter.configs').setup({
-        refactor = {
-          smart_rename = {
-            enable = true,
-            keymaps = { smart_rename = '<leader>Rn' },
-          },
-          highlight_definitions = { enable = false },
-        },
-      })
-    end,
-  },
-
-  {
     'RRethy/nvim-treesitter-endwise',
     event = 'InsertEnter',
     dependencies = 'nvim-treesitter/nvim-treesitter',
