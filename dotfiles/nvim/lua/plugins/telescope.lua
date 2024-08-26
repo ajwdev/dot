@@ -46,10 +46,11 @@ return {
       require('telescope').load_extension('fzf')
 
       local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>T', '<cmd>Telescope<cr>', { silent = true, desc = "Telescope" })
       vim.keymap.set('n', '<C-P>', builtin.find_files, { desc = "Telescope: Find files" })
+      vim.keymap.set('n', '<leader>H', builtin.help_tags, { desc = "Telescope: Help tags" })
       vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = "Telescope: Show buffers" })
       vim.keymap.set('n', '<leader>rg', builtin.live_grep, { desc = "Telescope: Live grep" })
-      vim.keymap.set('n', '<leader>th', builtin.help_tags, { desc = "Telescope: Help tags" })
       vim.keymap.set('n', '<leader>ts', builtin.treesitter, { desc = "Telescope: Tressitter" })
       vim.keymap.set('n', '<leader>lws', builtin.lsp_dynamic_workspace_symbols, { desc = "Telescope: LSP dynamic workspace symbols" })
       vim.keymap.set('n', '<leader>ls', builtin.lsp_document_symbols, { desc = "Telescope: LSP document symbols" })
