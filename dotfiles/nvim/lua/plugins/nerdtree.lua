@@ -1,12 +1,17 @@
 return {
   {
-    -- 'scrooloose/nerdtree',
     'preservim/nerdtree',
-    cmd = {"NERDTreeToggle", "NERDTreeVCS"},
-    init = function ()
-      vim.keymap.set('n', "<F2>", "::NERDTreeToggleVCS<cr>", {silent=true})
-      -- vim.keymap.set('n', "<F2>", ":NERDTreeToggle<cr>", {silent=true})
-
+    dependencies = {
+      -- Adjust color/syntax of open files
+      'tiagofumo/vim-nerdtree-syntax-highlight',
+      -- Delete buffers from NERDTree
+      'PhilRunninger/nerdtree-buffer-ops',
+    },
+    event = { 'BufReadPost', 'BufNew' },
+    config = function()
+      vim.keymap.set('n', "<F2>", "::NERDTreeToggleVCS<cr>", { silent = true })
+    end,
+    init = function()
       vim.cmd [[
       let g:NERDTreeQuitOnOpen = 1
 
@@ -15,19 +20,5 @@ return {
             \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
       ]]
     end
-  },
-    -- Adjust color/syntax of open files
-  {
-    'tiagofumo/vim-nerdtree-syntax-highlight',
-    dependencies = {
-      'preservim/nerdtree',
-    }
-  },
-  -- Delete buffers from NERDTree
-  {
-    'PhilRunninger/nerdtree-buffer-ops',
-    dependencies = {
-      'preservim/nerdtree',
-    }
   },
 }

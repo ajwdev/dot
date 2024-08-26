@@ -1,5 +1,12 @@
 return {
   {
+    'folke/twilight.nvim',
+    keys = {
+      { "<F4>", "<cmd>Twilight<cr>", desc = "Toggle Twightlight" },
+    },
+  },
+
+  {
     'folke/which-key.nvim',
     event = "VeryLazy",
     keys = {
@@ -86,6 +93,7 @@ return {
 
   {
     "folke/todo-comments.nvim",
+    event = 'BufReadPost',
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       keywords = {

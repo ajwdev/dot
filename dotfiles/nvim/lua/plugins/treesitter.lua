@@ -1,8 +1,8 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
+    event = 'BufReadPost',
     build = ':TSUpdate',
-    event = { 'BufReadPost', 'BufNewFile' },
     config = function()
       require('nvim-treesitter.configs').setup({
         ensure_installed = {
@@ -59,6 +59,7 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
     dependencies = 'nvim-treesitter/nvim-treesitter',
+    event = 'BufReadPost',
     config = function()
       require('nvim-treesitter.configs').setup({
         textobjects = {
@@ -196,6 +197,7 @@ return {
 
   {
     'RRethy/nvim-treesitter-endwise',
+    event = 'InsertEnter',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('nvim-treesitter.configs').setup({
@@ -208,6 +210,7 @@ return {
 
   {
     'RRethy/nvim-treesitter-textsubjects',
+    event = 'BufReadPost',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('nvim-treesitter.configs').setup({
@@ -226,6 +229,7 @@ return {
 
   {
     'HiPhish/rainbow-delimiters.nvim',
+    event = 'BufReadPost',
     url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()

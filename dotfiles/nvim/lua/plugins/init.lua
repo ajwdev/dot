@@ -8,6 +8,7 @@ return {
 
   {
     "lewis6991/gitsigns.nvim",
+    event = 'BufReadPost',
     config = function()
       require('gitsigns').setup()
     end,
@@ -82,14 +83,17 @@ return {
   {
     'yorickpeterse/nvim-window',
     url = 'https://gitlab.com/yorickpeterse/nvim-window.git',
-    config = function()
-      vim.keymap.set('n', "<leader>w", require('nvim-window').pick, { silent = true })
-    end,
+    keys = {
+      { "<leader>w", function() require('nvim-window').pick() end, desc = "Pick a window" },
+    },
   },
 
   {
     'stevearc/oil.nvim',
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { "-", mode = "n", function() require("oil").toggle_float() end, { desc = "Open parent directory" } },
+    },
     config = function()
       require("oil").setup {
         columns = { "icon" },
@@ -101,20 +105,11 @@ return {
         },
       }
     end,
-    keys = {
-      {
-        "<F4>",
-        mode = "n",
-        function()
-          require("oil").toggle_float()
-        end,
-        { desc = "Open parent directory" }
-      }
-    },
   },
 
   {
     'rgroli/other.nvim',
+    cmd = { "OtherVSplit", "Other", "OtherSplit" },
     config = function()
       require("other-nvim").setup({
         showMissingFiles = false,
@@ -152,6 +147,7 @@ return {
           -- minHeight = 2
         },
       })
+
       vim.keymap.set("c", "AV<CR>", "<cmd>OtherVSplit<CR>", { silent = true })
     end
   },
@@ -165,32 +161,20 @@ return {
   {
     'mbbill/undotree',
     cmd = "UndotreeToggle",
-    init = function()
-      vim.keymap.set('n', "<F3>", "<cmd>UndotreeToggle<cr>", { silent = true })
-    end
+    keys = {
+      { "<F3>", "<cmd>UndotreeToggle<cr>", silent = true, desc = "Join Toggle" },
+    },
   },
 
+  -- TODO Figure out if I need this. Pretty sure its just to open qfuix file
+  -- in a  split
   {
     'yssl/QFEnter',
     event = "BufEnter quickfix"
   },
 
   {
-    'jbyuki/venn.nvim',
-    cmd = "VBox",
-  },
-
-  {
-    "b0o/incline.nvim",
-    event = "VeryLazy",
-    config = function()
-      require('incline').setup()
-    end
-  },
-
-  {
     'glacambre/firenvim',
-
     -- Lazy load firenvim
     -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
     lazy = not vim.g.started_by_firenvim,
@@ -198,4 +182,9 @@ return {
       vim.fn["firenvim#install"](0)
     end
   },
+
+  {
+    "RRethy/vim-illuminate",
+    event = { 'BufReadPost', 'BufNew' },
+  }
 }

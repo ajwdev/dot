@@ -4,6 +4,7 @@ return {
   --
   {
     'neovim/nvim-lspconfig',
+    event = 'BufReadPost',
     dependencies = {
       -- Adds a lightblub in the line number column when an LSP code action is available
       'kosayoda/nvim-lightbulb',
@@ -18,7 +19,6 @@ return {
     config = function()
       require 'config.lsp'
     end,
-    event = 'BufReadPost',
   },
 
   --
@@ -26,6 +26,7 @@ return {
   --
   {
     'hrsh7th/nvim-cmp',
+    event = 'InsertEnter',
     dependencies = {
       -- Highlight/bold the current argument of the completion
       'hrsh7th/cmp-nvim-lsp-signature-help',
@@ -47,6 +48,5 @@ return {
     config = function()
       require 'config.cmp'
     end,
-    event = 'InsertEnter',
   },
 }

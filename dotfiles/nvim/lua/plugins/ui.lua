@@ -2,9 +2,9 @@
 return {
   {
     'RRethy/nvim-base16',
-    lazy = false, -- Make its loaded during startup
+    lazy = false,    -- Make its loaded during startup
     priority = 1000, -- Make sure its loaded before everything else
-    config = function ()
+    config = function()
       -- TODO Probably a better way to do this
       vim.cmd "colorscheme base16-eighties"
       -- Make the line number standout so its easier to find
@@ -22,7 +22,7 @@ return {
       -- TODO I'd like the filename in the winbar to show a path instead of basename
       require('lualine').setup {
         sections = {
-          lualine_b = { 'copilot', 'branch', 'diff', 'diagnostics'},
+          lualine_b = { 'copilot', 'branch', 'diff', 'diagnostics' },
           lualine_c = {
             {
               'filename',
@@ -35,20 +35,12 @@ return {
       }
     end
   },
-  {
-    'MunifTanjim/nui.nvim',
-    lazy = true
-  },
-  {
-    'folke/twilight.nvim',
-    keys = {
-      { "<F5>", "<cmd>Twilight<cr>", desc = "Toggle Twightlight" },
-    },
-  },
+
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
   },
+
   {
     'j-hui/fidget.nvim',
     event = 'BufReadPost',
@@ -60,5 +52,13 @@ return {
         },
       }
     end,
+  },
+
+  {
+    "b0o/incline.nvim",
+    event = "VeryLazy",
+    config = function()
+      require('incline').setup()
+    end
   },
 }
