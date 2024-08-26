@@ -36,7 +36,6 @@ return {
       'hrsh7th/cmp-nvim-lsp',
       -- Completions from filesystem paths
       'hrsh7th/cmp-path',
-      -- Completions for the Neovim Lua API (also see neodev)
       'hrsh7th/cmp-nvim-lua',
       'windwp/nvim-autopairs',
       'onsails/lspkind.nvim',

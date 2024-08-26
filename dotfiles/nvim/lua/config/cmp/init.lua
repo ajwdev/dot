@@ -105,7 +105,6 @@ cmp.setup({
         buffer = "[Buffer]",
         nvim_lsp = "[LSP]",
         luasnip = "[LuaSnip]",
-        -- TODO What about neodev?
         nvim_lua = "[Lua]",
       })
     })
