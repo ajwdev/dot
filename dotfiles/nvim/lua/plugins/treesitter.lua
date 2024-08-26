@@ -1,8 +1,8 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
+    event = 'BufReadPost',
     build = ':TSUpdate',
-    event = { 'BufReadPost', 'BufNewFile' },
     config = function()
       require('nvim-treesitter.configs').setup({
         ensure_installed = {
@@ -59,6 +59,7 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
     dependencies = 'nvim-treesitter/nvim-treesitter',
+    event = 'BufReadPost',
     config = function()
       require('nvim-treesitter.configs').setup({
         textobjects = {
@@ -150,10 +151,10 @@ return {
             -- Use if you want more granular movements
             -- Make it even more gradual by adding multiple queries and regex.
             goto_next = {
-              ["]d"] = "@conditional.outer",
+              ["]b"] = "@conditional.outer",
             },
             goto_previous = {
-              ["[d"] = "@conditional.outer",
+              ["[b"] = "@conditional.outer",
             },
           },
         },
@@ -163,12 +164,12 @@ return {
 
       -- Repeat movement with ; and ,
       -- ensure ; goes forward and , goes backward regardless of the last direction
-      vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
+      -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
+      -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
 
       -- vim way: ; goes to the direction you were moving.
-      -- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
-      -- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+      vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
 
       -- Optionally, make builtin f, F, t, T also repeatable with ; and ,
       vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
@@ -179,23 +180,8 @@ return {
   },
 
   {
-    'nvim-treesitter/nvim-treesitter-refactor',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
-    config = function()
-      require('nvim-treesitter.configs').setup({
-        refactor = {
-          smart_rename = {
-            enable = true,
-            keymaps = { smart_rename = '<leader>Rn' },
-          },
-          highlight_definitions = { enable = false },
-        },
-      })
-    end,
-  },
-
-  {
     'RRethy/nvim-treesitter-endwise',
+    event = 'InsertEnter',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('nvim-treesitter.configs').setup({
@@ -208,6 +194,7 @@ return {
 
   {
     'RRethy/nvim-treesitter-textsubjects',
+    event = 'BufReadPost',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       require('nvim-treesitter.configs').setup({
@@ -226,6 +213,7 @@ return {
 
   {
     'HiPhish/rainbow-delimiters.nvim',
+    event = 'BufReadPost',
     url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git',
     dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()

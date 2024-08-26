@@ -4,6 +4,7 @@ return {
   --
   {
     'neovim/nvim-lspconfig',
+    event = 'BufReadPost',
     dependencies = {
       -- Adds a lightblub in the line number column when an LSP code action is available
       'kosayoda/nvim-lightbulb',
@@ -18,7 +19,6 @@ return {
     config = function()
       require 'config.lsp'
     end,
-    event = 'BufReadPost',
   },
 
   --
@@ -26,6 +26,7 @@ return {
   --
   {
     'hrsh7th/nvim-cmp',
+    event = 'InsertEnter',
     dependencies = {
       -- Highlight/bold the current argument of the completion
       'hrsh7th/cmp-nvim-lsp-signature-help',
@@ -35,7 +36,6 @@ return {
       'hrsh7th/cmp-nvim-lsp',
       -- Completions from filesystem paths
       'hrsh7th/cmp-path',
-      -- Completions for the Neovim Lua API (also see neodev)
       'hrsh7th/cmp-nvim-lua',
       'windwp/nvim-autopairs',
       'onsails/lspkind.nvim',
@@ -47,6 +47,5 @@ return {
     config = function()
       require 'config.cmp'
     end,
-    event = 'InsertEnter',
   },
 }

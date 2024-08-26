@@ -1,8 +1,5 @@
 local myutil = require("config.util")
 
--- Must be defined before the remaining LSP config per the docs
-require("neodev").setup {}
-
 local lspconfig = require('lspconfig')
 local util = require('lspconfig/util')
 
