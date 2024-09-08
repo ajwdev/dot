@@ -89,6 +89,17 @@ lspconfig.nil_ls.setup {
       },
 }
 
+lspconfig.yamlls.setup {
+  settings = {
+    yaml = {
+      schemas = {
+        ["https://api.spinnaker.mgmt.netflix.net/managed/delivery-configs/schema"] = "spinnaker.yml",
+      },
+    }
+  }
+}
+
+
 lspconfig.clangd.setup {}
 lspconfig.solargraph.setup {}
 lspconfig.bashls.setup {}
