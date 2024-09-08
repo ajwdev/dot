@@ -1,32 +1,8 @@
 live_config_reload = true
 
-[colors.bright]
-black = "0x4f4f4f"
-blue = "0x7cb8bb"
-cyan = "0x93e0e3"
-green = "0x5f7f5f"
-magenta = "0xdc8cc3"
-red = "0xdca3a3"
-white = "0xdcdccc"
-yellow = "0xe0cf9f"
-
-[colors.cursor]
-cursor = "0xdcdccc"
-text = "0x3f3f3f"
-
-[colors.normal]
-black = "0x3f3f3f"
-blue = "0x7cb8bb"
-cyan = "0x93e0e3"
-green = "0x5f7f5f"
-magenta = "0xdc8cc3"
-red = "0xdca3a3"
-white = "0xdcdccc"
-yellow = "0xe0cf9f"
-
-[colors.primary]
-background = "0x3f3f3f"
-foreground = "0xdcdccc"
+import = [
+  "~/.config/alacritty/base16-eighties.toml"
+]
 
 [font]
 size = 14.0
