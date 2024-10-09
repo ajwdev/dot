@@ -108,6 +108,7 @@ lspconfig.tilt_ls.setup{}
 lspconfig.racket_langserver.setup {}
 lspconfig.tilt_ls.setup {}
 lspconfig.ruby_lsp.setup {}
+lspconfig.zls.setup {}
 
 require("inlay-hints").setup {
   only_current_line = true,
@@ -126,7 +127,7 @@ require("config.lsp.lightbulb")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- This should match the configured servers above
-local servers = { "gopls", "rust_analyzer", "tsserver" , "clangd" }
+local servers = { "gopls", "rust_analyzer", "ts_ls" , "clangd", "zls" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     capabilties = capabilities,
