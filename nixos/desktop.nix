@@ -59,6 +59,7 @@
   # Enable CUPS
   services.printing.enable = true;
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 
   # https://nixos.wiki/wiki/Fonts
   fonts.packages = with pkgs; [
@@ -97,6 +98,7 @@
       enable = true;
       addresses = true;
       workstation = true;
+      userServices = true;
     };
   };
 
