@@ -17,6 +17,8 @@
     blender-hip
     unstable.obsidian
     unstable.signal-desktop
+
+    playerctl
   ];
 
   # Enable a windowing system. This also applies to Wayland despite the name
