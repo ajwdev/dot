@@ -17,6 +17,8 @@
     blender-hip
     unstable.obsidian
     unstable.signal-desktop
+
+    playerctl
   ];
 
   # Enable a windowing system. This also applies to Wayland despite the name
@@ -57,6 +59,7 @@
   # Enable CUPS
   services.printing.enable = true;
   hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
 
   # https://nixos.wiki/wiki/Fonts
   fonts.packages = with pkgs; [
@@ -95,6 +98,7 @@
       enable = true;
       addresses = true;
       workstation = true;
+      userServices = true;
     };
   };
 

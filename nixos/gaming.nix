@@ -12,6 +12,8 @@
     ckan
     protonup-qt
     vulkan-tools
+
+    sunshine
   ];
 
   programs.steam = {
@@ -31,6 +33,13 @@
 
   programs.gamemode.enable = true;
   programs.gamescope.enable = true;
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
 
   # This was needed to troubleshoot a crash. Not sure its needed anymore
   # environment.variables = {
