@@ -5,5 +5,5 @@
   pkgs ? (import ../nixpkgs.nix) { },
 }:
 {
-  # example = pkgs.callPackage ./example { };
+  # my-neovim = pkgs.callPackage ./my-neovim.nix { };
 }

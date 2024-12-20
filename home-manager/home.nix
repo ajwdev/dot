@@ -32,7 +32,7 @@
       outputs.overlays.unstable-packages
 
       # You can also add overlays exported from other flakes:
-      # inputs.neovim-nightly-overlay.overlays.default
+      inputs.neovim-nightly-overlay.overlays.default
 
       inputs.zig.overlays.default
 
@@ -104,6 +104,7 @@
     tmux
     # neovim
     inputs.neovim-nightly-overlay.packages.${pkgs.system}.default
+    # my-neovim
 
     yubikey-manager
 
@@ -157,6 +158,8 @@
     # gotools
     go-tools
     # gomod2nix.packages.${system}.default
+
+    nodejs
 
     # ruby
     unstable.arduino-ide
