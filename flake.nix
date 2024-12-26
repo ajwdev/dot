@@ -16,6 +16,9 @@
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-darwin.url = "github:LnL7/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     # TODO Look into using these to cleanup
     # flake-utils.url = "github:numtide/flake-utils";
     # flake-compat = {
@@ -47,6 +50,7 @@
       nixpkgs-unstable,
       home-manager,
       nixos,
+      nix-darwin,
       ...
     }@inputs:
     let
@@ -130,5 +134,28 @@
           ];
         };
       };
-    };
+
+      darwinConfigurations = {
+        "crow" = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./darwin/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              home-manager.backupFileExtension = "bak";
+              users.users.andrew = {
+                name = nixpkgs.lib.mkForce "andrew";
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
+          ];
+        };
+      };
+  };
 }

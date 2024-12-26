@@ -18,6 +18,7 @@
     firefox
     brave 
     google-chrome
+    ghostty
   ];
 
   # Enable a windowing system. This also applies to Wayland despite the name

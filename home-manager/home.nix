@@ -23,9 +23,12 @@
     ./dotfiles.nix
   ];
 
-  home = {
-    username = "andrew";
-    homeDirectory = "/home/andrew";
+
+  home = rec {
+    username = lib.mkDefault "andrew";
+    homeDirectory = lib.mkDefault (if pkgs.stdenv.isDarwin 
+      then "/Users/${username.content}" 
+      else "/home/${username.content}");
   };
 
   # TODO
@@ -86,8 +89,6 @@
     ldns # replacement of `dig`, it provide the command `drill`
     ipcalc # it is a calculator for the IPv4/v6 addresses
     # system call monitoring
-    strace # system call monitoring
-    ltrace # library call monitoring
     lsof # list open files
     git
     wget
@@ -116,10 +117,8 @@
 
     # Dev
     gnumake
-    gdb
     openssl
     # https://github.com/mitchellh/zig-overlay/blob/d07b6a999f051b23ae7704f9d63a966b4b0284d1/flake.nix#L56-L60
-    #zigpkgs.master
     # Rust
     rustup
     # golang
@@ -130,12 +129,16 @@
     # gomod2nix.packages.${system}.default
 
     # ruby
-    unstable.arduino-ide
-    unstable.arduino-cli
+    # unstable.arduino-ide
+    # unstable.arduino-cli
 
     unstable.tree-sitter
 
-    ghostty
+    # ghostty
+    # TODO Linux specific
+    # gdb
+    # strace # system call monitoring
+    # ltrace # library call monitoring
   ];
 
   programs.rbenv.enable = true;
