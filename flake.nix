@@ -17,7 +17,8 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     zig.url = "github:mitchellh/zig-overlay";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+
+    myneovim.url = "./nix/flakes/neovim";
 
     # TODO https://stylix.danth.me/installation.html
     # stylix.url = "github:danth/stylix";
