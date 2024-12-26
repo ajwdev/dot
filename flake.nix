@@ -15,9 +15,10 @@
 
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     zig.url = "github:mitchellh/zig-overlay";
-
     myneovim.url = "./nix/flakes/neovim";
 
     # TODO https://stylix.danth.me/installation.html
@@ -31,6 +32,7 @@
       nixpkgs-unstable,
       home-manager,
       nixos,
+      nix-darwin,
       ...
     }@inputs:
     let
@@ -85,6 +87,23 @@
         };
       };
 
+      darwinConfigurations = {
+        "crow" = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = [
+            ./darwin/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              # home-manager.backupFileExtension = "bak";
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
+          ];
+        };
+      };
+
       # Standalone home-manager configuration entrypoint
       # Available through 'home-manager --flake .#your-username@your-hostname'
       homeConfigurations = {
@@ -98,6 +117,16 @@
             ./home-manager/home.nix
           ];
         };
+        "andrew@crow" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            # > Our main home-manager configuration file <
+            ./home-manager/home.nix
+          ];
+        };
       };
-    };
+  };
 }

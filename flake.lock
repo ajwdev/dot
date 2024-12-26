@@ -444,11 +444,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-eHYupOrCAj6uNE5ztURbJ6sy4OtZNOhyQe7ik6z0I3w=",
-        "path": "/nix/store/i5y5i042f6zs4kmn64nszzfi7bbirrvb-source/nix/flakes/neovim",
+        "path": "/nix/store/7dw33inid6m6s997zchizdk5sjvawabw-source/nix/flakes/neovim",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i5y5i042f6zs4kmn64nszzfi7bbirrvb-source/nix/flakes/neovim",
+        "path": "/nix/store/7dw33inid6m6s997zchizdk5sjvawabw-source/nix/flakes/neovim",
         "type": "path"
       }
     },
@@ -512,6 +512,26 @@
       "original": {
         "owner": "oxalica",
         "repo": "nil",
+        "type": "github"
+      }
+    },
+    "nix-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733570843,
+        "narHash": "sha256-sQJAxY1TYWD1UyibN/FnN97paTFuwBw3Vp3DNCyKsMk=",
+        "owner": "LnL7",
+        "repo": "nix-darwin",
+        "rev": "a35b08d09efda83625bef267eb24347b446c80b8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LnL7",
+        "repo": "nix-darwin",
         "type": "github"
       }
     },
@@ -688,6 +708,7 @@
         "hardware": "hardware",
         "home-manager": "home-manager",
         "myneovim": "myneovim",
+        "nix-darwin": "nix-darwin",
         "nixos": "nixos",
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-unstable": "nixpkgs-unstable",
