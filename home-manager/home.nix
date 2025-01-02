@@ -30,6 +30,7 @@
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
+      outputs.overlays.ghostty
 
       inputs.myneovim.overlays.default
 
@@ -164,6 +165,8 @@
     unstable.arduino-cli
 
     unstable.tree-sitter
+
+    ghostty
   ];
 
   programs.rbenv.enable = true;

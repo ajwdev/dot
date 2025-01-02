@@ -38,4 +38,6 @@
       config.allowUnfree = true;
     };
   };
+
+  ghostty = inputs.ghostty.overlays.default;
 }
