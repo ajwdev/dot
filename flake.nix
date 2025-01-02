@@ -16,9 +16,10 @@
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    zig.url = "github:mitchellh/zig-overlay";
-
     myneovim.url = "./nix/flakes/neovim";
+
+    zig.url = "github:mitchellh/zig-overlay";
+    ghostty.url = "github:ghostty-org/ghostty";
 
     # TODO https://stylix.danth.me/installation.html
     # stylix.url = "github:danth/stylix";
