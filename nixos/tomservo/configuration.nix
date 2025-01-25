@@ -14,61 +14,14 @@
 
     ./hardware-configuration.nix
 
-    ./common.nix
-    ./users.nix
-    ./gaming.nix
-    ./virt.nix
-    ./sdr.nix
-    ./desktop.nix
-    ./power.nix
+    ../common.nix
+    ../users.nix
+    ../desktop.nix
+    ../gaming.nix
+    ../virt.nix
+    ../sdr.nix
+    ../power.nix
   ];
-
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
-
-      # You can also add overlays exported from other flakes:
-      # inputs.neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-    };
-  };
-
-  nix = {
-    # This will add each flake input as a registry
-    # To make nix3 commands consistent with your flake
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-
-    # This will additionally add your inputs to the system's legacy channels
-    # Making legacy nix commands consistent as well, awesome!
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
-
-    settings = {
-      # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes";
-      trusted-users = [
-        "root"
-        "andrew"
-        "@wheel"
-      ];
-      auto-optimise-store = true;
-    };
-  };
 
   boot.loader = {
     efi = {
@@ -80,6 +33,7 @@
       device = "nodev";
       useOSProber = true;
       memtest86.enable = true;
+      configurationLimit = 30;
     };
   };
 
@@ -118,7 +72,6 @@
     ghidra
     wofi
     # asg
-    fuse
     dpdk
     blackmagic
     saleae-logic
@@ -126,21 +79,29 @@
     libimobiledevice
     ifuse # optional, to mount using 'ifuse'
     idevicerestore
+
+    k3b
+    cdrkit
+    makemkv
+    handbrake
+    discord
+    blender-hip
   ];
 
   environment.enableDebugInfo = true;
-
   virtualisation.docker.enable = true;
   services.flatpak.enable = true;
+
+  services.usbmuxd.enable = true;
+
+  programs.ryzen-monitor-ng.enable = true;
+  programs.rog-control-center.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-
-  services.usbmuxd.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";
