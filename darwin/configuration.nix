@@ -1,8 +1,16 @@
-{ inputs, outputs, pkgs, lib, config, ... }:
+{ inputs, outputs, lib, ... }:
 {
-  users.users.andrew = {
-    name = "andrew";
-    home = "/Users/andrew";
+  # users.users.${user} = rec {
+  #   home = "/Users/${user}";
+  # };
+  users.users = {
+    # XXX Hacky, but seems to work. Make this better
+    "andrewwilliams" = {
+      home = "/Users/andrewwilliams";
+    };
+    "andrew" = {
+      home = "/Users/andrew";
+    };
   };
 
   nixpkgs = {

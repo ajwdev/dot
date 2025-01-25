@@ -160,6 +160,57 @@
             }
           ];
         };
+
+        "work" = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./darwin/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              home-manager.backupFileExtension = "bak";
+              users.users.andrewwilliams = {
+                name = nixpkgs.lib.mkForce "andrewwilliams";
+              };
+              home-manager.users.andrewwilliams = import ./home-manager/home.nix;
+            }
+          ];
+        };
+      };
+
+      homeConfigurations = {
+        "coder" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ({ pkgs, ... }: {
+              nixpkgs = {
+                overlays = [
+                  outputs.overlays.additions
+                  outputs.overlays.modifications
+                  outputs.overlays.unstable-packages
+                  outputs.overlays.my-neovim-env
+                ];
+
+                config = {
+                  allowUnfree = true;
+                };
+              };
+
+              home.username = pkgs.lib.mkForce "andrewwilliams";
+              # We always this home directory for whatever reason :shrug:
+              home.homeDirectory = pkgs.lib.mkForce "/home/coder";
+            })
+            ./home-manager/home.nix
+          ];
+        };
       };
   };
 }
