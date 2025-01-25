@@ -81,22 +81,37 @@
           };
           modules = [
             # > Our main nixos configuration file <
-            ./nixos/configuration.nix
+            ./nixos/tomservo/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
           ];
         };
-      };
 
-      # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager --flake .#your-username@your-hostname'
-      homeConfigurations = {
-        "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = {
+        "bender" = nixpkgs.lib.nixosSystem {
+          specialArgs = {
             inherit inputs outputs;
           };
           modules = [
-            # > Our main home-manager configuration file <
-            ./home-manager/home.nix
+            ./nixos/bender/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # arguments to home.nix
+            }
           ];
         };
       };
