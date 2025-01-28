@@ -168,5 +168,11 @@ return {
   {
     "RRethy/vim-illuminate",
     event = { 'BufReadPost', 'BufNew' },
+  },
+  {
+    "nvzone/typr",
+    dependencies = "nvzone/volt",
+    opts = {},
+    cmd = { "Typr", "TyprStats" },
   }
 }
