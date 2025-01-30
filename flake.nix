@@ -16,10 +16,25 @@
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    myneovim.url = "./nix/flakes/neovim";
+    # TODO Look into using these to cleanup
+    # flake-utils.url = "github:numtide/flake-utils";
+    # flake-compat = {
+    #   url = "github:edolstra/flake-compat";
+    #   flake = false;
+    # };
 
-    zig.url = "github:mitchellh/zig-overlay";
+    neovim-nightly = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      # XXX Neovim nightly cannot follow stable, though I'm not sure this is
+      # right either. Just comment out for now
+      # https://github.com/nix-community/neovim-nightly-overlay/issues/616
+      # inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     ghostty.url = "github:ghostty-org/ghostty";
+    zig.url = "github:mitchellh/zig-overlay";
+    nil.url = "github:oxalica/nil";
+    zls.url = "github:zigtools/zls";
 
     # TODO https://stylix.danth.me/installation.html
     # stylix.url = "github:danth/stylix";

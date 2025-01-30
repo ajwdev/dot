@@ -8,11 +8,11 @@
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
-      outputs.overlays.ghostty
-      inputs.zig.overlays.default
-      inputs.myneovim.overlays.default
+      outputs.overlays.my-neovim-env
 
       # You can also add overlays exported from other flakes:
+      inputs.ghostty.overlays.default
+      inputs.zig.overlays.default
       # inputs.neovim-nightly-overlay.overlays.default
 
       # Or define it inline, for example:
