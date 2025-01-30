@@ -1,6 +1,4 @@
-{
-  pkgs ? import <nixpkgs> { },
-}:
+{ pkgs, nightlyNvim, ... }:
 let
   neovimRuntimeDependencies = pkgs.symlinkJoin {
     name = "neovimRuntimeDependencies";
@@ -11,7 +9,7 @@ let
       nodejs
 
       rust-analyzer # TODO Can this be nightly?
-      bash-language-server
+      unstable.bash-language-server
       lua-language-server
       nil # nix lsp
       gopls
@@ -28,7 +26,7 @@ let
   #   ];
   # };
 
-  myNeovimUnwrapped = pkgs.wrapNeovim pkgs.neovim {
+  myNeovimUnwrapped = pkgs.unstable.wrapNeovim nightlyNvim {
     # configure = {
     #   # inherit customRC;
     #   packages.all.start = plugins;
@@ -36,13 +34,19 @@ let
   };
 
 in
-rec {
-  "myNeovim" = pkgs.writeShellApplication {
-    name = "nvim";
-    runtimeInputs = [ neovimRuntimeDependencies ];
-    text = ''
-      exec ${myNeovimUnwrapped}/bin/nvim "$@"
-    '';
-  };
-  "default" = myNeovim;
+# "myNeovim" = pkgs.writeShellApplication {
+#   name = "nvim";
+#   runtimeInputs = [ neovimRuntimeDependencies ];
+#   text = ''
+#     exec ${myNeovimUnwrapped}/bin/nvim "$@"
+#   '';
+# };
+# "default" = myNeovim;
+
+pkgs.writeShellApplication {
+  name = "nvim";
+  runtimeInputs = [ neovimRuntimeDependencies ];
+  text = ''
+    exec ${myNeovimUnwrapped}/bin/nvim "$@"
+  '';
 }
