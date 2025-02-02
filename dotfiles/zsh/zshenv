@@ -22,4 +22,4 @@ export PATH=$HOME/bin:/opt/wasi-sdk-12.0/bin:/usr/local/sbin:/usr/local/bin:$HOM
 
 [[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
 
-if [ -e /home/andrew/.nix-profile/etc/profile.d/nix.sh ]; then . /home/andrew/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

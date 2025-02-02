@@ -1,6 +1,6 @@
 # This file defines overlays
 { inputs, ... }:
-{
+rec {
   # This one brings our custom packages from the 'pkgs' directory
   additions = final: _prev: import ../pkgs { pkgs = final; };
 
@@ -36,6 +36,16 @@
     unstable = import inputs.nixpkgs-unstable {
       system = final.system;
       config.allowUnfree = true;
+    };
+  };
+
+  nil = inputs.nil.overlays.nil;
+  zls = inputs.zls.overlays.zls;
+
+  my-neovim-env = final: prev: {
+    neovim = import ./my-neovim.nix {
+      pkgs = final;
+      nightlyNvim = inputs.neovim-nightly.packages.${final.system}.default;
     };
   };
 }

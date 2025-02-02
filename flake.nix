@@ -16,9 +16,28 @@
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    zig.url = "github:mitchellh/zig-overlay";
+    nix-darwin.url = "github:LnL7/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    myneovim.url = "./nix/flakes/neovim";
+    # TODO Look into using these to cleanup
+    # flake-utils.url = "github:numtide/flake-utils";
+    # flake-compat = {
+    #   url = "github:edolstra/flake-compat";
+    #   flake = false;
+    # };
+
+    neovim-nightly = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      # XXX Neovim nightly cannot follow stable, though I'm not sure this is
+      # right either. Just comment out for now
+      # https://github.com/nix-community/neovim-nightly-overlay/issues/616
+      # inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    ghostty.url = "github:ghostty-org/ghostty";
+    zig.url = "github:mitchellh/zig-overlay";
+    nil.url = "github:oxalica/nil";
+    zls.url = "github:zigtools/zls";
 
     # TODO https://stylix.danth.me/installation.html
     # stylix.url = "github:danth/stylix";
@@ -31,6 +50,7 @@
       nixpkgs-unstable,
       home-manager,
       nixos,
+      nix-darwin,
       ...
     }@inputs:
     let
@@ -80,24 +100,62 @@
           };
           modules = [
             # > Our main nixos configuration file <
-            ./nixos/configuration.nix
+            ./nixos/tomservo/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
+          ];
+        };
+
+        "bender" = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/bender/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # arguments to home.nix
+            }
           ];
         };
       };
 
-      # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager --flake .#your-username@your-hostname'
-      homeConfigurations = {
-        "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = {
+      darwinConfigurations = {
+        "crow" = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = {
             inherit inputs outputs;
           };
           modules = [
-            # > Our main home-manager configuration file <
-            ./home-manager/home.nix
+            ./darwin/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              home-manager.backupFileExtension = "bak";
+              users.users.andrew = {
+                name = nixpkgs.lib.mkForce "andrew";
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
           ];
         };
       };
-    };
+  };
 }

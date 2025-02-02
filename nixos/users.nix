@@ -3,6 +3,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.andrew = {
     isNormalUser = true;
+    description = "Andrew Williams";
     uid = 1000;
     extraGroups = [
       "andrew"
@@ -26,7 +27,6 @@
       curl
       rsync
       screen
-      google-chrome
     ];
   };
 

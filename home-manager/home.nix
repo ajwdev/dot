@@ -23,40 +23,12 @@
     ./dotfiles.nix
   ];
 
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.unstable-packages
 
-      inputs.myneovim.overlays.default
-
-      # You can also add overlays exported from other flakes:
-      # inputs.neovim-nightly-overlay.overlays.default
-
-      inputs.zig.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = (_: true);
-    };
-  };
-
-  home = {
-    username = "andrew";
-    homeDirectory = "/home/andrew";
+  home = rec {
+    username = lib.mkDefault "andrew";
+    homeDirectory = lib.mkDefault (if pkgs.stdenv.isDarwin 
+      then "/Users/${username.content}" 
+      else "/home/${username.content}");
   };
 
   # TODO
@@ -117,8 +89,6 @@
     ldns # replacement of `dig`, it provide the command `drill`
     ipcalc # it is a calculator for the IPv4/v6 addresses
     # system call monitoring
-    strace # system call monitoring
-    ltrace # library call monitoring
     lsof # list open files
     git
     wget
@@ -141,15 +111,14 @@
     # misc
     cowsay
     tree
+    glow
 
     httpie
 
     # Dev
     gnumake
-    gdb
     openssl
     # https://github.com/mitchellh/zig-overlay/blob/d07b6a999f051b23ae7704f9d63a966b4b0284d1/flake.nix#L56-L60
-    zigpkgs.master
     # Rust
     rustup
     # golang
@@ -160,10 +129,16 @@
     # gomod2nix.packages.${system}.default
 
     # ruby
-    unstable.arduino-ide
-    unstable.arduino-cli
+    # unstable.arduino-ide
+    # unstable.arduino-cli
 
     unstable.tree-sitter
+
+    # ghostty
+    # TODO Linux specific
+    # gdb
+    # strace # system call monitoring
+    # ltrace # library call monitoring
   ];
 
   programs.rbenv.enable = true;

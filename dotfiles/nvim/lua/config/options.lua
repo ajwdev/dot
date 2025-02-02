@@ -6,6 +6,9 @@
 
 local opt = vim.opt
 
+-- Force 24bit color
+opt.termguicolors = true
+
 -- Enable mouse in almost all modes
 opt.mouse = "a"
 
@@ -111,3 +114,4 @@ opt.formatoptions = opt.formatoptions
 opt.spell = true
 -- Only spellcheck designated areas such as comments. These are typically defined by Treesitter queries
 opt.spelloptions = "noplainbuffer"
+
