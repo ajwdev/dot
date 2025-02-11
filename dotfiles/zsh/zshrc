@@ -84,6 +84,9 @@ bindkey "^X^E" edit-command-line
 zmodload zsh/deltochar
 bindkey "\ez" zap-to-char
 
+# alt+delete
+bindkey '^[[3;3~' kill-word
+
 if whence -v nvim &>/dev/null; then
   export EDITOR=$(which nvim)
 else
@@ -115,9 +118,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
   }
 fi
 
-alias mv='nocorrect mv'       # no spelling correction on mv
-alias cp='nocorrect cp'       # no spelling correction on cp
-alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
+# TODO(ajw) Do I still need these?
+alias mv='nocorrect mv'
+alias cp='nocorrect cp'
+alias mkdir='nocorrect mkdir'
 alias l='ls -l'
 alias ll='ls -lh'
 alias la='ls -lha'
@@ -125,8 +129,6 @@ alias less='less -R'  # Send raw ascii control codes (ex: colors)
 
 alias -g ....='../..'
 alias -g ......='../../..'
-
-alias gtt='pushd $(git rev-parse --show-toplevel)'
 
 alias -g G='|& grep'
 alias -g L='|& less'
@@ -156,6 +158,8 @@ alias -g Y='-o yaml'
 alias -g W='-o wide'
 alias -g N='-o name'
 
+alias gtt='pushd $(git rev-parse --show-toplevel)'
+
 function github_url {
   git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//'
 }
@@ -169,36 +173,19 @@ function pr {
 }
 
 zmodload zsh/system
-
-function gethostbyname() {
-  if [ -z "${1}" ]; then
-    echo "Please specify a hostname" >&2
-    return 1
-  fi
-
-  python -c "import socket; print socket.gethostbyname('${1}')"
-}
-
-
 # This functionality is replicated by syserror in zsh/system module
 # function _errno {
 #   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
 # }
+
 function utc {
   TZ=utc date
 }
 
-function t {
+function tt {
   echo "Local: $(date)"
   echo "UTC:   $(utc)"
   echo "Offset: $(date +"%Z %z")"
-}
-
-
-alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
-
-function hex-to-bin {
-  ruby -e "puts '%.8b' % ${1}"
 }
 
 autoload -Uz vcs_info
@@ -244,10 +231,9 @@ function jwt {
   jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
 }
 
-eval "$(direnv hook zsh)"
-
 # Put bigger functions in .zfunc
 # TODO Make this automatic
 autoload -Uz kc webserver gosum-unmerge gethostbyname
 
+eval "$(direnv hook zsh)"
 [[ -f "$HOME/.zshrc.local" ]] && source $HOME/.zshrc.local
