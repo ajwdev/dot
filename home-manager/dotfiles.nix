@@ -19,8 +19,9 @@ in
 
   home.file = {
     ".ssh/config".source = ../dotfiles/ssh/config;
-    ".zshrc".source = ../dotfiles/zsh/zshrc;
     ".zshenv".source = ../dotfiles/zsh/zshenv;
+    ".zprofile".source = ../dotfiles/zsh/zprofile;
+    ".zshrc".source = ../dotfiles/zsh/zshrc;
     ".tmux.conf".source = ../dotfiles/tmux.conf;
     ".screenrc".source = ../dotfiles/screenrc;
     ".gitconfig".source = ../dotfiles/git/gitconfig;
@@ -30,6 +31,8 @@ in
       set auto-load safe-path /nix/store
     '';
   };
+
+  home.file.".zfunc".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/zsh/zfunc";
 
   # Symlink directly to the nvim directory in our repo vs into a nix
   # derivation in the nix store.
