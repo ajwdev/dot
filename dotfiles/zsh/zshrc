@@ -259,8 +259,6 @@ function jwt {
   jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
 }
 
-export LOCALE_ARCHIVE_2_27=/nix/store/bdnd8lfyps2glm5s6xiy4c3dk29hrmr4-glibc-locales-2.35-163/lib/locale/locale-archive
-
 eval "$(direnv hook zsh)"
 
 function download_nixpkgs_cache_index () {
