@@ -231,6 +231,22 @@ function jwt {
   jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
 }
 
+function _timg_pk {
+  real=$(whence -p timg)
+  if [ -z "$real" ]; then
+    echo "timg not found" >&2
+    return 1
+  fi
+
+  "$real" -pk "$@"
+}
+
+if [[ $TERM == tmux* ]]; then
+  # TMUX can pass through kitty escape sequences but tooling won't know that
+  # they can. With timg, we just force it.
+  alias timg=_timg_pk
+fi
+
 # Put bigger functions in .zfunc
 # TODO Make this automatic
 autoload -Uz kc webserver gosum-unmerge gethostbyname
