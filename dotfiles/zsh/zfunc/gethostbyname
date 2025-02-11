@@ -1,0 +1,10 @@
+# vim: set ft=zsh
+
+function gethostbyname() {
+  if [ -z "${1}" ]; then
+    echo "Please specify a hostname" >&2
+    return 1
+  fi
+
+  python -c "import socket; print socket.gethostbyname('${1}')"
+}

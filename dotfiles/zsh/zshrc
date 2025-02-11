@@ -179,11 +179,6 @@ function gethostbyname() {
   python -c "import socket; print socket.gethostbyname('${1}')"
 }
 
-function webserver {
-  port="${1:-3000}"
-  ruby -r webrick -e "s = WEBrick::HTTPServer.new(Port: $port, DocumentRoot: Dir.pwd); trap('INT') { s.shutdown }; s.start"
-}
-
 
 # This functionality is replicated by syserror in zsh/system module
 # function _errno {
@@ -238,16 +233,6 @@ function fh() {
   print -z $(fc -l 1 | fzf +s --tac | cut -d\  -f 4-)
 }
 
-function gosum-unmerge {
-  if [ ! -f ./go.sum ]; then
-    echo "go.sum not found" >&1
-    return 1
-  fi
-
-  gsed -i -e '/<<<<<<</d' -e '/>>>>>>>/d' -e '/=======/d' ./go.sum
-  go mod tidy
-}
-
 alias rgv='rg -g "!vendor"'
 alias y2j='ruby -ryaml -rjson -e "YAML.load_stream(ARGF.file.read) { |x| puts x.to_json }"'
 
@@ -261,12 +246,8 @@ function jwt {
 
 eval "$(direnv hook zsh)"
 
-function download_nixpkgs_cache_index () {
-  filename="index-$(uname -m | sed 's/^arm64$/aarch64/')-$(uname | tr A-Z a-z)"
-  mkdir -p ~/.cache/nix-index && cd ~/.cache/nix-index
-  # -N will only download a new version if there is an update.
-  wget -q -N https://github.com/nix-community/nix-index-database/releases/latest/download/$filename
-  ln -f $filename files
-}
+# Put bigger functions in .zfunc
+# TODO Make this automatic
+autoload -Uz kc webserver gosum-unmerge gethostbyname
 
 [[ -f "$HOME/.zshrc.local" ]] && source $HOME/.zshrc.local
