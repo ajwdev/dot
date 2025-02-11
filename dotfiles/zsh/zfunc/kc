@@ -1,0 +1,16 @@
+# vim: set ft=zsh
+
+function kc() {
+  result=$(kubectl config get-contexts -o name | fzf-tmux -p \
+    --info=inline --layout=reverse --header-lines=1  \
+    --prompt "Current: '$(kubectl config current-context)'> " \
+    --header "╱ Enter (select context) ╱ CTRL-X (run one-off command with context)\n\n" \
+    --preview-window up:follow \
+    --preview="$HOME/bin/libexec/fzf_kube_preview.sh {}" \
+    --bind 'ctrl-x:execute:kubectl logs --all-containers --namespace {1} {2}) > /dev/tty'
+  ) 
+  
+  if [ ! -z $result ]; then
+    kubectl config use-context $result
+  fi
+}

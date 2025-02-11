@@ -84,18 +84,14 @@ bindkey "^X^E" edit-command-line
 zmodload zsh/deltochar
 bindkey "\ez" zap-to-char
 
-alias mv='nocorrect mv'       # no spelling correction on mv
-alias cp='nocorrect cp'       # no spelling correction on cp
-alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
-alias l='ls -l'
-alias ll='ls -lh'
-alias la='ls -lha'
-alias less='less -R'  # Send raw ascii control codes (ex: colors)
+# alt+delete
+bindkey '^[[3;3~' kill-word
 
-alias -g ....='../..'
-alias -g ......='../../..'
-
-alias gtt='pushd $(git rev-parse --show-toplevel)'
+if whence -v nvim &>/dev/null; then
+  export EDITOR=$(which nvim)
+else
+  export EDITOR=$(which vim)
+fi
 
 if [[ "$(uname)" == "Darwin" ]]; then
   alias xargs=gxargs
@@ -104,14 +100,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
   alias awk='gawk'
   alias sed='gsed'
   alias airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
-
-  # If MacVim is installed, use that binary
-  # Prioritize version in home directory if possible
-  if [ -f "$HOME/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-      alias vim="nocorrect $HOME/Applications/MacVim.app/Contents/MacOS/Vim"
-  elif [ -f "/Applications/MacVim.app/Contents/MacOS/Vim" ]; then
-      alias vim="nocorrect /Applications/MacVim.app/Contents/MacOS/Vim"
-  fi
 
   function profile-userspace {
     if [ -z "${1}" ]; then
@@ -125,29 +113,25 @@ if [[ "$(uname)" == "Darwin" ]]; then
     open -a /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea "$@"
   }
 
-  function j8 {
-    export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-  }
-
-
   function notify {
     osascript -e "display notification 'Done: "$@"' with title '$@'"
   }
-
-elif [[ "$(uname)" == "Linux" ]]; then
-    alias open='xdg-open'
-
-    function loopback-audio() {
-        pactl unload-module module-loopback || true
-        pactl load-module module-loopback
-        # TODO How can determine if muted?
-        pactl set-sink-mute 1 toggle
-    }
 fi
+
+# TODO(ajw) Do I still need these?
+alias mv='nocorrect mv'
+alias cp='nocorrect cp'
+alias mkdir='nocorrect mkdir'
+alias l='ls -l'
+alias ll='ls -lh'
+alias la='ls -lha'
+alias less='less -R'  # Send raw ascii control codes (ex: colors)
+
+alias -g ....='../..'
+alias -g ......='../../..'
 
 alias -g G='|& grep'
 alias -g L='|& less'
-
 
 for i in {1..9}; do
   alias a$i="awk '{print \$$i}'"
@@ -174,6 +158,8 @@ alias -g Y='-o yaml'
 alias -g W='-o wide'
 alias -g N='-o name'
 
+alias gtt='pushd $(git rev-parse --show-toplevel)'
+
 function github_url {
   git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//'
 }
@@ -187,41 +173,19 @@ function pr {
 }
 
 zmodload zsh/system
-
-function gethostbyname() {
-  if [ -z "${1}" ]; then
-    echo "Please specify a hostname" >&2
-    return 1
-  fi
-
-  python -c "import socket; print socket.gethostbyname('${1}')"
-}
-
-function webserver {
-  port="${1:-3000}"
-  ruby -r webrick -e "s = WEBrick::HTTPServer.new(Port: $port, DocumentRoot: Dir.pwd); trap('INT') { s.shutdown }; s.start"
-}
-
-
 # This functionality is replicated by syserror in zsh/system module
 # function _errno {
 #   cpp -dM /usr/include/errno.h | grep 'define E' | sort -n -k 3
 # }
+
 function utc {
   TZ=utc date
 }
 
-function t {
+function tt {
   echo "Local: $(date)"
   echo "UTC:   $(utc)"
   echo "Offset: $(date +"%Z %z")"
-}
-
-
-alias _join='ruby -e "puts STDIN.readlines.map(&:strip).join"'
-
-function hex-to-bin {
-  ruby -e "puts '%.8b' % ${1}"
 }
 
 autoload -Uz vcs_info
@@ -252,36 +216,9 @@ else
   [ $UID != 0 ] && PROMPT=$'[%{\e[1;32m%}%n@%m:%l %{\e[1;34m%}%2~%{\e[00m%}]${vcs_info_msg_0_}%(1j.|%j|.)$ '
 fi
 
-# GPG Agent stuff
-export GPG_TTY=$(tty)
-# unset SSH_AGENT_PID
-# if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-#   export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
-# fi
-
-# export PATH=$HOME/.rbenv/bin:$PATH
-type rbenv &>/dev/null && eval "$(rbenv init -)"
-
-function deployment-to-role {
-  kubectl get deployments --all-namespaces -o json | \
-    jq -r '.items[] | select(.spec.template.metadata.annotations."iam.amazonaws.com/role" != null) | "\(.metadata.name): \(.spec.template.metadata.annotations."iam.amazonaws.com/role")"'
-}
-
 function fh() {
   print -z $(fc -l 1 | fzf +s --tac | cut -d\  -f 4-)
 }
-
-function gosum-unmerge {
-  if [ ! -f ./go.sum ]; then
-    echo "go.sum not found" >&1
-    return 1
-  fi
-
-  gsed -i -e '/<<<<<<</d' -e '/>>>>>>>/d' -e '/=======/d' ./go.sum
-  go mod tidy
-}
-
-alias alsamixer='ssh -Xt andrew@192.168.1.86 alsamixer'
 
 alias rgv='rg -g "!vendor"'
 alias y2j='ruby -ryaml -rjson -e "YAML.load_stream(ARGF.file.read) { |x| puts x.to_json }"'
@@ -290,48 +227,29 @@ function acme() {
   PATH=$PLAN9/bin:$PATH $PLAN9/bin/acme
 }
 
-if [ -f "$HOME/.zshrc.local" ]; then
-  source $HOME/.zshrc.local
-fi
-
-export DOCKER_SCAN_SUGGEST=false
-
 function jwt {
   jq -R 'split(".") | .[0],.[1] | @base64d | fromjson'
 }
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export LOCALE_ARCHIVE_2_27=/nix/store/bdnd8lfyps2glm5s6xiy4c3dk29hrmr4-glibc-locales-2.35-163/lib/locale/locale-archive
-
-# export WASMTIME_HOME="$HOME/.wasmtime"
-# export PATH="$WASMTIME_HOME/bin:$PATH"
-eval "$(direnv hook zsh)"
-
-function nrun {
-  if [ -z $1 ]; then
-    echo "missing command" >&2
+function _timg_pk {
+  real=$(whence -p timg)
+  if [ -z "$real" ]; then
+    echo "timg not found" >&2
     return 1
   fi
 
-  local pkg=$1
-  shift
-
-  if [[ "$1" == "--" ]]; then
-    shift
-  fi
-
-  nix run "nixpkgs#${pkg}" -- "$@"
+  "$real" -pk "$@"
 }
 
-function download_nixpkgs_cache_index () {
-  filename="index-$(uname -m | sed 's/^arm64$/aarch64/')-$(uname | tr A-Z a-z)"
-  mkdir -p ~/.cache/nix-index && cd ~/.cache/nix-index
-  # -N will only download a new version if there is an update.
-  wget -q -N https://github.com/nix-community/nix-index-database/releases/latest/download/$filename
-  ln -f $filename files
-}
+if [[ $TERM == tmux* ]]; then
+  # TMUX can pass through kitty escape sequences but tooling won't know that
+  # they can. With timg, we just force it.
+  alias timg=_timg_pk
+fi
+
+# Put bigger functions in .zfunc
+# TODO Make this automatic
+autoload -Uz kc webserver gosum-unmerge gethostbyname
+
+eval "$(direnv hook zsh)"
+[[ -f "$HOME/.zshrc.local" ]] && source $HOME/.zshrc.local

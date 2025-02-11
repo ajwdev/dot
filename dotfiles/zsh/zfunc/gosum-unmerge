@@ -1,0 +1,11 @@
+# vim: set ft=zsh
+
+function gosum-unmerge {
+  if [ ! -f ./go.sum ]; then
+    echo "go.sum not found" >&1
+    return 1
+  fi
+
+  gsed -i -e '/<<<<<<</d' -e '/>>>>>>>/d' -e '/=======/d' ./go.sum
+  go mod tidy
+}

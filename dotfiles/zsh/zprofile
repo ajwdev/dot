@@ -1,0 +1,4 @@
+export BAT_THEME=OneHalfDark
+export DOCKER_SCAN_SUGGEST=false
+export PLAN9=$HOME/src/9fans/plan9port
+export GPG_TTY=$(tty)
