@@ -29,24 +29,32 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+    # device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+    device = "/dev/disk/by-uuid/9336f3ab-a0fc-46ce-84d7-b160fb826b84";
     fsType = "btrfs";
-    options = [ "subvol=rootfs" ];
+    options = [ 
+      "compress=zstd"
+      "subvol=rootfs" 
+    ];
   };
 
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
     fsType = "btrfs";
-    options = [ "subvol=home" ];
+    options = [ 
+      "compress=zstd"
+      "subvol=home" 
+    ];
   };
 
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+    # device = "/dev/disk/by-uuid/bf15c633-920e-48b1-ad3e-655b8fbfe11c";
+    device = "/dev/disk/by-uuid/9336f3ab-a0fc-46ce-84d7-b160fb826b84";
     fsType = "btrfs";
     options = [
-      "subvol=nix"
       "noatime"
       "compress=zstd"
+      "subvol=nix"
     ];
   };
 
