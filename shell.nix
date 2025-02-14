@@ -12,6 +12,8 @@
       nix
       home-manager
       git
+      gnumake
+      ruby
     ];
   };
 }

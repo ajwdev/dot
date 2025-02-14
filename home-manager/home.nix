@@ -75,10 +75,9 @@
   home.packages = with pkgs; [
     zsh
     zplug
+    antidote # zsh plugin manager
     tmux
     neovim
-
-    yubikey-manager
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
@@ -107,6 +106,8 @@
     file
     which
     killall
+    watch
+    parallel
 
     # misc
     cowsay
@@ -132,9 +133,6 @@
     # unstable.arduino-ide
     # unstable.arduino-cli
 
-    unstable.tree-sitter
-
-    # ghostty
     # TODO Linux specific
     # gdb
     # strace # system call monitoring
@@ -142,8 +140,6 @@
   ];
 
   programs.rbenv.enable = true;
-
-  programs.alacritty.enable = true;
 
   programs = {
     direnv = {

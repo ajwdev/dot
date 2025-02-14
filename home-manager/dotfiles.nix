@@ -1,45 +1,60 @@
 {
   pkgs,
   config,
-# lib,
   ...
 }:
 let
   repoRoot = "${config.home.homeDirectory}/dot";
-  dotfiles = "../dotfiles";
 
   alacrittyTheme = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/aarowill/base16-alacritty/c9e824811eed70d7cdb1b31614b81c2f82bf16f8/colors/base16-eighties.toml";
     hash = "sha256-JuTdsi5VLA2HM5RH7+E/I/QCC7BlR1s4H0jGEYsAG00=";
   };
+
+  mkOutOfStoreSymlink = config.lib.file.mkOutOfStoreSymlink;
+  erbtemplate = import ./lib/erb pkgs;
 in
 {
   xdg.configFile."alacritty/alacritty.toml".source = ../dotfiles/alacritty/alacritty.toml;
   xdg.configFile."alacritty/base16-eighties.toml".source = alacrittyTheme;
 
   home.file = {
-    ".ssh/config".source = ../dotfiles/ssh/config;
-    ".zshenv".source = ../dotfiles/zsh/zshenv;
-    ".zprofile".source = ../dotfiles/zsh/zprofile;
-    ".zshrc".source = ../dotfiles/zsh/zshrc;
+    ".ssh/config".source = mkOutOfStoreSymlink ../dotfiles/ssh/config;
     ".tmux.conf".source = ../dotfiles/tmux.conf;
     ".screenrc".source = ../dotfiles/screenrc;
     ".gitconfig".source = ../dotfiles/git/gitconfig;
     ".gitignore_global".source = ../dotfiles/git/gitignore_global;
 
+    # zsh things
+    ".zshenv".source = ../dotfiles/zsh/zshenv;
+    ".zprofile".source = ../dotfiles/zsh/zprofile;
+    ".zshrc".source = erbtemplate ../dotfiles/zsh/zshrc.erb "zshrc" {
+        antidote_pkg = pkgs.antidote;
+    };
+    ".zfunc".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/zsh/zfunc";
+    ".zsh_plugins.txt".text = ''
+      rupa/z
+      zsh-users/zsh-syntax-highlighting kind:defer
+      chisui/zsh-nix-shell path:nix-shell.plugin.zsh
+      zsh-users/zsh-history-substring-search
+    '';
+
     ".gdbinit".text = ''
       set auto-load safe-path /nix/store
     '';
+
+    # Hides/accepts the academic citation notice
+    ".parallel/will-cite".text = '''';
   };
 
-  home.file.".zfunc".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/zsh/zfunc";
 
   # Symlink directly to the nvim directory in our repo vs into a nix
   # derivation in the nix store.
-  home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/dotfiles/nvim";
+  home.file.".config/nvim".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/nvim";
 
   # Shell scripts
-  home.file."bin/git-cowt".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
-  home.file."bin/git-wip".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/bin/git-wip";
-  home.file."bin/git-fx".source = config.lib.file.mkOutOfStoreSymlink "${repoRoot}/bin/git-fx";
+  home.file."bin/git-cowt".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
+  home.file."bin/git-wip".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-wip";
+  home.file."bin/git-fx".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-fx";
+
 }
