@@ -7,6 +7,7 @@ let
       clang
       gnumake
       nodejs
+      unstable.tree-sitter
 
       rust-analyzer # TODO Can this be nightly?
       unstable.bash-language-server
@@ -20,12 +21,6 @@ let
     ];
   };
 
-  # neovimNodeRuntimeDependencies = pkgs.symlinkJoin {
-  #   name = "neovimNodeRuntimeDependencies";
-  #   paths = with pkgs; [
-  #   ];
-  # };
-
   myNeovimUnwrapped = pkgs.unstable.wrapNeovim nightlyNvim {
     # configure = {
     #   # inherit customRC;
@@ -34,15 +29,6 @@ let
   };
 
 in
-# "myNeovim" = pkgs.writeShellApplication {
-#   name = "nvim";
-#   runtimeInputs = [ neovimRuntimeDependencies ];
-#   text = ''
-#     exec ${myNeovimUnwrapped}/bin/nvim "$@"
-#   '';
-# };
-# "default" = myNeovim;
-
 pkgs.writeShellApplication {
   name = "nvim";
   runtimeInputs = [ neovimRuntimeDependencies ];
