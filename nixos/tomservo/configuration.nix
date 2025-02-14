@@ -3,7 +3,6 @@
 
 { inputs, outputs, pkgs, lib, config, ... }:
 {
-  # You can import other NixOS modules here
   imports = [
     # If you want to use modules your own flake exports (from modules/nixos):
     # outputs.nixosModules.example
@@ -21,6 +20,7 @@
     ../virt.nix
     ../sdr.nix
     ../power.nix
+    ../_1password.nix
   ];
 
   boot.loader = {

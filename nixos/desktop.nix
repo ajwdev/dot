@@ -77,17 +77,6 @@
   ];
   fonts.fontDir.enable = true;
 
-  # TODO I can't get these to work in the home manager file. I dont know why
-  programs._1password = {
-    enable = true;
-    package = pkgs.unstable._1password;
-  };
-  programs._1password-gui = {
-    enable = true;
-    polkitPolicyOwners = [ "andrew" ];
-    package = pkgs.unstable._1password-gui;
-  };
-
   programs.firefox.enable = true;
   programs.usbtop.enable = true;
   programs.ssh.startAgent = true;
