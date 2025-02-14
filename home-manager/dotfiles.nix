@@ -17,6 +17,10 @@ in
 {
   xdg.configFile."alacritty/alacritty.toml".source = ../dotfiles/alacritty/alacritty.toml;
   xdg.configFile."alacritty/base16-eighties.toml".source = alacrittyTheme;
+  xdg.configFile."ghostty/config".text = ''
+  theme = "SpaceGray Eighties"
+  title = " "
+  '';
 
   home.file = {
     ".ssh/config".source = mkOutOfStoreSymlink ../dotfiles/ssh/config;
