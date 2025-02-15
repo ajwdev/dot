@@ -14,3 +14,8 @@ Host *
     ServerAliveInterval 30
     ServerAliveCountMax 10
     VisualHostKey yes
+
+<% begin %>
+  <%= read_file(metatron_ssh) %>
+<% rescue %>
+<% end %>

@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  workDotfileArgs,
   ...
 }:
 let
@@ -17,16 +18,17 @@ in
 {
   xdg.configFile."alacritty/alacritty.toml".source = ../dotfiles/alacritty/alacritty.toml;
   xdg.configFile."alacritty/base16-eighties.toml".source = alacrittyTheme;
-  xdg.configFile."ghostty/config".text = ''
-  theme = "SpaceGray Eighties"
-  title = " "
-  '';
+  xdg.configFile."ghostty/config".source = ../dotfiles/ghostty/config;
 
   home.file = {
-    ".ssh/config".source = mkOutOfStoreSymlink ../dotfiles/ssh/config;
+    ".ssh/config".source = mkOutOfStoreSymlink (
+      erbtemplate ../dotfiles/ssh/config.erb "ssh-config" workDotfileArgs
+    );
     ".tmux.conf".source = ../dotfiles/tmux.conf;
     ".screenrc".source = ../dotfiles/screenrc;
-    ".gitconfig".source = ../dotfiles/git/gitconfig;
+    ".gitconfig".source = mkOutOfStoreSymlink (
+      erbtemplate ../dotfiles/git/gitconfig.erb "gitconfig" workDotfileArgs
+    );
     ".gitignore_global".source = ../dotfiles/git/gitignore_global;
 
     # zsh things
@@ -34,7 +36,7 @@ in
     ".zprofile".source = ../dotfiles/zsh/zprofile;
     ".zshrc".source = erbtemplate ../dotfiles/zsh/zshrc.erb "zshrc" {
         antidote_pkg = pkgs.antidote;
-    };
+    } // workDotfileArgs;
     ".zfunc".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/zsh/zfunc";
     ".zsh_plugins.txt".text = ''
       rupa/z

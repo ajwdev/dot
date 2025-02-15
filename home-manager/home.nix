@@ -22,8 +22,7 @@
     # ./nvim.nix
     ./dotfiles.nix
   ];
-
-
+  
   home = rec {
     username = lib.mkDefault "andrew";
     homeDirectory = lib.mkDefault (if pkgs.stdenv.isDarwin 
