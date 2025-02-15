@@ -1,0 +1,4 @@
+theme = "Tomorrow Night Eighties"
+font-feature = -calt
+cursor-style = block
+mouse-hide-while-typing = true

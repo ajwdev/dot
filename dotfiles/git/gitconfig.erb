@@ -1,5 +1,10 @@
 # vim: ft=gitconfig
 
+<% begin %>
+  <%= read_file(metatron_git) %>
+<% rescue %>
+<% end %>
+
 [core]
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
@@ -12,6 +17,7 @@
 	a = add
 	ap = add --patch
 	bb = !better-git-branch.sh
+	br = branch
 	ca = commit --amend -C HEAD
 	co = checkout
 	cob = checkout -b

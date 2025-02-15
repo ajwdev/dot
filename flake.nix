@@ -105,8 +105,12 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
+                workDotfileArgs = {
+                  foo = "bar";
+                };
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
             }
