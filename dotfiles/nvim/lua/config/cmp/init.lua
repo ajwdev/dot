@@ -51,17 +51,18 @@ cmp.setup({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     -- Switch to only showing snippet sources
-    ['<C-s>'] = cmp.mapping.complete({
-      config = {
-        sources = {
-          { name = "luasnip"}
-        }
-      }
-    }),
+    -- XXX This interferes with tmux. Do I want it?
+    -- ['<C-s>'] = cmp.mapping.complete({
+    --   config = {
+    --     sources = {
+    --       { name = "luasnip" }
+    --     }
+    --   }
+    -- }),
     ['<C-e>'] = cmp.mapping.close(),
     ['<C-Space>'] = cmp.mapping.confirm({
       -- TODO I think i'd prefer replace
-      behavior = cmp.ConfirmBehavior.Insert,
+      behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     }),
     ['<C-y>'] = cmp.mapping.confirm({
@@ -69,18 +70,14 @@ cmp.setup({
       select = true,
     }),
     ['<tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
+      if luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
       else
         fallback()
       end
     end, { 'i', 's' }),
     ['<s-tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
+      if luasnip.jumpable(-1) then
         luasnip.jump(-1)
       else
         fallback()
