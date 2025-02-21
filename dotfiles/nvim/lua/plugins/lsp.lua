@@ -9,7 +9,7 @@ return {
       -- Adds a lightblub in the line number column when an LSP code action is available
       'kosayoda/nvim-lightbulb',
       -- Inlay hints. Review this in the future as Neovim is getting it natively
-      'simrat39/inlay-hints.nvim',
+      -- 'simrat39/inlay-hints.nvim',
       {
         'vxpm/ferris.nvim',
         opts = {},
