@@ -1,7 +1,7 @@
 return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "canary",
+    branch = "main",
     event = "InsertEnter",
     dependencies = {
       { "zbirenbaum/copilot.lua" },

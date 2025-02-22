@@ -4,8 +4,9 @@ set -eo pipefail
 usage() { echo "${0} <branch name>"; }
 
 ECHO=
+DEL=
 
-while getopts "nhv" o; do
+while getopts "dnhv" o; do
   case "${o}" in
     n)
       ECHO="echo DRY RUN: " 
@@ -13,23 +14,29 @@ while getopts "nhv" o; do
     v)
       set -x
       ;;
+    d)
+      DEL=1
+      set -x
+      ;;
     h)
       usage
       exit 0
+      ;;
+    *)
       ;;
   esac
 done
 shift $((OPTIND-1))
 
-if [ -z ${1} ]; then
+if [ -z "${1}" ]; then
     echo "must specify a ref" >&2
     exit 1
 fi
 
-wtdir=.worktrees
+wtdir="$(git root)/.worktrees"
 
-${ECHO}git worktree add ${wtdir}/${1} ${1}
+${ECHO}git worktree add "${wtdir}/${1}" "${1}"
 
-if [ -z ${ECHO} ]; then
+if [ -z "${ECHO}" ]; then
   echo "Created worktree ${wtdir}/${1}"
 fi
