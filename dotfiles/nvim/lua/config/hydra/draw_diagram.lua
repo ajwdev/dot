@@ -10,13 +10,13 @@ local hint = [[
 Hydra({
    name = 'Draw Diagram',
    hint = hint,
-   config = {
-      color = 'pink',
-      invoke_on_body = true,
-      on_enter = function()
-         vim.o.virtualedit = 'all'
-      end,
-   },
+   -- config = {
+   --    color = 'pink',
+   --    -- invoke_on_body = true,
+   --    on_enter = function()
+   --       vim.o.virtualedit = 'all'
+   --    end,
+   -- },
    mode = 'n',
    body = '<leader>d',
    heads = {

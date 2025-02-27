@@ -245,5 +245,3 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 vim.diagnostic.config {
   float = { border = myutil.Windowstyle.border },
 }
-
-require("config.lsp.lightbulb")

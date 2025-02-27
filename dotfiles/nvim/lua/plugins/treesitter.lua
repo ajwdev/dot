@@ -135,6 +135,7 @@ return {
               ["]c"] = "@class.outer",
             },
             goto_previous_start = {
+              ["[i"] = { query = "@x.import.last", desc = "TODO", query_group = "locals" },
               ["[r"] = { query = "@x.return", desc = "Previous return statement", query_group = "locals" },
               ["[R"] = { query = "@x.returnargs", desc = "Previous return value(s)", query_group = "locals" },
               ["[s"] = { query = "@scope", desc = "Previous scope" },
