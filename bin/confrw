@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+SUFFIX=".prev"
+KEEP=
+VERBOSE=
+
+usage() {
+    echo "Usage: $0 [-k] [-s suffix] [-v] <file>"
+    exit 1
+}
+
+while getopts ":kvs:" opt; do
+    case ${opt} in
+        k )
+            KEEP=1
+            ;;
+        v )
+            VERBOSE=1
+            ;;
+        s )
+            SUFFIX="$OPTARG"
+            ;;
+        \? )
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+if [[ -z "$1" ]]; then
+    usage
+fi
+
+if [[ -z "$SUFFIX" ]]; then
+    echo "Suffix cannot be empty" >&2
+    exit 1
+fi
+
+if [[ ! -L "$1" ]] || [[ ! -f "$1" ]]; then
+    echo "not a symlink to a file" >&2
+    exit 1
+fi
+
+real=$(readlink -f "$1")
+
+if [[ "$real" != /nix/store/* ]]; then
+    echo "symlink does not point to a file in /nix/store" >&2
+    exit 1
+fi
+
+if [[ -n "$VERBOSE" ]]; then
+    echo "'$1' -> '${1}${SUFFIX}'"
+fi
+
+mv "$1" "${1}${SUFFIX}"
+touch "$1"
+cat "$real" > "$1"
+
+if [[ -n "$VERBOSE" ]]; then
+    echo "'$real' -> '$1'"
+fi
+
+if [[ -z "$KEEP" ]]; then
+    rm -f "${1}${SUFFIX}"
+fi
