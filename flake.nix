@@ -172,7 +172,10 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+                workDotfileArgs = {};
+              };
               home-manager.backupFileExtension = "bak";
               users.users.andrewwilliams = {
                 name = nixpkgs.lib.mkForce "andrewwilliams";
@@ -188,6 +191,7 @@
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           extraSpecialArgs = {
             inherit inputs outputs;
+            workDotfileArgs = {};
           };
           modules = [
             ({ pkgs, ... }: {
