@@ -7,8 +7,15 @@ switch:
 ifeq ($(UNAME), Darwin)
 	nix build --extra-experimental-features nix-command --extra-experimental-features flakes ".#darwinConfigurations.${NIXNAME}.system"
 	./result/sw/bin/darwin-rebuild switch --flake "$$(pwd)#${NIXNAME}"
+else ifeq ($(UNAME), Linux)
+	if [ -f /etc/NIXOS ]; then \
+		sudo nixos-rebuild switch --flake ".#${NIXNAME}" > /dev/null 2>&1; \
+	else \
+		home-manager switch --flake ".#${NIXNAME}" > /dev/null 2>&1; \
+	fi
 else
-	sudo nixos-rebuild switch --flake ".#${NIXNAME}"
+	echo "uknown system ${UNAME}"
+	exit 1
 endif
 
 test:
