@@ -14,7 +14,8 @@ else ifeq ($(UNAME), Linux)
 		home-manager switch --flake ".#${NIXNAME}"; \
 	fi
 else
-	sudo nixos-rebuild switch --flake ".#${NIXNAME}"
+	echo "uknown system ${UNAME}"
+	exit 1
 endif
 
 test:
