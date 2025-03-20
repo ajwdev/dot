@@ -1,8 +1,9 @@
 { inputs, outputs, lib, ... }:
 {
-  # users.users.${user} = rec {
-  #   home = "/Users/${user}";
-  # };
+  # XXX This is to address an error about an unexpected uid/gid numbers. I think I
+  # just need to reinstall Nix, but that's for another day.
+  ids.gids.nixbld = 350;
+
   users.users = {
     # XXX Hacky, but seems to work. Make this better
     "andrewwilliams" = {
