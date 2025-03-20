@@ -27,6 +27,7 @@
 	ff = merge --ff-only
 	head = rev-parse HEAD
 	l = log --oneline
+	mff = merge --no-ff
 	missing = ls HEAD..main
 	new = ls main..HEAD
 	poh = push origin HEAD
@@ -42,9 +43,6 @@
 	which-branches-contain = branch -a --contains
 	which-tags-contain = name-rev --name-only
 	who = shortlog -s --
-
-[url "git@github.com:"]
-	insteadOf = https://github.com/
 
 [init]
 	defaultBranch = main
