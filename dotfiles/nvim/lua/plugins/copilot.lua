@@ -14,6 +14,7 @@ return {
       {
         "<leader>C",
         "<cmd>CopilotChatToggle<cr>",
+        mode = {"n", "v"},
         desc = "Toggle Copilot Chat",
       },
     },
