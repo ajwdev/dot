@@ -35,6 +35,9 @@ return {
               ["<c-t>"] = open_with_trouble,
             },
             i = {
+              -- Move up and down
+              ["<c-j>"] = actions.move_selection_next,
+              ["<c-k>"] = actions.move_selection_previous,
               -- Close telescope window
               ["<esc>"] = actions.close,
               -- Delete buffer
