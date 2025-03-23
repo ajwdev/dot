@@ -1,9 +1,35 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 
-{ inputs, outputs, pkgs, lib, config, ... }:
 {
+  inputs,
+  outputs,
+  pkgs,
+  lib,
+  config,
+  ...
+} @args :
+let
+  pinPackage =
+    {
+      name,
+      commit,
+      sha256,
+    }:
+    (import (builtins.fetchTarball {
+      inherit sha256;
+      url = "https://github.com/NixOS/nixpkgs/archive/${commit}.tar.gz";
+    }) { system = pkgs.system; }).${name};
+in
+{
+
+  disabledModules = [ "services/misc/ollama.nix" ];
+
+  # You can import other NixOS modules here
   imports = [
+    "${args.inputs.nixpkgs-unstable}/nixos/modules/services/misc/ollama.nix"
+
+
     # If you want to use modules your own flake exports (from modules/nixos):
     # outputs.nixosModules.example
 
@@ -61,6 +87,8 @@
     extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
+      rocm-opencl-icd
+      rocm-opencl-runtime
     ];
   };
 
@@ -86,6 +114,7 @@
     handbrake
     discord
     blender-hip
+    amdgpu_top
   ];
 
   environment.enableDebugInfo = true;
@@ -96,6 +125,31 @@
 
   programs.ryzen-monitor-ng.enable = true;
   programs.rog-control-center.enable = true;
+
+  # https://github.com/NixOS/nixpkgs/issues/375910#issuecomment-2608558305
+  # nixpkgs.config.rocmSupport = true;
+  services = {
+    ollama = {
+      enable = true;
+      acceleration = "rocm";
+      # Ollama Port 11434/tcp
+      # host = "0.0.0.0";
+      # port = 11434;
+      # openFirewall = true;
+      # pin ollama v0.5.7 until nixpkgs update
+      # https://github.com/NixOS/nixpkgs/issues/375359
+      package = (
+        pinPackage {
+          name = "ollama";
+          commit = "ad5309a80e00cf392242ccfcc00a1c2b62e1f731";
+          sha256 = "sha256:1hh0p0p42yqrm69kqlxwzx30m7i7xqw9m8f224i3bm6wsj4dxm05";
+        }
+      );
+      # rocmOverrideGfx = "10.3.0";
+      # additional environment variables
+      # environmentVariables = { HSA_OVERRIDE_GFX_VERSION="10.3.0"; };
+    };
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
