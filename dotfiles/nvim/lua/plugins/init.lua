@@ -160,19 +160,15 @@ return {
     build = function()
       vim.fn["firenvim#install"](0)
     end,
-    config = function ()
+    config = function()
       vim.g.firenvim_config.localSettings['.*'] = { takeover = 'never' }
     end,
   },
 
   {
-    "RRethy/vim-illuminate",
-    event = { 'BufReadPost', 'BufNew' },
-  },
-  {
     "nvzone/typr",
     dependencies = "nvzone/volt",
     opts = {},
     cmd = { "Typr", "TyprStats" },
-  }
+  },
 }
