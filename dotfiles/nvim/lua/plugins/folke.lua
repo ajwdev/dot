@@ -29,10 +29,16 @@ return {
       -- TODO Look into these
       scope = { enabled = false },    -- REVIEW
       notifier = { enabled = false }, -- Maybe?
-      input = { enabled = false },    -- TODO Might want this
-      -- scratch = { enabled = true },
-      dim = { enabled = true }, -- TODO Repalce twight
+      -- input = { enabled = true },    -- TODO Might want this
+      dim = { enabled = true },       -- TODO Repalce twight
       -- layout = { enabled = false },
+      --
+      styles = {
+        input = {
+          relative = "cursor",
+          row = -3,
+        },
+      },
     },
     keys = {
       { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
@@ -41,6 +47,9 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
         callback = function()
+          -- Replace the standard input dialog. Makes LSP rename nicer
+          vim.ui.input = Snacks.input.input
+
           -- Setup some globals for debugging (lazy-loaded)
           _G.dd = function(...)
             Snacks.debug.inspect(...)
@@ -177,4 +186,11 @@ return {
       },
     }
   },
+
+  {
+    "folke/ts-comments.nvim",
+    opts = {},
+    event = "VeryLazy",
+    enabled = vim.fn.has("nvim-0.10.0") == 1,
+  }
 }

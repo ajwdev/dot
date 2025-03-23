@@ -37,11 +37,6 @@ return {
   },
 
   {
-    "stevearc/dressing.nvim",
-    event = "VeryLazy",
-  },
-
-  {
     'j-hui/fidget.nvim',
     event = 'BufReadPost',
     tag = 'legacy',
@@ -54,6 +49,7 @@ return {
     end,
   },
 
+  -- Floating statusline in the top right
   {
     "b0o/incline.nvim",
     event = "VeryLazy",
