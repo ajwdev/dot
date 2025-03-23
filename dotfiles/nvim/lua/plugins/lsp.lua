@@ -7,9 +7,17 @@ return {
     event = 'BufReadPost',
     dependencies = {
       -- Adds a lightblub in the line number column when an LSP code action is available
-      'kosayoda/nvim-lightbulb',
-      -- Inlay hints. Review this in the future as Neovim is getting it natively
-      -- 'simrat39/inlay-hints.nvim',
+      {
+        'kosayoda/nvim-lightbulb',
+        config =function ()
+          require('nvim-lightbulb').setup {
+            code_lenses = true,
+            autocmd = { enabled = true },
+            sign = { enabled = false },
+            virtual_text = { enabled = true }
+          }
+        end
+      },
       {
         'vxpm/ferris.nvim',
         opts = {},
