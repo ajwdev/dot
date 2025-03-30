@@ -87,8 +87,8 @@ in
     extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
-      rocm-opencl-icd
-      rocm-opencl-runtime
+      # rocm-opencl-icd
+      # rocm-opencl-runtime
     ];
   };
 
@@ -128,28 +128,28 @@ in
 
   # https://github.com/NixOS/nixpkgs/issues/375910#issuecomment-2608558305
   # nixpkgs.config.rocmSupport = true;
-  services = {
-    ollama = {
-      enable = true;
-      acceleration = "rocm";
-      # Ollama Port 11434/tcp
-      # host = "0.0.0.0";
-      # port = 11434;
-      # openFirewall = true;
-      # pin ollama v0.5.7 until nixpkgs update
-      # https://github.com/NixOS/nixpkgs/issues/375359
-      package = (
-        pinPackage {
-          name = "ollama";
-          commit = "ad5309a80e00cf392242ccfcc00a1c2b62e1f731";
-          sha256 = "sha256:1hh0p0p42yqrm69kqlxwzx30m7i7xqw9m8f224i3bm6wsj4dxm05";
-        }
-      );
-      # rocmOverrideGfx = "10.3.0";
-      # additional environment variables
-      # environmentVariables = { HSA_OVERRIDE_GFX_VERSION="10.3.0"; };
-    };
-  };
+  # services = {
+  #   ollama = {
+  #     enable = true;
+  #     acceleration = "rocm";
+  #     # Ollama Port 11434/tcp
+  #     # host = "0.0.0.0";
+  #     # port = 11434;
+  #     # openFirewall = true;
+  #     # pin ollama v0.5.7 until nixpkgs update
+  #     # https://github.com/NixOS/nixpkgs/issues/375359
+  #     package = (
+  #       pinPackage {
+  #         name = "ollama";
+  #         commit = "ad5309a80e00cf392242ccfcc00a1c2b62e1f731";
+  #         sha256 = "sha256:0iqlimxhsbm2jndrzckj5aqhxc2k0jjqsgzcbjk0yvwxkdds0xxp";
+  #       }
+  #     );
+  #     # rocmOverrideGfx = "10.3.0";
+  #     # additional environment variables
+  #     # environmentVariables = { HSA_OVERRIDE_GFX_VERSION="10.3.0"; };
+  #   };
+  # };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
