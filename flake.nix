@@ -138,7 +138,17 @@
           ];
         };
 
-        ajwlive = nixpkgs.lib.nixosSystem {
+        "glados01" = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/glados01/configuration.nix
+            # TODO Add home-manager after refactoring out all of the devtools
+          ];
+        };
+
+        "ajwlive" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           packages.x86_64-linux.default = self.nixosConfigurations.exampleIso.config.system.build.isoImage;
           modules = [
