@@ -25,3 +25,6 @@ ifeq ($(UNAME), Darwin)
 else
 	sudo nixos-rebuild test --flake ".#$(NIXNAME)" --show-trace
 endif
+
+build-live:
+	nixos-generate -f iso -c ./nixos/ajwlive/configuration.nix -o ajwliveiso

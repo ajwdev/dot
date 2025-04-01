@@ -14,6 +14,7 @@
       git
       gnumake
       ruby
+      nixos-generators
     ];
   };
 }
