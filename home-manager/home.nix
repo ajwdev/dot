@@ -107,6 +107,8 @@
     killall
     watch
     parallel
+    tio
+    minicom
 
     # misc
     cowsay
