@@ -21,6 +21,8 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./dotfiles.nix
+    ./devtools.nix
+    ./gui.nix
   ];
   
   home = rec {
@@ -121,26 +123,12 @@
     gnumake
     openssl
     # https://github.com/mitchellh/zig-overlay/blob/d07b6a999f051b23ae7704f9d63a966b4b0284d1/flake.nix#L56-L60
-    # Rust
-    rustup
-    # golang
-    go
-    gopls
-    # gotools
-    go-tools
-    # gomod2nix.packages.${system}.default
-
-    # ruby
-    # unstable.arduino-ide
-    # unstable.arduino-cli
 
     # TODO Linux specific
     # gdb
     # strace # system call monitoring
     # ltrace # library call monitoring
   ];
-
-  programs.rbenv.enable = true;
 
   programs = {
     direnv = {
