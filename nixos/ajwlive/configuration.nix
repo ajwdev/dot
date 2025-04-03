@@ -31,23 +31,23 @@
     "kernel.sysrq" = 1;
   };
 
-  boot.supportedFilesystems = lib.mkForce [
-    "vfat"
-    "exfat"
-    "ext"
-    "xfs"
-    "ntfs"
-    "cifs"
-    "nfs"
-    "bcachefs"
-    "btrfs"
-    "f2fs"
-    "erofs"
-    "overlayfs"
-    "squashfs"
-    # TODO
-    # "zfs"
-  ];
+  # boot.supportedFilesystems = lib.mkForce [
+  #   "vfat"
+  #   "exfat"
+  #   "ext"
+  #   "xfs"
+  #   "ntfs"
+  #   "cifs"
+  #   "nfs"
+  #   "bcachefs"
+  #   "btrfs"
+  #   "f2fs"
+  #   "erofs"
+  #   "overlayfs"
+  #   "squashfs"
+  #   # TODO
+  #   # "zfs"
+  # ];
 
   boot.kernelParams = [
     "console=tty1"
