@@ -84,7 +84,6 @@
   environment.systemPackages = with pkgs; [
     home-manager
     nix-index
-    nixfmt-rfc-style
     cachix
     # it provides the command `nom` works just like `nix`
     # with more details log output
