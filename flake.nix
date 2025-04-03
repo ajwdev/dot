@@ -113,6 +113,8 @@
                 };
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
+
+              devtools.enable_all = true;
             }
           ];
         };
@@ -215,6 +217,8 @@
                 name = nixpkgs.lib.mkForce "andrewwilliams";
               };
               home-manager.users.andrewwilliams = import ./home-manager/home.nix;
+
+              devtools.go.enable = true;
             }
           ];
         };
@@ -245,6 +249,8 @@
               home.username = pkgs.lib.mkForce "andrewwilliams";
               # We always this home directory for whatever reason :shrug:
               home.homeDirectory = pkgs.lib.mkForce "/home/coder";
+
+              devtools.go.enable = true;
             })
             ./home-manager/home.nix
           ];
