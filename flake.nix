@@ -111,10 +111,9 @@
                 workDotfileArgs = {
                   foo = "bar";
                 };
+                devtools.enable_all = true;
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
-
-              devtools.enable_all = true;
             }
           ];
         };
