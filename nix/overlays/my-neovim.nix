@@ -6,19 +6,17 @@ let
       # For building plugins that need it (Telescope, Treesitter, etc)
       clang
       gnumake
+      pandoc
       nodejs
       unstable.tree-sitter
 
-      rust-analyzer # TODO Can this be nightly?
+      # Common language servers. Language specific ones should be installed
+      # elsewhere (ex: project specific flake)
       unstable.bash-language-server
       lua-language-server
       nil # nix lsp
-      gopls
-      ruby-lsp
-      zls
-      nodePackages.typescript-language-server
+      nixfmt-rfc-style
       nodePackages.yaml-language-server
-      pandoc
     ];
   };
 
