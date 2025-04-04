@@ -144,7 +144,19 @@
           };
           modules = [
             ./nixos/glados01/configuration.nix
-            # TODO Add home-manager after refactoring out all of the devtools
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+                workDotfileArgs = {};
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # arguments to home.nix
+            }
           ];
         };
 
