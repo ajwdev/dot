@@ -53,5 +53,6 @@ in
   home.file."bin/git-cowt".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
   home.file."bin/git-wip".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-wip";
   home.file."bin/git-fx".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-fx";
+  home.file."bin/git-branch-gc".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-branch-gc";
   home.file."bin/confrw".source = mkOutOfStoreSymlink "${repoRoot}/bin/confrw";
 }

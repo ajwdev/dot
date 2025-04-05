@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+HEAD=$1
+if  [[ -z "$HEAD" ]]; then
+    HEAD=origin/main
+fi
+
+git fetch -p
+
+# TODO Consider what to do with worktrees
+for br in $(git branch --merged $HEAD | awk 'NF == 1 && ($1 != main && $1 != master) {print $1}'); do
+    echo "== Deleting $br"
+    git branch -d "$br" || true
+done
