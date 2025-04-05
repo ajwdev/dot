@@ -42,6 +42,9 @@ in
 
     # Hides/accepts the academic citation notice
     ".parallel/will-cite".text = '''';
+
+    ".sqliterc".source = ../dotfiles/sqliterc;
+    ".irbrc".source = ../dotfiles/irbrc;
   };
 
 
@@ -55,4 +58,5 @@ in
   home.file."bin/git-fx".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-fx";
   home.file."bin/git-branch-gc".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-branch-gc";
   home.file."bin/confrw".source = mkOutOfStoreSymlink "${repoRoot}/bin/confrw";
+  home.file."bin/better-git-branch.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/better-git-branch.sh";
 }
