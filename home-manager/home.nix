@@ -128,6 +128,8 @@
     # gdb
     # strace # system call monitoring
     # ltrace # library call monitoring
+
+    (ruby.withPackages (ps: with ps; [ rugged pry ]))
   ];
 
   programs = {
