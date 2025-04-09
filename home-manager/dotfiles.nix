@@ -59,4 +59,5 @@ in
   home.file."bin/git-branch-gc".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-branch-gc";
   home.file."bin/confrw".source = mkOutOfStoreSymlink "${repoRoot}/bin/confrw";
   home.file."bin/better-git-branch.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/better-git-branch.sh";
+  home.file."bin/git-related-files.rb".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-related-files.rb";
 }
