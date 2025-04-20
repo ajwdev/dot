@@ -126,6 +126,7 @@
     # btop  # replacement of htop/nmon
     iotop # io monitoring
     iftop # network monitoring
+    lm_sensors
 
     # system call monitoring
     strace # system call monitoring
