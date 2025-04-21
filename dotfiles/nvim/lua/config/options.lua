@@ -115,3 +115,4 @@ opt.spell = true
 -- Only spellcheck designated areas such as comments. These are typically defined by Treesitter queries
 opt.spelloptions = "noplainbuffer"
 
+vim.o.winborder = "rounded"

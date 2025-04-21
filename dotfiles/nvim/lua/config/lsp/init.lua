@@ -1,13 +1,7 @@
-local myutil = require("config.util")
-
-local lspconfig = require('lspconfig')
-local util = require('lspconfig/util')
-
 local servers = {
   gopls = {
     cmd = { 'gopls', '--remote=auto' },
     filetypes = { "go", "gomod" },
-    root_dir = util.root_pattern("go.work", "go.mod", ".git"),
     settings = {
       gopls = {
         hints = {
@@ -100,7 +94,6 @@ local servers = {
     }
   },
 
-
   clangd = {},
   solargraph = {},
   bashls = {},
@@ -110,15 +103,9 @@ local servers = {
   zls = {},
 }
 
--- Advertise nvim-cmp capabilities to the LSP server
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
+local lspconfig = require('lspconfig')
 for lsp, config in pairs(servers) do
-  config = vim.tbl_deep_extend("force", {}, {
-    capabilities = capabilities,
-  }, config)
-
+  config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
   lspconfig[lsp].setup(config)
 end
 
@@ -173,13 +160,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
       })
     end
 
-    require("lsp_signature").on_attach({
-      bind = true,
-      handler_opts = {
-        border = "rounded",
-      }
-    }, ev.buf)
-
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     vim.keymap.set('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', keymap_opts("Goto definition"))
@@ -192,7 +172,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       keymap_opts("Goto type definition in vertical split"))
 
     vim.keymap.set('n', 'K',
-      function() vim.lsp.buf.hover({ border = myutil.Windowstyle.border }) end,
+      function() vim.lsp.buf.hover() end,
       keymap_opts("Show symbol information under cursor in floating window")
     )
     vim.keymap.set('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
@@ -228,20 +208,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set("n", "<leader>F", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", keymap_opts("Format buffer"))
   end
 })
-
--- Window appearance. I need borders for my eyes
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, {
-    border = myutil.Windowstyle.border,
-  }
-)
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-  vim.lsp.handlers.signature_help, {
-    border = myutil.Windowstyle.border,
-  }
-)
-
-vim.diagnostic.config {
-  float = { border = myutil.Windowstyle.border },
-}
