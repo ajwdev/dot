@@ -1,13 +1,9 @@
 local myutil = require("config.util")
 
-local lspconfig = require('lspconfig')
-local util = require('lspconfig/util')
-
 local servers = {
   gopls = {
     cmd = { 'gopls', '--remote=auto' },
     filetypes = { "go", "gomod" },
-    root_dir = util.root_pattern("go.work", "go.mod", ".git"),
     settings = {
       gopls = {
         hints = {
@@ -110,15 +106,9 @@ local servers = {
   zls = {},
 }
 
--- Advertise nvim-cmp capabilities to the LSP server
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
+local lspconfig = require('lspconfig')
 for lsp, config in pairs(servers) do
-  config = vim.tbl_deep_extend("force", {}, {
-    capabilities = capabilities,
-  }, config)
-
+  config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
   lspconfig[lsp].setup(config)
 end
 
@@ -173,12 +163,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
       })
     end
 
-    require("lsp_signature").on_attach({
-      bind = true,
-      handler_opts = {
-        border = "rounded",
-      }
-    }, ev.buf)
+    -- require("lsp_signature").on_attach({
+    --   bind = true,
+    --   handler_opts = {
+    --     border = "rounded",
+    --   }
+    -- }, ev.buf)
 
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -229,19 +219,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 
--- Window appearance. I need borders for my eyes
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, {
-    border = myutil.Windowstyle.border,
-  }
-)
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-  vim.lsp.handlers.signature_help, {
-    border = myutil.Windowstyle.border,
-  }
-)
-
-vim.diagnostic.config {
-  float = { border = myutil.Windowstyle.border },
-}
+-- -- Window appearance. I need borders for my eyes
+-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+--   vim.lsp.handlers.hover, {
+--     border = myutil.Windowstyle.border,
+--   }
+-- )
+--
+-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+--   vim.lsp.handlers.signature_help, {
+--     border = myutil.Windowstyle.border,
+--   }
+-- )
+--
+-- vim.diagnostic.config {
+--   float = { border = myutil.Windowstyle.border },
+-- }
