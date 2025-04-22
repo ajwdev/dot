@@ -31,8 +31,8 @@ if [ -z "$(git diff --cached)" ]; then
 fi
 
 if grep -i '^\!WIP' <(git log --pretty=format:%s -1) >/dev/null; then
-    ${ECHO} git commit --amend -C HEAD
+    ${ECHO} git commit --no-verify --amend -C HEAD
 else
-    ${ECHO} git commit -m '!WIP'"${MSG}"
+    ${ECHO} git commit --no-verify -m '!WIP'"${MSG}"
 fi
 

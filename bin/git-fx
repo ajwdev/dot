@@ -32,4 +32,4 @@ if [ -z $COMMIT ]; then
     return 0
 fi
 
-${ECHO} git commit --fixup $COMMIT
+${ECHO} git commit --no-verify --fixup $COMMIT
