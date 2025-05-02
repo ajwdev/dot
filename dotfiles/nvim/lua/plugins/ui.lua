@@ -12,6 +12,7 @@ return {
     end
   },
   {
+
     'nvim-lualine/lualine.nvim',
     lazy = false,
     dependencies = {
@@ -21,8 +22,13 @@ return {
     config = function()
       -- TODO I'd like the filename in the winbar to show a path instead of basename
       require('lualine').setup {
+
+        options = {
+          globalstatus = true,
+        },
         sections = {
-          lualine_b = { 'copilot', 'branch', 'diff', 'diagnostics' },
+          -- lualine_a = { { 'mode', fmt = function(res) return res:sub(1, 1) end } },
+          lualine_b = { 'branch', 'diff', 'diagnostics' },
           lualine_c = {
             {
               'filename',
@@ -30,8 +36,25 @@ return {
               path = 3,
             }
           },
-        }
-
+          lualine_x = { 'filetype' },
+          lualine_y = {
+            'copilot',
+            {
+              'lsp_status',
+              -----@param res string
+              ---fmt = function(res)
+              ---  if res:len() > 8 then
+              ---    return res:sub(1, 10) .. '...'
+              ---  end
+              ---
+              ---  return res
+              ---end,
+              icon = '',
+              ignore_lsp = { 'copilot', 'null-ls' },
+            },
+          },
+          lualine_z = {'progress', 'location'}
+        },
       }
     end
   },
@@ -50,11 +73,11 @@ return {
   },
 
   -- Floating statusline in the top right
-  {
-    "b0o/incline.nvim",
-    event = "VeryLazy",
-    config = function()
-      require('incline').setup()
-    end
-  },
+  -- {
+  --   "b0o/incline.nvim",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require('incline').setup()
+  --   end
+  -- },
 }

@@ -38,6 +38,8 @@ return {
     -- optional: provides snippets for the snippet source
     dependencies = {
       'giuxtaposition/blink-cmp-copilot',
+      'onsails/lspkind.nvim',
+      -- 'ray-x/lsp_signature.nvim',
     },
 
     -- use a release tag to download pre-built binaries
@@ -54,6 +56,8 @@ return {
         preset = 'default',
 
         ['<C-space>'] = { 'select_and_accept', 'show', 'show_documentation' },
+        -- TODO
+        ['Enter'] = { 'select_and_accept' },
         ['<C-j>'] = { 'select_next', 'fallback' },
         ['<C-k>'] = { 'select_prev', 'fallback' },
         ['<C-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
@@ -79,11 +83,48 @@ return {
 
           draw = {
             treesitter = { 'lsp' },
-            -- nvim-cmp style menu
             columns = {
-              { "label",     "label_description", gap = 1 },
-              { "kind_icon", "kind" }
+              { "label", "label_description", gap = 1 },
+              { "kind_icon" },
+              { "kind" },
+              { "source_name" },
             },
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  local lspkind = require("lspkind")
+                  local icon = ctx.kind_icon
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
+                    if dev_icon then
+                      icon = dev_icon
+                    end
+                  elseif vim.tbl_contains({ "Copilot" }, ctx.source_name) then
+                    icon = " "
+                  else
+                    icon = lspkind.symbolic(ctx.kind, {
+                      mode = "symbol",
+                    })
+                  end
+
+                  return icon .. ctx.icon_gap
+                end,
+
+                -- Optionally, use the highlight groups from nvim-web-devicons
+                -- You can also add the same function for `kind.highlight` if you want to
+                -- keep the highlight groups in sync with the icons.
+                highlight = function(ctx)
+                  local hl = ctx.kind_hl
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.label)
+                    if dev_icon then
+                      hl = dev_hl
+                    end
+                  end
+                  return hl
+                end,
+              }
+            }
           }
         },
       },
@@ -94,17 +135,14 @@ return {
         default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot' },
         providers = {
           copilot = {
-            name = "copilot",
+            name = "Copilot",
             module = "blink-cmp-copilot",
             score_offset = 100,
             async = true,
-            transform_items = function(ctx, items)
-              for _, item in ipairs(items) do
-                item.kind_icon = ''
-                item.kind_name = 'Copilot'
-              end
-              return items
-            end,
+            opts = {
+              kind_name = "Copilot", ---@type string | false
+              kind_icon = " ", ---@type string | false
+            },
           },
         },
       },
