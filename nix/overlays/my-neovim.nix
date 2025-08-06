@@ -2,17 +2,17 @@
 let
   neovimRuntimeDependencies = pkgs.symlinkJoin {
     name = "neovimRuntimeDependencies";
-    paths = with pkgs; [
+    paths = with pkgs.unstable; [
       # For building plugins that need it (Telescope, Treesitter, etc)
       clang
       gnumake
       pandoc
       nodejs
-      unstable.tree-sitter
+      tree-sitter
 
       # Common language servers. Language specific ones should be installed
       # elsewhere (ex: project specific flake)
-      unstable.bash-language-server
+      bash-language-server
       lua-language-server
       nil # nix lsp
       nixfmt-rfc-style
