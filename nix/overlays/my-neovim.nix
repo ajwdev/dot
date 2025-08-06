@@ -4,6 +4,7 @@ let
     name = "neovimRuntimeDependencies";
     paths = with pkgs.unstable; [
       # For building plugins that need it (Telescope, Treesitter, etc)
+      fzf
       clang
       gnumake
       pandoc
