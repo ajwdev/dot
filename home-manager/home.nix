@@ -119,6 +119,8 @@
 
     httpie
 
+    claude-code
+
     # Dev
     gnumake
     openssl
