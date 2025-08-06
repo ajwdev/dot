@@ -103,6 +103,8 @@ local servers = {
   zls = {},
 }
 
+vim.lsp.enable('kotlin_lsp')
+
 local lspconfig = require('lspconfig')
 for lsp, config in pairs(servers) do
   config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
