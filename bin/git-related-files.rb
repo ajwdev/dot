@@ -1,7 +1,5 @@
-#!/usr/bin/env ruby
-# If I didnt want to include ruby in my home-manager env
-##!/usr/bin/env nix-shell
-##!nix-shell -i ruby -p "ruby.withPackages (ps: with ps; [ rugged ])"
+#!/usr/bin/env nix-shell
+#!nix-shell -i ruby -p "ruby.withPackages (ps: with ps; [ rugged ])"
 
 # Pulled from (4/8/25)
 # https://gist.github.com/schacon/a5da5f2e2e076eb2434f8775ac5ff55e
