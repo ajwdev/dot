@@ -210,6 +210,7 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
                 workDotfileArgs = {};
+                devtools.go.enable = true;
               };
               home-manager.backupFileExtension = "bak";
               users.users.andrewwilliams = {
@@ -217,7 +218,6 @@
               };
               home-manager.users.andrewwilliams = import ./home-manager/home.nix;
 
-              devtools.go.enable = true;
             }
           ];
         };
