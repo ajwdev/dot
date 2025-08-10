@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+      "Bash(nix flake update:*)",
+      "Bash(nix show-config:*)"
+    ],
+    "deny": []
+  }
+}
