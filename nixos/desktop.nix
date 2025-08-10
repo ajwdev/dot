@@ -1,5 +1,7 @@
 { pkgs, ... }:
-{
+let
+  pinPackage = import ../nix/lib/pinPackage.nix { inherit pkgs; }.pinPackage;
+in {
   environment.systemPackages = with pkgs; [
     # wayland things
     wl-clipboard
