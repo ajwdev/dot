@@ -7,7 +7,7 @@
       # Add overlays your own flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
-      outputs.overlays.unstable-packages
+      outputs.overlays.stable-packages
       outputs.overlays.my-neovim-env
 
       # You can also add overlays exported from other flakes:

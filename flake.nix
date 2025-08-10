@@ -6,18 +6,18 @@
   inputs = {
     nixos.url = "github:NixOS/nix";
 
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # Also see the 'unstable-packages' overlay at 'overlays/default.nix'.
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    # Also see the 'stable-packages' overlay at 'overlays/default.nix'.
     hardware.url = "github:nixos/nixos-hardware";
 
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-darwin.url = "github:LnL7/nix-darwin/master";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # TODO Look into using these to cleanup
     # flake-utils.url = "github:numtide/flake-utils";
@@ -47,7 +47,7 @@
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
+      nixpkgs-stable,
       home-manager,
       nixos,
       nix-darwin,
@@ -186,7 +186,10 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+                workDotfileArgs = {};
+              };
               home-manager.backupFileExtension = "bak";
               users.users.andrew = {
                 name = nixpkgs.lib.mkForce "andrew";
@@ -210,6 +213,7 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
                 workDotfileArgs = {};
+                devtools.go.enable = true;
               };
               home-manager.backupFileExtension = "bak";
               users.users.andrewwilliams = {
@@ -217,7 +221,6 @@
               };
               home-manager.users.andrewwilliams = import ./home-manager/home.nix;
 
-              devtools.go.enable = true;
             }
           ];
         };
@@ -236,7 +239,7 @@
                 overlays = [
                   outputs.overlays.additions
                   outputs.overlays.modifications
-                  outputs.overlays.unstable-packages
+                  outputs.overlays.stable-packages
                   outputs.overlays.my-neovim-env
                 ];
 

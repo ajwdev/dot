@@ -4,15 +4,16 @@ let
     name = "neovimRuntimeDependencies";
     paths = with pkgs; [
       # For building plugins that need it (Telescope, Treesitter, etc)
+      fzf
       clang
       gnumake
       pandoc
       nodejs
-      unstable.tree-sitter
+      tree-sitter
 
       # Common language servers. Language specific ones should be installed
       # elsewhere (ex: project specific flake)
-      unstable.bash-language-server
+      bash-language-server
       lua-language-server
       nil # nix lsp
       nixfmt-rfc-style
@@ -20,7 +21,7 @@ let
     ];
   };
 
-  myNeovimUnwrapped = pkgs.unstable.wrapNeovim nightlyNvim {
+  myNeovimUnwrapped = pkgs.wrapNeovim nightlyNvim {
     # configure = {
     #   # inherit customRC;
     #   packages.all.start = plugins;
