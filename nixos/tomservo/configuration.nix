@@ -42,6 +42,7 @@ in
     ../common.nix
     ../users.nix
     ../desktop.nix
+    ../media.nix
     ../gaming.nix
     ../virt.nix
     ../sdr.nix
@@ -110,8 +111,6 @@ in
 
     k3b
     cdrkit
-    makemkv
-    handbrake
     discord
     blender-hip
     amdgpu_top
