@@ -11,11 +11,8 @@
 } @args :
 {
 
-  disabledModules = [ "services/misc/ollama.nix" ];
-
   # You can import other NixOS modules here
   imports = [
-    "${args.inputs.nixpkgs-unstable}/nixos/modules/services/misc/ollama.nix"
 
 
     # If you want to use modules your own flake exports (from modules/nixos):
@@ -69,10 +66,9 @@
   # services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
@@ -97,7 +93,7 @@
     ifuse # optional, to mount using 'ifuse'
     idevicerestore
 
-    k3b
+    kdePackages.k3b
     cdrkit
     discord
     blender-hip

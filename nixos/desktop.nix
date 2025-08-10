@@ -1,16 +1,16 @@
 { pkgs, ... }:
 let
-  pinPackage = import ../nix/lib/pinPackage.nix { inherit pkgs; }.pinPackage;
+  pinPackage = (import ../nix/lib/pinPackage.nix { inherit pkgs; }).pinPackage;
 in {
   environment.systemPackages = with pkgs; [
     # wayland things
     wl-clipboard
 
     fuse
-    kcalc
+    kdePackages.kcalc
     discord
-    unstable.obsidian
-    unstable.signal-desktop
+    obsidian
+    signal-desktop
 
     playerctl
     # XXX Addresses regression with Opus 5.1 audio tracks. Rolls back to
@@ -35,7 +35,7 @@ in {
 
   services.displayManager.defaultSession = "plasma";
   environment.plasma6.excludePackages = with pkgs; [
-    elisa
+    kdePackages.elisa
     # gwenview
     # okular
     # oxygen
@@ -48,9 +48,8 @@ in {
     enable = true;
   };
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  # Enable sound with PipeWire below
+  services.pulseaudio.enable = false;
   # rtkit is optional but recommended. Allows programs to request realtime
   # scheduling.
   security.rtkit.enable = true;

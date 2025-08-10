@@ -40,8 +40,8 @@ in
       ]
       ++ lib.optionals (isEnabled "rust") [ rustup ]
       ++ lib.optionals (isEnabled "arduino") [
-        unstable.arduino-ide
-        unstable.arduino-cli
+        arduino-ide
+        arduino-cli
       ];
 
     programs.rbenv.enable = isEnabled "ruby";

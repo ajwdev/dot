@@ -119,7 +119,7 @@
 
     httpie
 
-    unstable.claude-code
+    claude-code
 
     # Dev
     gnumake

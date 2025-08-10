@@ -2,7 +2,7 @@
 let
   neovimRuntimeDependencies = pkgs.symlinkJoin {
     name = "neovimRuntimeDependencies";
-    paths = with pkgs.unstable; [
+    paths = with pkgs; [
       # For building plugins that need it (Telescope, Treesitter, etc)
       fzf
       clang
@@ -21,7 +21,7 @@ let
     ];
   };
 
-  myNeovimUnwrapped = pkgs.unstable.wrapNeovim nightlyNvim {
+  myNeovimUnwrapped = pkgs.wrapNeovim nightlyNvim {
     # configure = {
     #   # inherit customRC;
     #   packages.all.start = plugins;

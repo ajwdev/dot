@@ -6,18 +6,18 @@
   inputs = {
     nixos.url = "github:NixOS/nix";
 
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # Also see the 'unstable-packages' overlay at 'overlays/default.nix'.
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    # Also see the 'stable-packages' overlay at 'overlays/default.nix'.
     hardware.url = "github:nixos/nixos-hardware";
 
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # TODO Look into using these to cleanup
     # flake-utils.url = "github:numtide/flake-utils";
@@ -47,7 +47,7 @@
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
+      nixpkgs-stable,
       home-manager,
       nixos,
       nix-darwin,
@@ -239,7 +239,7 @@
                 overlays = [
                   outputs.overlays.additions
                   outputs.overlays.modifications
-                  outputs.overlays.unstable-packages
+                  outputs.overlays.stable-packages
                   outputs.overlays.my-neovim-env
                 ];
 

@@ -2,11 +2,11 @@
 {
   environment.systemPackages = with pkgs; [
     ffmpeg
-    unstable.makemkv
+    makemkv
     mkvtoolnix
     handbrake
     libdvdcss
     dvdbackup
-    unstable.ffmpeg-full
+    ffmpeg-full
   ];
 }
