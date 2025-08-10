@@ -13,10 +13,10 @@
     # Also see the 'unstable-packages' overlay at 'overlays/default.nix'.
     hardware.url = "github:nixos/nixos-hardware";
 
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    nix-darwin.url = "github:LnL7/nix-darwin/master";
+    nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     # TODO Look into using these to cleanup
@@ -186,7 +186,10 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {inherit inputs outputs;};
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+                workDotfileArgs = {};
+              };
               home-manager.backupFileExtension = "bak";
               users.users.andrew = {
                 name = nixpkgs.lib.mkForce "andrew";

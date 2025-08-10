@@ -28,6 +28,8 @@
   };
 
   nix = {
+    # This is needed to use the Determinate systems install.
+    enable = false;
     settings = {
       experimental-features = "nix-command flakes";
       max-jobs = "auto";
