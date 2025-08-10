@@ -4,17 +4,20 @@
     # wayland things
     wl-clipboard
 
-    ffmpeg
     fuse
     kcalc
-    vlc
-    libdvdcss
-    ffmpeg
     discord
     unstable.obsidian
     unstable.signal-desktop
 
     playerctl
+    # XXX Addresses regression with Opus 5.1 audio tracks. Rolls back to
+    # version 3.0.20
+    (pinPackage {
+      name = "vlc";
+      commit = "d2679dcbf1a032b0583915a8e3f9faffe936e9f1";
+      sha256 = "sha256:04bsa03mhzjq3p7c32znrmg3wfc9njwm4wg7hdsn2kyb6qcjlj5m";
+    })
     firefox
     brave 
     google-chrome
