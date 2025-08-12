@@ -55,6 +55,7 @@
     }@inputs:
     let
       inherit (self) outputs;
+
       forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-linux"
         "x86_64-linux"
@@ -108,9 +109,6 @@
               home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
-                workDotfileArgs = {
-                  foo = "bar";
-                };
                 devtools.enable_all = true;
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
@@ -151,7 +149,6 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
-                workDotfileArgs = {};
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
 
@@ -188,7 +185,6 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
-                workDotfileArgs = {};
               };
               home-manager.backupFileExtension = "bak";
               users.users.andrew = {
@@ -212,14 +208,17 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
-                workDotfileArgs = {};
                 devtools.go.enable = true;
               };
               home-manager.backupFileExtension = "bak";
               users.users.andrewwilliams = {
                 name = nixpkgs.lib.mkForce "andrewwilliams";
               };
-              home-manager.users.andrewwilliams = import ./home-manager/home.nix;
+              home-manager.users.andrewwilliams = {
+                imports = [ ./home-manager/home.nix ];
+                # Work system overrides
+                dotfiles.user.email = nixpkgs.lib.mkForce "andrewwilliams@netflix.com";
+              };
 
             }
           ];
@@ -231,32 +230,38 @@
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           extraSpecialArgs = {
             inherit inputs outputs;
-            workDotfileArgs = {};
           };
           modules = [
-            ({ pkgs, ... }: {
-              nixpkgs = {
-                overlays = [
-                  outputs.overlays.additions
-                  outputs.overlays.modifications
-                  outputs.overlays.stable-packages
-                  outputs.overlays.my-neovim-env
-                ];
+            (
+              { pkgs, ... }:
+              {
+                nixpkgs = {
+                  overlays = [
+                    outputs.overlays.additions
+                    outputs.overlays.modifications
+                    outputs.overlays.stable-packages
+                    outputs.overlays.my-neovim-env
+                  ];
 
-                config = {
-                  allowUnfree = true;
+                  config = {
+                    allowUnfree = true;
+                  };
                 };
-              };
 
-              home.username = pkgs.lib.mkForce "andrewwilliams";
-              # We always this home directory for whatever reason :shrug:
-              home.homeDirectory = pkgs.lib.mkForce "/home/coder";
+                home.username = pkgs.lib.mkForce "andrewwilliams";
+                # We always this home directory for whatever reason :shrug:
+                home.homeDirectory = pkgs.lib.mkForce "/home/coder";
 
-              devtools.go.enable = true;
-            })
-            ./home-manager/home.nix
+                devtools.go.enable = true;
+              }
+            )
+            {
+              imports = [ ./home-manager/home.nix ];
+              # Coder (work) system overrides
+              dotfiles.user.email = nixpkgs.lib.mkForce "andrewwilliams@netflix.com";
+            }
           ];
         };
       };
-  };
+    };
 }

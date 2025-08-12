@@ -20,16 +20,17 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./config.nix # Import dotfile config module
     ./dotfiles.nix
     ./devtools.nix
     ./gui.nix
   ];
-  
+
   home = rec {
     username = lib.mkDefault "andrew";
-    homeDirectory = lib.mkDefault (if pkgs.stdenv.isDarwin 
-      then "/Users/${username.content}" 
-      else "/home/${username.content}");
+    homeDirectory = lib.mkDefault (
+      if pkgs.stdenv.isDarwin then "/Users/${username.content}" else "/home/${username.content}"
+    );
   };
 
   # TODO
@@ -131,7 +132,12 @@
     # strace # system call monitoring
     # ltrace # library call monitoring
 
-    (ruby.withPackages (ps: with ps; [ rugged pry ]))
+    (ruby.withPackages (
+      ps: with ps; [
+        rugged
+        pry
+      ]
+    ))
   ];
 
   programs = {
