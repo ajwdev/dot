@@ -80,6 +80,7 @@
     antidote # zsh plugin manager
     tmux
     neovim
+    nixfmt-rfc-style
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
