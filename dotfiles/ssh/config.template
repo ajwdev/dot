@@ -7,14 +7,11 @@ Host tomservo tomservo.local tomservo.localdomain
     ForwardX11 yes
     ForwardX11Trusted yes
 
+@SSH_HOSTS@
+
 Host *
     ForwardAgent yes
     TCPKeepAlive yes
     ServerAliveInterval 30
     ServerAliveCountMax 10
     VisualHostKey yes
-
-<% begin %>
-  <%= read_file(metatron_ssh) %>
-<% rescue %>
-<% end %>
