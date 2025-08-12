@@ -28,3 +28,10 @@ endif
 
 build-live:
 	nixos-generate -f iso -c ./nixos/ajwlive/configuration.nix -o ajwliveiso
+
+fmt:
+	treefmt
+
+# Check formatting without making changes
+check:
+	treefmt --check

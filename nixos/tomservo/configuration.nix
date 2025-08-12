@@ -8,12 +8,11 @@
   lib,
   config,
   ...
-} @args :
+}@args:
 {
 
   # You can import other NixOS modules here
   imports = [
-
 
     # If you want to use modules your own flake exports (from modules/nixos):
     # outputs.nixosModules.example

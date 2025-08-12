@@ -1,7 +1,8 @@
 { pkgs, ... }:
 let
   pinPackage = (import ../nix/lib/pinPackage.nix { inherit pkgs; }).pinPackage;
-in {
+in
+{
   environment.systemPackages = with pkgs; [
     # wayland things
     wl-clipboard
@@ -21,7 +22,7 @@ in {
       sha256 = "sha256:04bsa03mhzjq3p7c32znrmg3wfc9njwm4wg7hdsn2kyb6qcjlj5m";
     })
     firefox
-    brave 
+    brave
     google-chrome
     ghostty
   ];

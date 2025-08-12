@@ -10,7 +10,7 @@
     NIX_CONFIG = "experimental-features = nix-command flakes";
     nativeBuildInputs = with pkgs; [
       nix
-      nixfmt
+      nixfmt-tree
       home-manager
       git
       gnumake
