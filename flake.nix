@@ -83,6 +83,9 @@
         import ./shell.nix { inherit pkgs; }
       );
 
+      # Formatter configuration for 'nix fmt'
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+
       # Your custom packages and modifications, exported as overlays
       overlays = import ./nix/overlays { inherit inputs; };
       # Reusable nixos modules you might want to export
