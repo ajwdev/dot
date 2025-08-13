@@ -73,4 +73,5 @@ in
     mkOutOfStoreSymlink "${repoRoot}/bin/better-git-branch.sh";
   home.file."bin/git-related-files.rb".source =
     mkOutOfStoreSymlink "${repoRoot}/bin/git-related-files.rb";
+  home.file."bin/sort-path.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/sort-path.sh";
 }
