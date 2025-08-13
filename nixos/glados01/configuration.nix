@@ -25,10 +25,10 @@
       memtest86.enable = true;
       configurationLimit = 12;
       extraConfig = ''
-      serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
-      terminal_input --append serial
-      terminal_output --append serial
-'';
+        serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+        terminal_input --append serial
+        terminal_output --append serial
+      '';
     };
   };
 
@@ -52,7 +52,6 @@
     wantedBy = [ "getty.target" ]; # to start at boot
     serviceConfig.Restart = "always"; # restart when session is closed
   };
-
 
   # TODO Turn this into an option
   networking.hostName = "glados01";

@@ -1,9 +1,6 @@
 # vim: ft=gitconfig
 
-<% begin %>
-  <%= read_file(metatron_git) %>
-<% rescue %>
-<% end %>
+@GIT_CONFIG@
 
 [core]
 	excludesfile = ~/.gitignore_global
@@ -72,4 +69,3 @@
 
 [includeIf "gitdir:~/src/*netflix*/"]
 	path = ~/.gitconfig-work
-

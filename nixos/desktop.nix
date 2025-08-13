@@ -1,22 +1,28 @@
 { pkgs, ... }:
+let
+  pinPackage = (import ../nix/lib/pinPackage.nix { inherit pkgs; }).pinPackage;
+in
 {
   environment.systemPackages = with pkgs; [
     # wayland things
     wl-clipboard
 
-    ffmpeg
     fuse
-    kcalc
-    vlc
-    libdvdcss
-    ffmpeg
+    kdePackages.kcalc
     discord
-    unstable.obsidian
-    unstable.signal-desktop
+    obsidian
+    signal-desktop
 
     playerctl
+    # XXX Addresses regression with Opus 5.1 audio tracks. Rolls back to
+    # version 3.0.20
+    (pinPackage {
+      name = "vlc";
+      commit = "d2679dcbf1a032b0583915a8e3f9faffe936e9f1";
+      sha256 = "sha256:04bsa03mhzjq3p7c32znrmg3wfc9njwm4wg7hdsn2kyb6qcjlj5m";
+    })
     firefox
-    brave 
+    brave
     google-chrome
     ghostty
   ];
@@ -30,7 +36,7 @@
 
   services.displayManager.defaultSession = "plasma";
   environment.plasma6.excludePackages = with pkgs; [
-    elisa
+    kdePackages.elisa
     # gwenview
     # okular
     # oxygen
@@ -43,9 +49,8 @@
     enable = true;
   };
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  # Enable sound with PipeWire below
+  services.pulseaudio.enable = false;
   # rtkit is optional but recommended. Allows programs to request realtime
   # scheduling.
   security.rtkit.enable = true;

@@ -8,27 +8,11 @@
   lib,
   config,
   ...
-} @args :
-let
-  pinPackage =
-    {
-      name,
-      commit,
-      sha256,
-    }:
-    (import (builtins.fetchTarball {
-      inherit sha256;
-      url = "https://github.com/NixOS/nixpkgs/archive/${commit}.tar.gz";
-    }) { system = pkgs.system; }).${name};
-in
+}@args:
 {
-
-  disabledModules = [ "services/misc/ollama.nix" ];
 
   # You can import other NixOS modules here
   imports = [
-    "${args.inputs.nixpkgs-unstable}/nixos/modules/services/misc/ollama.nix"
-
 
     # If you want to use modules your own flake exports (from modules/nixos):
     # outputs.nixosModules.example
@@ -42,6 +26,7 @@ in
     ../common.nix
     ../users.nix
     ../desktop.nix
+    ../media.nix
     ../gaming.nix
     ../virt.nix
     ../sdr.nix
@@ -80,10 +65,9 @@ in
   # services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
@@ -108,10 +92,8 @@ in
     ifuse # optional, to mount using 'ifuse'
     idevicerestore
 
-    k3b
+    kdePackages.k3b
     cdrkit
-    makemkv
-    handbrake
     discord
     blender-hip
     amdgpu_top

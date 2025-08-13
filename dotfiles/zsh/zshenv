@@ -5,3 +5,5 @@ export PATH=$HOME/bin:$HOME/.cargo/bin:$HOME/.local/bin:/opt/homebrew/bin:$PATH
 
 [[ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]] && source $HOME/.nix-profile/etc/profile.d/nix.sh
 [[ -f ~/.zshenv.local ]] && source ~/.zshenv.local
+
+eval $($HOME/bin/sort-path.sh)

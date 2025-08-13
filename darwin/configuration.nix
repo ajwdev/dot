@@ -1,4 +1,9 @@
-{ inputs, outputs, lib, ... }:
+{
+  inputs,
+  outputs,
+  lib,
+  ...
+}:
 {
   # XXX This is to address an error about an unexpected uid/gid numbers. I think I
   # just need to reinstall Nix, but that's for another day.
@@ -16,13 +21,15 @@
 
   nixpkgs = {
     hostPlatform = lib.mkDefault "aarch64-darwin";
-    config = { allowUnfree = true; };
+    config = {
+      allowUnfree = true;
+    };
 
     overlays = [
       # Add overlays your own flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
-      outputs.overlays.unstable-packages
+      outputs.overlays.stable-packages
       outputs.overlays.my-neovim-env
     ];
   };
