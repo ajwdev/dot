@@ -1,2 +1,3 @@
 .direnv
 .worktrees
+.claude/settings.local.json
