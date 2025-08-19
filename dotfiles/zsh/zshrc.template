@@ -19,7 +19,6 @@ setopt AUTOPUSHD         # Turn cd into pushd for all situations
 setopt PUSHD_IGNORE_DUPS # Don't push multiple copies of the same directory onto the directory stack
 setopt EXTENDED_GLOB
 setopt NUMERIC_GLOB_SORT # Sort numerically first, before alpha
-setopt NOMATCH           # Raise error if a glob did not match files instead passing that string back as an argument
 setopt PRINT_EXIT_VALUE  # Print status code on non-zero returns
 setopt MULTIOS           # Allow multiple redirection operators
 setopt LIST_TYPES        # Show file types in list with trailing identifying mark
