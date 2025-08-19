@@ -5,9 +5,8 @@
   ...
 }:
 {
-  # XXX This is to address an error about an unexpected uid/gid numbers. I think I
-  # just need to reinstall Nix, but that's for another day.
-  ids.gids.nixbld = 350;
+  # This is needed to use the Determinate systems install.
+  nix.enable = false;
 
   users.users = {
     # XXX Hacky, but seems to work. Make this better
@@ -32,15 +31,6 @@
       outputs.overlays.stable-packages
       outputs.overlays.my-neovim-env
     ];
-  };
-
-  nix = {
-    # This is needed to use the Determinate systems install.
-    enable = false;
-    settings = {
-      experimental-features = "nix-command flakes";
-      max-jobs = "auto";
-    };
   };
 
   # Used for backwards compatibility, please read the changelog before changing.
