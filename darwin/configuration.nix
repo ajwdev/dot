@@ -18,6 +18,8 @@
     };
   };
 
+  security.pam.services.sudo_local.touchIdAuth = true;
+
   nixpkgs = {
     hostPlatform = lib.mkDefault "aarch64-darwin";
     config = {
