@@ -15,6 +15,7 @@ let
       # elsewhere (ex: project specific flake)
       bash-language-server
       lua-language-server
+      clang-tools
       nil # nix lsp
       nixfmt-rfc-style
       nodePackages.yaml-language-server
