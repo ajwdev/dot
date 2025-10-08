@@ -1,38 +1,27 @@
 return {
   {
-    "greggh/claude-code.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim", -- Required for git operations
-    },
-    config = function()
-      require("claude-code").setup()
-
-      local claudeGrp = vim.api.nvim_create_augroup("Claude", { clear = true })
-      vim.api.nvim_create_autocmd("TermOpen", {
-        pattern = "*",
-        callback = function()
-          local buf_name = vim.api.nvim_buf_get_name(0)
-          if string.find(buf_name, "claude-") then
-            -- Auto-unlist claude-code buffer
-            vim.bo.buflisted = false
-            vim.keymap.set("n", "q", "<cmd>ClaudeCode<cr>", {
-              buffer = 0,
-              desc = "Toggle Claude Code Buffer",
-            })
-            vim.keymap.set("n", "<ESC>", "i<A-ESC><ESC>", {
-              buffer = 0,
-            })
-            vim.keymap.set("n", "O", "a", {
-              buffer = 0,
-            })
-            vim.keymap.set("n", "o", "a", {
-              buffer = 0,
-            })
-          end
-        end,
-        group = claudeGrp,
-      })
-    end
+    "coder/claudecode.nvim",
+    dependencies = { "folke/snacks.nvim" },
+    config = true,
+    keys = {
+      { "<leader><leader>a",  nil,                              desc = "AI/Claude Code" },
+      { "<leader><leader>ac", "<cmd>ClaudeCode<cr>",            desc = "Toggle Claude" },
+      { "<leader><leader>af", "<cmd>ClaudeCodeFocus<cr>",       desc = "Focus Claude" },
+      { "<leader><leader>ar", "<cmd>ClaudeCode --resume<cr>",   desc = "Resume Claude" },
+      { "<leader><leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+      { "<leader><leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+      { "<leader><leader>ab", "<cmd>ClaudeCodeAdd %<cr>",       desc = "Add current buffer" },
+      { "<leader><leader>as", "<cmd>ClaudeCodeSend<cr>",        mode = "v",                  desc = "Send to Claude" },
+      {
+        "<leader><leader>as",
+        "<cmd>ClaudeCodeTreeAdd<cr>",
+        desc = "Add file",
+        ft = { "NvimTree", "neo-tree", "oil", "minifiles", "netrw" },
+      },
+      -- Diff management
+      { "<leader><leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+      { "<leader><leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>",   desc = "Deny diff" },
+    }
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
