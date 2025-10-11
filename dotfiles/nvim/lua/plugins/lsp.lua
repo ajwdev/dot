@@ -172,6 +172,14 @@ return {
           return { 'lsp', 'path', 'snippets', 'buffer', 'copilot' }
         end,
         providers = {
+          -- Use the cwd of the buffer for path completions
+          path = {
+            opts = {
+              get_cwd = function(_)
+                return vim.fn.getcwd()
+              end,
+            },
+          },
           copilot = {
             name = "Copilot",
             module = "blink-cmp-copilot",
