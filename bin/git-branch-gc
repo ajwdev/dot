@@ -8,8 +8,56 @@ fi
 
 git fetch -p
 
-# TODO Consider what to do with worktrees
+deleted=()
+failed=()
+skipped=()
+
+worktree_branches=()
+while IFS= read -r line; do
+    if [[ $line == branch\ * ]]; then
+        branch="${line#branch }"
+        branch="${branch#refs/heads/}"
+        worktree_branches+=("$branch")
+    fi
+done < <(git worktree list --porcelain)
+
 for br in $(git branch --merged $HEAD | awk 'NF == 1 && ($1 != main && $1 != master) {print $1}'); do
+    in_worktree=false
+    for wt_br in "${worktree_branches[@]}"; do
+        if [[ "$br" == "$wt_br" ]]; then
+            in_worktree=true
+            break
+        fi
+    done
+
+    if [[ "$in_worktree" == "true" ]]; then
+        echo "== Skipping $br (in use by worktree)"
+        skipped+=("$br")
+        continue
+    fi
+
     echo "== Deleting $br"
-    git branch -d "$br" || true
+    if git branch -d "$br" 2>&1; then
+        deleted+=("$br")
+    else
+        failed+=("$br")
+    fi
 done
+
+echo ""
+echo "Summary:"
+echo "  Deleted: ${#deleted[@]} branches"
+if [ ${#skipped[@]} -gt 0 ]; then
+    echo "  Skipped: ${#skipped[@]} branches (in use by worktrees)"
+fi
+if [ ${#failed[@]} -gt 0 ]; then
+    echo "  Failed: ${#failed[@]} branches"
+    echo ""
+    echo "Failed branches (use -D to force delete):"
+    printf '    %s\n' "${failed[@]}"
+fi
+if [ ${#skipped[@]} -gt 0 ]; then
+    echo ""
+    echo "Skipped branches (checked out in worktrees):"
+    printf '    %s\n' "${skipped[@]}"
+fi

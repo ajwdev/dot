@@ -1,42 +1,151 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-usage() { echo "${0} <branch name>"; }
+usage() {
+  cat <<EOF
+Usage: ${0} [OPTIONS] [branch name] [start-point]
+
+Create or delete a git worktree in .worktrees/<branch-name>
+Use '.' as the branch name to refer to the current branch.
+With no arguments, lists all worktrees.
+
+OPTIONS:
+  -b    Create a new branch from start-point (like git checkout -b)
+  -d    Delete the worktree instead of creating it
+  -n    Dry-run mode (show what would be done)
+  -v    Verbose mode (show detailed output)
+  -h    Show this help message
+
+EXAMPLES:
+  ${0}                       # List all worktrees
+  ${0} .                     # Create worktree for current branch
+  ${0} feature-branch        # Create worktree for feature-branch
+  ${0} -b new-feature        # Create new branch and worktree from HEAD
+  ${0} -b new-feature main   # Create new branch and worktree from main
+  ${0} -d feature-branch     # Delete worktree for feature-branch
+  ${0} -n feature-branch     # Show what would be created (dry-run)
+EOF
+}
 
 ECHO=
 DEL=
+VERBOSE=
+CREATE_BRANCH=
 
-while getopts "dnhv" o; do
+while getopts "bdnhv" o; do
   case "${o}" in
+    b)
+      CREATE_BRANCH=1
+      ;;
     n)
-      ECHO="echo DRY RUN: " 
+      ECHO="echo [DRY RUN]"
       ;;
     v)
+      VERBOSE=1
       set -x
       ;;
     d)
       DEL=1
-      set -x
       ;;
     h)
       usage
       exit 0
       ;;
     *)
+      usage
+      exit 1
       ;;
   esac
 done
 shift $((OPTIND-1))
 
-if [ -z "${1}" ]; then
-    echo "must specify a ref" >&2
+if ! repo_root="$(git rev-parse --show-toplevel 2>/dev/null)"; then
+    echo "Error: not in a git repository" >&2
     exit 1
 fi
 
-wtdir="$(git root)/.worktrees"
+if [ -n "${CREATE_BRANCH}" ] && [ -n "${DEL}" ]; then
+    echo "Error: cannot use -b and -d together" >&2
+    exit 1
+fi
 
-${ECHO}git worktree add "${wtdir}/${1}" "${1}"
+if [ -z "${1}" ]; then
+    exec git worktree list
+fi
+
+if [ "${1}" = "." ]; then
+    if ! branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"; then
+        echo "Error: could not determine current branch" >&2
+        exit 1
+    fi
+    if [ "${branch}" = "HEAD" ]; then
+        echo "Error: currently in detached HEAD state" >&2
+        echo "Cannot create worktree from detached HEAD" >&2
+        exit 1
+    fi
+else
+    branch="${1}"
+fi
+
+wtdir="${repo_root}/.worktrees"
+wtpath="${wtdir}/${branch}"
+
+if [ -n "${CREATE_BRANCH}" ]; then
+    start_point="${2:-HEAD}"
+
+    if ! git rev-parse --verify "${start_point}" >/dev/null 2>&1; then
+        echo "Error: start-point '${start_point}' does not exist" >&2
+        exit 1
+    fi
+
+    if git rev-parse --verify "${branch}" >/dev/null 2>&1; then
+        echo "Error: branch '${branch}' already exists" >&2
+        exit 1
+    fi
+
+    ${ECHO} git branch "${branch}" "${start_point}"
+    if [ -z "${ECHO}" ]; then
+        echo "Created branch ${branch} from ${start_point}"
+    fi
+fi
+
+if [ -n "${DEL}" ]; then
+    if [ ! -d "${wtpath}" ]; then
+        echo "Error: worktree ${wtpath} does not exist" >&2
+        exit 1
+    fi
+
+    ${ECHO} git worktree remove "${wtpath}"
+
+    if [ -z "${ECHO}" ]; then
+        echo "Removed worktree ${wtpath}"
+    fi
+    exit 0
+fi
+
+if [ -z "${CREATE_BRANCH}" ]; then
+    if ! git rev-parse --verify "${branch}" >/dev/null 2>&1; then
+        echo "Error: ref '${branch}' does not exist" >&2
+        echo "Tip: Create the branch first with: git branch ${branch}" >&2
+        echo "      Or use -b flag: git cowt -b ${branch}" >&2
+        exit 1
+    fi
+fi
+
+if [ -d "${wtpath}" ]; then
+    echo "Error: worktree ${wtpath} already exists" >&2
+    echo "Use -d flag to delete it first, or choose a different branch name" >&2
+    exit 1
+fi
+
+if git worktree list | grep -q "${wtpath}"; then
+    echo "Error: ${wtpath} is already registered as a worktree" >&2
+    echo "Run 'git worktree list' to see all worktrees" >&2
+    exit 1
+fi
+
+${ECHO} git worktree add "${wtpath}" "${branch}"
 
 if [ -z "${ECHO}" ]; then
-  echo "Created worktree ${wtdir}/${1}"
+    echo "Created worktree ${wtpath}"
 fi
