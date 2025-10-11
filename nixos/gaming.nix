@@ -6,6 +6,7 @@
     cabextract
     gamescope
     glxinfo
+    umu-launcher
     lutris
     dosbox
     # ksp package manager for mods
