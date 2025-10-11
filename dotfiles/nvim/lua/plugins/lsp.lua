@@ -40,6 +40,7 @@ return {
       'giuxtaposition/blink-cmp-copilot',
       'onsails/lspkind.nvim',
       -- 'ray-x/lsp_signature.nvim',
+      'xzbdmw/colorful-menu.nvim'
     },
 
     -- use a release tag to download pre-built binaries
@@ -87,12 +88,20 @@ return {
           draw = {
             treesitter = { 'lsp' },
             columns = {
-              { "label",      "label_description", gap = 1 },
               { "kind_icon" },
+              { "label",      gap = 1 },
               { "kind" },
               { "source_name" },
             },
             components = {
+              label = {
+                text = function(ctx)
+                  return require("colorful-menu").blink_components_text(ctx)
+                end,
+                highlight = function(ctx)
+                  return require("colorful-menu").blink_components_highlight(ctx)
+                end,
+              },
               kind_icon = {
                 text = function(ctx)
                   local lspkind = require("lspkind")
@@ -164,5 +173,8 @@ return {
       signature = { enabled = true },
     },
     opts_extend = { "sources.default" }
+  },
+  {
+    'xzbdmw/colorful-menu.nvim'
   }
 }
