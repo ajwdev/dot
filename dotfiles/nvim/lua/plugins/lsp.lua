@@ -141,10 +141,36 @@ return {
         },
       },
 
-      -- Default list of enabled providers defined so that you can extend it
-      -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot' },
+        default = function(ctx)
+          local simple_sources = { 'path', 'buffer', 'copilot' }
+
+          -- Check node type first (fast path)
+          local ok, node = pcall(vim.treesitter.get_node)
+          if ok and node then
+            if vim.tbl_contains({ 'comment', 'line_comment', 'block_comment' }, node:type()) then
+              return simple_sources
+            end
+
+            -- If we got the root node, check the parser language and see if its 'comment' (slower path)
+            if node:type() == 'source_file' then
+              local bufnr = vim.api.nvim_get_current_buf()
+              local cursor = vim.api.nvim_win_get_cursor(0)
+              local row, col = cursor[1] - 1, cursor[2]
+
+              local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+              if ok and parser then
+                local lang_tree = parser:language_for_range({ row, col, row, col })
+                if lang_tree and lang_tree:lang() == 'comment' then
+                  return simple_sources
+                end
+              end
+            end
+          end
+
+          -- None of the above, return the default
+          return { 'lsp', 'path', 'snippets', 'buffer', 'copilot' }
+        end,
         providers = {
           copilot = {
             name = "Copilot",
