@@ -147,6 +147,12 @@ alias -g Y='-o yaml'
 alias -g W='-o wide'
 alias -g N='-o name'
 
+# Load kubectl completions
+if command -v kubectl &>/dev/null; then
+  source <(kubectl completion zsh)
+  compdef k=kubectl
+fi
+
 alias gtt='pushd $(git rev-parse --show-toplevel)'
 
 function github_url {
