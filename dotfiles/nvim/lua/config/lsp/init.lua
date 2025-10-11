@@ -1,115 +1,134 @@
-local servers = {
-  gopls = {
-    cmd = { 'gopls', '--remote=auto' },
-    filetypes = { "go", "gomod" },
-    settings = {
-      gopls = {
-        hints = {
-          assignVariableTypes = true,
-          compositeLiteralFields = true,
-          compositeLiteralTypes = true,
-          constantValues = true,
-          functionTypeParameters = true,
-          parameterNames = true,
-          rangeVariableTypes = true,
-        },
-        codelenses = {
-          generate = false, -- Don't show the `go generate` lens.
-          gc_details = true -- Show a code lens toggling the display of gc's choices.
-        },
-        staticcheck = true,
+-- Enable LSP servers using the modern vim.lsp.enable() API
+local capabilities = require('blink.cmp').get_lsp_capabilities({
+  textDocument = {
+    completion = {
+      completionItem = {
+        snippetSupport = true
+      }
+    }
+  }
+})
+
+vim.lsp.enable('gopls', {
+  cmd = { 'gopls', '--remote=auto' },
+  filetypes = { "go", "gomod" },
+  settings = {
+    gopls = {
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
       },
+      codelenses = {
+        generate = false, -- Don't show the `go generate` lens.
+        gc_details = true -- Show a code lens toggling the display of gc's choices.
+      },
+      staticcheck = true,
     },
-    capabilties = {
-      textDocuemnt = {
-        completion = {
-          completionItem = {
-            snippetSupport = true
-          }
+  },
+  capabilities = capabilities,
+  init_options = {
+    usePlaceholders = true,
+    completeUnimported = true
+  }
+})
+
+vim.lsp.enable('rust_analyzer', {
+  capabilities = capabilities,
+  settings = {
+    ["rust-analyzer"] = {
+      assist = {
+        importGranularity = "module",
+        importPrefix = "by_self",
+      },
+      cargo = {
+        loadOutDirsFromCheck = true
+      },
+      procMacro = {
+        enable = true
+      },
+    }
+  }
+})
+
+vim.lsp.enable('lua_ls', {
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'LuaJIT',
+      },
+      telemetry = {
+        enable = false,
+      },
+      format = {
+        enable = true,
+        -- Put format options here
+        -- NOTE: the value should be STRING!!
+        defaultConfig = {
+          indent_style = "space",
+          indent_size = "2",
         }
-      }
-    },
-    init_options = {
-      usePlaceholders = true,
-      completeUnimported = true
+      },
     }
-  },
+  }
+})
 
-  rust_analyzer = {
-    settings = {
-      ["rust-analyzer"] = {
-        assist = {
-          importGranularity = "module",
-          importPrefix = "by_self",
-        },
-        cargo = {
-          loadOutDirsFromCheck = true
-        },
-        procMacro = {
-          enable = true
-        },
-      }
-    }
-  },
-
-  lua_ls = {
-    settings = {
-      Lua = {
-        runtime = {
-          version = 'LuaJIT',
-        },
-        telemetry = {
-          enable = false,
-        },
-        format = {
-          enable = true,
-          -- Put format options here
-          -- NOTE: the value should be STRING!!
-          defaultConfig = {
-            indent_style = "space",
-            indent_size = "2",
-          }
-        },
-      }
-    }
-  },
-
-  nil_ls = {
-    settings = {
-      ['nil'] = {
-        formatting = {
-          command = { "nixfmt" },
-        },
+vim.lsp.enable('nil_ls', {
+  capabilities = capabilities,
+  settings = {
+    ['nil'] = {
+      formatting = {
+        command = { "nixfmt" },
       },
     },
   },
+})
 
-  yamlls = {
-    settings = {
-      yaml = {
-        schemas = {
-          ["https://api.spinnaker.mgmt.netflix.net/managed/delivery-configs/schema"] = "spinnaker.yml",
-        },
-      }
+vim.lsp.enable('yamlls', {
+  capabilities = capabilities,
+  settings = {
+    yaml = {
+      schemas = {
+        ["https://api.spinnaker.mgmt.netflix.net/managed/delivery-configs/schema"] = "spinnaker.yml",
+      },
     }
-  },
+  }
+})
 
-  clangd = {},
-  solargraph = {},
-  bashls = {},
-  racket_langserver = {},
-  tilt_ls = {},
-  ruby_lsp = {},
-  zls = {},
-}
+vim.lsp.enable('clangd', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable('solargraph', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable('bashls', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable('racket_langserver', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable('tilt_ls', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable('ruby_lsp', {
+  capabilities = capabilities,
+})
+
+vim.lsp.enable('zls', {
+  capabilities = capabilities,
+})
 
 vim.lsp.enable('kotlin_lsp')
-
-local lspconfig = require('lspconfig')
-for lsp, config in pairs(servers) do
-  config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-  lspconfig[lsp].setup(config)
-end
 
 local function keymap_opts(desc)
   return {
