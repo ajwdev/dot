@@ -24,8 +24,16 @@ return {
       -- whitespace sensitive
       require('mini.indentscope').setup()
       -- ... however, I find it distracting in languages where I don't care.
-      -- So disable by default, and re-enable in after/ftplugin files.
-      vim.g.miniindentscope_disable = true
+      -- So disable for all filetypes except python and yaml.
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local ft = vim.bo[args.buf].filetype
+          local allowed_filetypes = { 'python', 'yaml' }
+          if not vim.tbl_contains(allowed_filetypes, ft) then
+            vim.b[args.buf].miniindentscope_disable = true
+          end
+        end,
+      })
 
       -- Keymaps to align text
       require('mini.align').setup()

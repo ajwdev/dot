@@ -40,6 +40,7 @@ return {
       'giuxtaposition/blink-cmp-copilot',
       'onsails/lspkind.nvim',
       -- 'ray-x/lsp_signature.nvim',
+      'xzbdmw/colorful-menu.nvim'
     },
 
     -- use a release tag to download pre-built binaries
@@ -87,12 +88,20 @@ return {
           draw = {
             treesitter = { 'lsp' },
             columns = {
-              { "label",      "label_description", gap = 1 },
               { "kind_icon" },
+              { "label",      gap = 1 },
               { "kind" },
               { "source_name" },
             },
             components = {
+              label = {
+                text = function(ctx)
+                  return require("colorful-menu").blink_components_text(ctx)
+                end,
+                highlight = function(ctx)
+                  return require("colorful-menu").blink_components_highlight(ctx)
+                end,
+              },
               kind_icon = {
                 text = function(ctx)
                   local lspkind = require("lspkind")
@@ -132,11 +141,45 @@ return {
         },
       },
 
-      -- Default list of enabled providers defined so that you can extend it
-      -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer', 'copilot' },
+        default = function(ctx)
+          local simple_sources = { 'path', 'buffer', 'copilot' }
+
+          -- Check node type first (fast path)
+          local ok, node = pcall(vim.treesitter.get_node)
+          if ok and node then
+            if vim.tbl_contains({ 'comment', 'line_comment', 'block_comment' }, node:type()) then
+              return simple_sources
+            end
+
+            -- If we got the root node, check the parser language and see if its 'comment' (slower path)
+            if node:type() == 'source_file' then
+              local bufnr = vim.api.nvim_get_current_buf()
+              local cursor = vim.api.nvim_win_get_cursor(0)
+              local row, col = cursor[1] - 1, cursor[2]
+
+              local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+              if ok and parser then
+                local lang_tree = parser:language_for_range({ row, col, row, col })
+                if lang_tree and lang_tree:lang() == 'comment' then
+                  return simple_sources
+                end
+              end
+            end
+          end
+
+          -- None of the above, return the default
+          return { 'lsp', 'path', 'snippets', 'buffer', 'copilot' }
+        end,
         providers = {
+          -- Use the cwd of the buffer for path completions
+          path = {
+            opts = {
+              get_cwd = function(_)
+                return vim.fn.getcwd()
+              end,
+            },
+          },
           copilot = {
             name = "Copilot",
             module = "blink-cmp-copilot",
@@ -164,5 +207,8 @@ return {
       signature = { enabled = true },
     },
     opts_extend = { "sources.default" }
+  },
+  {
+    'xzbdmw/colorful-menu.nvim'
   }
 }
