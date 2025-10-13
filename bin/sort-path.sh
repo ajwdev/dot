@@ -7,40 +7,70 @@ sort_and_dedupe_path() {
     # Convert PATH to array, removing empty entries
     IFS=':' read -ra path_array <<< "$path_string"
     
-    # Use a simple approach for deduplication and stable sorting
+    # Use multiple passes for deduplication and priority-based sorting
     local seen_paths=""
     local sorted_path=""
-    
-    # First pass: collect priority paths (home, opt non-homebrew, nix) in order
+
+    # Pass 1: Home directories (highest user priority)
     for path in "${path_array[@]}"; do
-        # Skip empty paths
         [[ -z "$path" ]] && continue
-        
-        # Skip if already seen (deduplication)
         if [[ ":$seen_paths:" == *":$path:"* ]]; then
             continue
         fi
-        
-        # Only add high priority paths in this pass
-        if [[ "$path" =~ ^~/ ]] || [[ "$path" =~ ^\$HOME/ ]] || [[ "$path" == "$HOME"* ]] || \
-           [[ "$path" =~ ^/opt/ && ! "$path" =~ /opt/homebrew ]] || \
-           [[ "$path" =~ /nix/ ]] || [[ "$path" =~ \.nix-profile ]] || \
+
+        if [[ "$path" == "$HOME"* ]]; then
+            seen_paths="$seen_paths:$path"
+            sorted_path="${sorted_path:+$sorted_path:}$path"
+        fi
+    done
+
+    # Pass 2: /opt/* (excluding homebrew)
+    for path in "${path_array[@]}"; do
+        [[ -z "$path" ]] && continue
+        if [[ ":$seen_paths:" == *":$path:"* ]]; then
+            continue
+        fi
+
+        if [[ "$path" =~ ^/opt/ && "$path" != *"/opt/homebrew"* ]]; then
+            seen_paths="$seen_paths:$path"
+            sorted_path="${sorted_path:+$sorted_path:}$path"
+        fi
+    done
+
+    # Pass 3: /run/wrappers/bin (wrapped executables - must come before other system paths)
+    for path in "${path_array[@]}"; do
+        [[ -z "$path" ]] && continue
+        if [[ ":$seen_paths:" == *":$path:"* ]]; then
+            continue
+        fi
+
+        if [[ "$path" == "/run/wrappers/bin" ]]; then
+            seen_paths="$seen_paths:$path"
+            sorted_path="${sorted_path:+$sorted_path:}$path"
+        fi
+    done
+
+    # Pass 4: Other Nix/NixOS system paths
+    for path in "${path_array[@]}"; do
+        [[ -z "$path" ]] && continue
+        if [[ ":$seen_paths:" == *":$path:"* ]]; then
+            continue
+        fi
+
+        if [[ "$path" =~ /nix/ ]] || [[ "$path" =~ \.nix-profile ]] || \
            [[ "$path" == "/run/current-system/sw/bin" ]] || [[ "$path" =~ ^/etc/profiles/per-user/ ]]; then
             seen_paths="$seen_paths:$path"
             sorted_path="${sorted_path:+$sorted_path:}$path"
         fi
     done
-    
-    # Second pass: add remaining paths in their original order (stable sort)
+
+    # Final pass: add all remaining paths in their original order
     for path in "${path_array[@]}"; do
-        # Skip empty paths
         [[ -z "$path" ]] && continue
-        
-        # Skip if already seen (deduplication)
         if [[ ":$seen_paths:" == *":$path:"* ]]; then
             continue
         fi
-        
+
         seen_paths="$seen_paths:$path"
         sorted_path="${sorted_path:+$sorted_path:}$path"
     done
@@ -60,7 +90,7 @@ case "${1:-}" in
         echo "  -p           Print sorted PATH only (no export)"
         echo "  --help       Show this help message"
         echo ""
-        echo "Priority order: Home directories > /opt/* (non-homebrew) > Nix paths > [rest in original order]"
+        echo "Priority order: Home directories > /opt/* (non-homebrew) > /run/wrappers/bin > Nix paths > [rest in original order]"
         echo "Uses stable sort to preserve existing order for non-priority paths"
         ;;
     --dry-run)
