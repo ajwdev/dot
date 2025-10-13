@@ -17,6 +17,7 @@ let
       stylua
       codespell
       bash-language-server
+      shfmt
       lua-language-server
       clang-tools
       nil # nix lsp
