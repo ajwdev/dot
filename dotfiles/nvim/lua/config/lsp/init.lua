@@ -242,6 +242,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>',
       keymap_opts("List all implementations in quickfix"))
 
-    vim.keymap.set("n", "<leader>F", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", keymap_opts("Format buffer"))
+    -- vim.keymap.set("n", "<leader>F", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", keymap_opts("Format buffer"))
   end
 })

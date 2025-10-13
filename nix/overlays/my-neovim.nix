@@ -13,6 +13,9 @@ let
 
       # Common language servers. Language specific ones should be installed
       # elsewhere (ex: project specific flake)
+      markdownlint-cli
+      stylua
+      codespell
       bash-language-server
       lua-language-server
       clang-tools
