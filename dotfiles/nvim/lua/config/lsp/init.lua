@@ -225,15 +225,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set(
       'n',
       'grr',
-      '<cmd>lua require("telescope.builtin").lsp_references()<CR>',
-      keymap_opts("List all references in Telescope")
+      function() Snacks.picker.lsp_references() end,
+      keymap_opts("List all references in Picker")
     )
     vim.keymap.set('n', 'gri', '<cmd>lua vim.lsp.buf.implementation()<CR>',
       keymap_opts("List all implementations in quickfix"))
     vim.keymap.set(
       'n',
       'gO',
-      '<cmd>lua require("telescope.builtin").lsp_document_symbols({symbol_width=0.4, symbol_type_width = 0.1})<CR>',
+      function() Snacks.picker.lsp_symbols() end,
       keymap_opts("List document symbols")
     )
     -- TODO Deprecate these and move to default bindings above
