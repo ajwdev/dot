@@ -12,11 +12,17 @@ rec {
     # ...
     # });
 
+    # XXX Skip direnv tests to avoid fish dependency (fish tests fail on macOS)
+    direnv = prev.direnv.overrideAttrs (oldAttrs: {
+      doCheck = false;
+    });
+
     # libbluray = pkgs.libbluray.override {
     #   withAACS = true;
     #   withBDplus = true;
     # };
     # vlc = pkgs.vlc.override { inherit libbluray; };
+    #
     # lutris-unwrapped = prev.lutris-unwrapped.overrideAttrs (oldAttrs: rec {
     #   inherit (oldAttrs) pname;
     #   version = "0.5.17";
