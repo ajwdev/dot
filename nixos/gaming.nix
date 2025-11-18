@@ -5,7 +5,7 @@
     winetricks
     cabextract
     gamescope
-    glxinfo
+    mesa-demos
     umu-launcher
     lutris
     dosbox
@@ -26,7 +26,7 @@
       extraPkgs = (
         pkgs: [
           pkgs.corefonts
-          pkgs.vistafonts
+          pkgs.vista-fonts
         ]
       );
     };
