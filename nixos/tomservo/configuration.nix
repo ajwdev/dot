@@ -61,6 +61,15 @@
   networking.hostName = "tomservo";
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
+  # Enable IPv6
+  networking.enableIPv6 = true;
+
+  # Enable accepting IPv6 Router Advertisements for SLAAC
+  boot.kernel.sysctl = {
+    "net.ipv6.conf.all.accept_ra" = 2;
+    "net.ipv6.conf.default.accept_ra" = 2;
+  };
+
   # Enable a windowing system. This also applies to Wayland despite the name
   # services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
