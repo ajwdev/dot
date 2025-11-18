@@ -5,5 +5,5 @@
   pkgs ? (import ../nixpkgs.nix) { },
 }:
 {
-  # example = pkgs.callPackage ./example { };
+  mangle = pkgs.callPackage ./mangle { };
 }
