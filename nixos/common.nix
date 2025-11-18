@@ -142,6 +142,8 @@
 
     # system tools
     sysstat
+
+    ndisc6
   ];
 
   programs.mtr.enable = true;

@@ -78,7 +78,7 @@ in
     fira-code-symbols
     jetbrains-mono
     corefonts
-    vistafonts
+    vista-fonts
   ];
   fonts.fontDir.enable = true;
 
