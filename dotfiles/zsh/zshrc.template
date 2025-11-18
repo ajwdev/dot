@@ -132,7 +132,27 @@ for ext in c cc S ld rs go js lua elm xml json yaml yml md; do
   alias -s $ext="$EDITOR"
 done
 
-alias -s git='git clone'
+# Wrapper function for gclone that also cds into the cloned repo
+function _gclone_and_cd {
+  local output repo_path
+  output=$(gclone "$1" 2>&1)
+  local status=$?
+
+  # Print the output
+  echo "$output"
+
+  # Extract the last line (which should be the repo path)
+  repo_path=$(echo "$output" | tail -1)
+
+  # If successful and path exists, cd into it
+  if [[ $status -eq 0 ]] && [[ -d "$repo_path" ]]; then
+    cd "$repo_path"
+  fi
+
+  return $status
+}
+
+alias -s git='_gclone_and_cd'
 alias -s json='jq .'
 
 # Kubernetes things

@@ -30,12 +30,13 @@
 	poh = push origin HEAD
 	pohf = push origin HEAD --force-with-lease
 	pot = push origin tag
-	related = !git-related-files.rb
 	r1 = reset HEAD~1
 	rbc = rebase --cont
+	related = !git-related-files.rb
 	ri = rebase --interactive
 	root = rev-parse --show-toplevel
 	st = status
+	tags = tag --list
 	uncommit = reset --soft HEAD^
 	unstage = reset HEAD --
 	which-branches-contain = branch -a --contains

@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'uri'
+require 'fileutils'
+
+def parse_git_url(url)
+  # Handle SSH URLs: git@github.com:user/repo.git
+  if url =~ /^git@([^:]+):(.+)\/([^\/]+?)(\.git)?$/
+    hostname = $1
+    user_org = $2
+    repo = $3
+    return { hostname: hostname, user_org: user_org, repo: repo }
+  end
+
+  # Handle HTTPS URLs: https://github.com/user/repo.git
+  # Also handles http:// variants
+  if url =~ /^https?:\/\/([^\/]+)\/(.+)\/([^\/]+?)(\.git)?$/
+    hostname = $1
+    user_org = $2
+    repo = $3
+    return { hostname: hostname, user_org: user_org, repo: repo }
+  end
+
+  nil
+end
+
+def main
+  if ARGV.empty?
+    puts "Usage: gclone <git-url>"
+    puts "\nClones a git repository into an organized directory structure:"
+    puts "  ~/src/<hostname>/<user/org>/<repo>"
+    puts "\nExamples:"
+    puts "  gclone https://github.com/neovim/neovim.git"
+    puts "  gclone git@github.com:torvalds/linux.git"
+    exit 1
+  end
+
+  url = ARGV[0]
+  parsed = parse_git_url(url)
+
+  unless parsed
+    puts "Error: Unable to parse git URL: #{url}"
+    puts "\nSupported formats:"
+    puts "  - SSH: git@hostname:user/repo.git"
+    puts "  - HTTPS: https://hostname/user/repo.git"
+    exit 1
+  end
+
+  # Build target directory
+  src_base = File.expand_path("~/src")
+  target_dir = File.join(src_base, parsed[:hostname], parsed[:user_org])
+  repo_path = File.join(target_dir, parsed[:repo])
+
+  # Check if repo already exists
+  if Dir.exist?(repo_path)
+    puts "Repository already exists at: #{repo_path}"
+    puts repo_path  # Output the path for shell integration
+    exit 0
+  end
+
+  # Create directory structure
+  FileUtils.mkdir_p(target_dir)
+
+  # Clone the repository
+  success = system("git", "clone", url, repo_path)
+
+  if success
+    puts "\nSuccessfully cloned to: #{repo_path}"
+    puts repo_path  # Output the path for shell integration
+    exit 0
+  else
+    puts "\nFailed to clone repository"
+    exit 1
+  end
+end
+
+main if __FILE__ == $PROGRAM_NAME
