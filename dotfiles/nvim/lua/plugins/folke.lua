@@ -20,7 +20,13 @@ return {
       dashboard = { enabled = false },
       explorer = { enabled = false },
       indent = { enabled = false },
-      picker = { enabled = false },
+      picker = {
+        enabled = true,
+        layout = {
+          preset = "telescope",
+          reverse = true,
+        },
+      },
       quickfile = { enabled = true },
       scroll = { enabled = false },
       statuscolumn = { enabled = false },
@@ -42,6 +48,30 @@ return {
     },
     keys = {
       { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+
+      -- Picker keybindings (replacing Telescope)
+      { '<leader>T', function() Snacks.picker.pick() end, desc = "Snacks Picker" },
+
+      -- File pickers
+      { '<C-P>', function() Snacks.picker.files() end, desc = "Picker: Find files" },
+      { '<leader>b', function() Snacks.picker.buffers() end, desc = "Picker: Show buffers" },
+
+      -- Search
+      { '<leader>rg', function() Snacks.picker.grep() end, desc = "Picker: Live grep" },
+      { '<leader>H', function() Snacks.picker.help() end, desc = "Picker: Help tags" },
+
+      -- Treesitter symbols (document level)
+      { '<leader>ts', function() Snacks.picker.lsp_symbols() end, desc = "Picker: Document symbols" },
+
+      -- LSP pickers
+      { '<leader>ls', function() Snacks.picker.lsp_symbols() end, desc = "Picker: LSP document symbols" },
+      { '<leader>lws', function() Snacks.picker.lsp_workspace_symbols() end, desc = "Picker: LSP workspace symbols" },
+      { '<leader>lr', function() Snacks.picker.lsp_references() end, desc = "Picker: LSP references" },
+      { '<leader>li', function() Snacks.picker.lsp_implementations() end, desc = "Picker: LSP implementations" },
+      { '<leader>ld', function() Snacks.picker.lsp_definitions() end, desc = "Picker: LSP definitions" },
+      { '<leader>lD', function() Snacks.picker.lsp_type_definitions() end, desc = "Picker: LSP type definitions" },
+      { '<leader>lci', function() Snacks.picker.lsp_incoming_calls() end, desc = "Picker: LSP calls incoming" },
+      { '<leader>lco', function() Snacks.picker.lsp_outgoing_calls() end, desc = "Picker: LSP calls outgoing" },
     },
     init = function()
       vim.api.nvim_create_autocmd("User", {
@@ -97,6 +127,27 @@ return {
       open_no_results = true,
     },
     cmd = "Trouble",
+    -- Integrate with snacks.nvim picker (from docs)
+    specs = {
+      "folke/snacks.nvim",
+      opts = function(_, opts)
+        return vim.tbl_deep_extend("force", opts or {}, {
+          picker = {
+            actions = require("trouble.sources.snacks").actions,
+            win = {
+              input = {
+                keys = {
+                  ["<c-t>"] = {
+                    "trouble_open",
+                    mode = { "n", "i" },
+                  },
+                },
+              },
+            },
+          },
+        })
+      end,
+    },
     keys = {
       {
         "]d",
