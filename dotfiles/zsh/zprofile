@@ -3,7 +3,7 @@ export DOCKER_SCAN_SUGGEST=false
 export PLAN9=$HOME/src/9fans/plan9port
 export GPG_TTY=$(tty)
 
-if [ ! -z "SSH_CONNECTION" ]; then
+if [ ! -z "$SSH_CONNECTION" ]; then
   # Force x11 so forwarding works correctly
   export GDK_BACKEND=x11
 fi
