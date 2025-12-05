@@ -177,6 +177,28 @@
             # })
           ];
         };
+
+        "workvm" = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/workvm/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # arguments to home.nix
+            }
+          ];
+        };
       };
 
       darwinConfigurations = {
