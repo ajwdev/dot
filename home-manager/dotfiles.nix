@@ -63,6 +63,9 @@ in
   # derivation in the nix store.
   home.file.".config/nvim".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/nvim";
 
+  # home.file.".config/hypr".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/hypr";
+  home.file.".config/quickshell".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/quickshell";
+
   # Shell scripts
   home.file."bin/git-cowt".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
   home.file."bin/git-wip".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-wip";

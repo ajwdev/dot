@@ -3,6 +3,8 @@ let
   pinPackage = (import ../nix/lib/pinPackage.nix { inherit pkgs; }).pinPackage;
 in
 {
+  imports = [./hyprland.nix];
+
   environment.systemPackages = with pkgs; [
     # wayland things
     wl-clipboard
@@ -45,15 +47,8 @@ in
   # We use KDE, but we still want to configure GTK app settings
   programs.dconf.enable = true;
 
-  programs.hyprland = {
-    enable = true;
-  };
-
   # Enable sound with PipeWire below
   services.pulseaudio.enable = false;
-  # rtkit is optional but recommended. Allows programs to request realtime
-  # scheduling.
-  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -66,6 +61,11 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+
+  security.polkit.enable = true;
+  # rtkit is optional but recommended. Allows programs to request realtime
+  # scheduling (ex: pipewire)
+  security.rtkit.enable = true;
 
   # Enable CUPS
   services.printing.enable = true;

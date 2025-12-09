@@ -33,6 +33,16 @@
     );
   };
 
+  # Fix menu bar visibility in Hyprland
+  home.sessionVariables = {
+    # For GTK apps
+    GTK_SHELL_SHOWS_MENUBAR = "0";
+    GTK_SHELL_SHOWS_APP_MENU = "0";
+
+    # For Qt/KDE apps
+    QT_QPA_PLATFORMTHEME = "qt5ct";
+  };
+
   # TODO
   # https://codeberg.org/dnkl/fuzzel
   # https://github.com/hyprland-community/awesome-hyprland#runners-menus-and-application-launchers
@@ -77,11 +87,14 @@
   home.packages = with pkgs; [
     comma
     zsh
-    zplug
     antidote # zsh plugin manager
     tmux
     neovim
     nixfmt-rfc-style
+
+    # Qt theme configuration tools for menu bar fix
+    libsForQt5.qt5ct
+    kdePackages.qt6ct
 
     # utils
     ripgrep # recursively searches directories for a regex pattern

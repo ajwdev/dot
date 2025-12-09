@@ -41,6 +41,11 @@
 
     # TODO https://stylix.danth.me/installation.html
     # stylix.url = "github:danth/stylix";
+
+    # ashell.url = "github:MalpenZibo/ashell";
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
+    hyprland-plugins.inputs.hyprland.follows = "hyprland";
   };
 
   outputs =
@@ -65,7 +70,7 @@
     in
     {
       # Your custom packages
-      # Acessible through 'nix build', 'nix shell', etc
+      # Accessible through 'nix build', 'nix shell', etc
       packages = forAllSystems (
         system:
         let
@@ -74,7 +79,7 @@
         import ./nix/pkgs { inherit pkgs; }
       );
       # Devshell for bootstrapping
-      # Acessible through 'nix develop' or 'nix-shell' (legacy)
+      # Accessible through 'nix develop' or 'nix-shell' (legacy)
       devShells = forAllSystems (
         system:
         let
