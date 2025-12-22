@@ -1,5 +1,4 @@
 return {
-
   { -- Linting
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
@@ -14,7 +13,11 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
-          lint.try_lint()
+           -- Skip linting in floating windows
+           local config = vim.api.nvim_win_get_config(0)
+           if config.relative == "" then
+             lint.try_lint()
+           end
         end,
       })
 

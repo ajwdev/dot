@@ -20,6 +20,52 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
+-- Configure floating windows (hover, signature help, etc.)
+vim.api.nvim_create_autocmd("FileType", {
+  -- pattern = "markdown",
+  callback = function()
+    -- Check if we're in a floating window
+    local config = vim.api.nvim_win_get_config(0)
+    if config.relative ~= "" then
+      -- Always conceal markdown markers in floating windows
+      vim.wo.concealcursor = "nvic"
+
+      -- Skip over code fence markers when moving
+      local function skip_fences(direction)
+        return function()
+          local line = vim.fn.line(".")
+          local max_line = vim.fn.line("$")
+
+          -- Move in the specified direction
+          if direction == "down" then
+            vim.cmd("normal! j")
+          else
+            vim.cmd("normal! k")
+          end
+
+          -- Skip lines that are just code fence markers
+          local new_line = vim.fn.line(".")
+          local content = vim.fn.getline(new_line)
+          while new_line ~= line and content:match("^```") do
+            if direction == "down" and new_line < max_line then
+              vim.cmd("normal! j")
+            elseif direction == "up" and new_line > 1 then
+              vim.cmd("normal! k")
+            else
+              break
+            end
+            new_line = vim.fn.line(".")
+            content = vim.fn.getline(new_line)
+          end
+        end
+      end
+
+      vim.keymap.set("n", "j", skip_fences("down"), { buffer = true, silent = true })
+      vim.keymap.set("n", "k", skip_fences("up"), { buffer = true, silent = true })
+    end
+  end,
+})
+
 -- Configure each server
 vim.lsp.config('gopls', {
   cmd = { 'gopls', '--remote=auto' },
