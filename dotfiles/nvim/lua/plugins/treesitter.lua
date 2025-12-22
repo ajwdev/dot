@@ -1,10 +1,10 @@
 return {
   {
-    'nvim-treesitter/nvim-treesitter',
-    event = 'BufReadPost',
-    build = ':TSUpdate',
+    "nvim-treesitter/nvim-treesitter",
+    event = "BufReadPost",
+    build = ":TSUpdate",
     config = function()
-      require('nvim-treesitter.configs').setup({
+      require("nvim-treesitter.configs").setup({
         ensure_installed = {
           "c",
           "cpp",
@@ -50,18 +50,18 @@ return {
         },
 
         indent = {
-          enable = true
+          enable = true,
         },
       })
     end,
   },
 
   {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
-    event = 'BufReadPost',
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    event = "BufReadPost",
     config = function()
-      require('nvim-treesitter.configs').setup({
+      require("nvim-treesitter.configs").setup({
         textobjects = {
           enable = true,
 
@@ -89,9 +89,9 @@ return {
             -- and should return the mode ('v', 'V', or '<c-v>') or a table
             -- mapping query_strings to modes.
             selection_modes = {
-              ['@parameter.outer'] = 'v', -- charwise
-              ['@function.outer'] = 'V',  -- linewise
-              ['@class.outer'] = 'V',     -- blockwise
+              ["@parameter.outer"] = "v", -- charwise
+              ["@function.outer"] = "V", -- linewise
+              ["@class.outer"] = "V", -- blockwise
               -- ['@class.outer'] = '<c-v>', -- blockwise
             },
           },
@@ -181,11 +181,11 @@ return {
   },
 
   {
-    'RRethy/nvim-treesitter-endwise',
-    event = 'InsertEnter',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
+    "RRethy/nvim-treesitter-endwise",
+    event = "InsertEnter",
+    dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
-      require('nvim-treesitter.configs').setup({
+      require("nvim-treesitter.configs").setup({
         endwise = {
           enable = true,
         },
@@ -194,18 +194,18 @@ return {
   },
 
   {
-    'RRethy/nvim-treesitter-textsubjects',
-    event = 'BufReadPost',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
+    "RRethy/nvim-treesitter-textsubjects",
+    event = "BufReadPost",
+    dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
-      require('nvim-treesitter.configs').setup({
+      require("nvim-treesitter.configs").setup({
         textsubjects = {
           enable = true,
-          prev_selection = ',', -- (Optional) keymap to select the previous selection
+          prev_selection = ",", -- (Optional) keymap to select the previous selection
           keymaps = {
-            ['.'] = 'textsubjects-smart',
-            [';'] = 'textsubjects-container-outer',
-            ['i;'] = { 'textsubjects-container-inner', desc = "Select inside containers (classes, functions, etc.)" },
+            ["."] = "textsubjects-smart",
+            [";"] = "textsubjects-container-outer",
+            ["i;"] = { "textsubjects-container-inner", desc = "Select inside containers (classes, functions, etc.)" },
           },
         },
       })
@@ -213,35 +213,35 @@ return {
   },
 
   {
-    'HiPhish/rainbow-delimiters.nvim',
-    event = 'BufReadPost',
-    url = 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
+    "HiPhish/rainbow-delimiters.nvim",
+    event = "BufReadPost",
+    url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git",
+    dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
-      local rainbow_delimiters = require('rainbow-delimiters')
-      require('rainbow-delimiters.setup').setup({
+      local rainbow_delimiters = require("rainbow-delimiters")
+      require("rainbow-delimiters.setup").setup({
         strategy = {
-          [''] = rainbow_delimiters.strategy['global'],
-          vim = rainbow_delimiters.strategy['local'],
+          [""] = rainbow_delimiters.strategy["global"],
+          vim = rainbow_delimiters.strategy["local"],
         },
         query = {
-          [''] = 'rainbow-delimiters',
+          [""] = "rainbow-delimiters",
           -- lua = 'rainbow-blocks',
         },
         priority = {
-          [''] = 110,
+          [""] = 110,
           lua = 210,
         },
         highlight = {
-          'RainbowDelimiterRed',
-          'RainbowDelimiterYellow',
-          'RainbowDelimiterBlue',
-          'RainbowDelimiterOrange',
-          'RainbowDelimiterGreen',
-          'RainbowDelimiterViolet',
-          'RainbowDelimiterCyan',
+          "RainbowDelimiterRed",
+          "RainbowDelimiterYellow",
+          "RainbowDelimiterBlue",
+          "RainbowDelimiterOrange",
+          "RainbowDelimiterGreen",
+          "RainbowDelimiterViolet",
+          "RainbowDelimiterCyan",
         },
       })
-    end
+    end,
   },
 }

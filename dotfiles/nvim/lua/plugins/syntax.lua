@@ -1,13 +1,13 @@
 return {
-  { 'lifepillar/pgsql.vim', ft = 'sql' },
-  { 'fatih/vim-go', ft = 'go' },
-  { 'rust-lang/rust.vim',ft = 'rust' },
-  { 'qnighy/lalrpop.vim', ft = "lalrpop" },
-  { 'wlangstroth/vim-racket', ft = "racket" },
+  { "lifepillar/pgsql.vim", ft = "sql" },
+  { "fatih/vim-go", ft = "go" },
+  { "rust-lang/rust.vim", ft = "rust" },
+  { "qnighy/lalrpop.vim", ft = "lalrpop" },
+  { "wlangstroth/vim-racket", ft = "racket" },
   -- TODO What should the type be here?
-  { 'cappyzawa/starlark.vim', ft = "starlark" },
-  { 'ziglang/zig.vim', ft = "zig" },
-  { 'aliou/bats.vim', ft = "bats" }
+  { "cappyzawa/starlark.vim", ft = "starlark" },
+  { "ziglang/zig.vim", ft = "zig" },
+  { "aliou/bats.vim", ft = "bats" },
   -- { 'uber/prototool', { 'rtp':'vim/prototool' }
   -- { 'vim-ruby/vim-ruby', ft = 'ruby' }
   -- { 'tpope/vim-rbenv', ft = 'ruby' }

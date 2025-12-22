@@ -3,30 +3,30 @@ return {
   -- LSP config
   --
   {
-    'neovim/nvim-lspconfig',
-    event = 'BufReadPost',
+    "neovim/nvim-lspconfig",
+    event = "BufReadPost",
     dependencies = {
       -- Adds a lightblub in the line number column when an LSP code action is available
       {
-        'kosayoda/nvim-lightbulb',
+        "kosayoda/nvim-lightbulb",
         config = function()
-          require('nvim-lightbulb').setup {
+          require("nvim-lightbulb").setup({
             code_lenses = true,
             autocmd = { enabled = true },
             sign = { enabled = false },
-            virtual_text = { enabled = true }
-          }
-        end
+            virtual_text = { enabled = true },
+          })
+        end,
       },
       {
-        'vxpm/ferris.nvim',
+        "vxpm/ferris.nvim",
         opts = {},
       },
       "b0o/SchemaStore.nvim",
-      'saghen/blink.cmp',
+      "saghen/blink.cmp",
     },
     config = function()
-      require 'config.lsp'
+      require("config.lsp")
     end,
   },
 
@@ -34,17 +34,17 @@ return {
   ---- Completion
   ----
   {
-    'saghen/blink.cmp',
+    "saghen/blink.cmp",
     -- optional: provides snippets for the snippet source
     dependencies = {
-      'giuxtaposition/blink-cmp-copilot',
-      'onsails/lspkind.nvim',
+      "giuxtaposition/blink-cmp-copilot",
+      "onsails/lspkind.nvim",
       -- 'ray-x/lsp_signature.nvim',
-      'xzbdmw/colorful-menu.nvim'
+      "xzbdmw/colorful-menu.nvim",
     },
 
     -- use a release tag to download pre-built binaries
-    version = '1.*',
+    version = "1.*",
     -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
     -- build = 'cargo build --release',
     -- If you use nix, you can build from source using latest nightly rust with:
@@ -54,29 +54,30 @@ return {
     ---@type blink.cmp.Config
     opts = {
       enabled = function()
-        return not vim.list_contains({ 'copilot-chat' }, vim.bo.filetype)
-            and vim.bo.buftype ~= 'prompt'
-            and vim.b.completion ~= false
+        return not vim.list_contains({ "copilot-chat" }, vim.bo.filetype)
+          and vim.bo.buftype ~= "prompt"
+          and vim.b.completion ~= false
       end,
       keymap = {
-        preset = 'default',
-        ['<C-space>'] = { 'select_and_accept', 'show', 'show_documentation' },
-        ['<CR>'] = { 'select_and_accept', 'fallback' },
-        ['<C-j>'] = { 'select_next', 'fallback' },
-        ['<C-k>'] = { 'select_prev', 'fallback' },
-        ['<C-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        preset = "default",
+        ["<C-space>"] = { "select_and_accept", "show", "show_documentation" },
+        ["<CR>"] = { "select_and_accept", "fallback" },
+        ["<C-j>"] = { "select_next", "fallback" },
+        ["<C-k>"] = { "select_prev", "fallback" },
+        ["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
       },
 
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono'
+        nerd_font_variant = "mono",
       },
 
       -- (Default) Only show the documentation popup when manually triggered
       completion = {
         documentation = {
-          auto_show = true, auto_show_delay_ms = 500
+          auto_show = true,
+          auto_show_delay_ms = 500,
         },
         accept = {
           auto_brackets = { enabled = true },
@@ -86,10 +87,10 @@ return {
           auto_show = true,
 
           draw = {
-            treesitter = { 'lsp' },
+            treesitter = { "lsp" },
             columns = {
               { "kind_icon" },
-              { "label",      gap = 1 },
+              { "label", gap = 1 },
               { "kind" },
               { "source_name" },
             },
@@ -135,25 +136,25 @@ return {
                   end
                   return hl
                 end,
-              }
-            }
-          }
+              },
+            },
+          },
         },
       },
 
       sources = {
         default = function(ctx)
-          local simple_sources = { 'path', 'buffer', 'copilot' }
+          local simple_sources = { "path", "buffer", "copilot" }
 
           -- Check node type first (fast path)
           local ok, node = pcall(vim.treesitter.get_node)
           if ok and node then
-            if vim.tbl_contains({ 'comment', 'line_comment', 'block_comment' }, node:type()) then
+            if vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
               return simple_sources
             end
 
             -- If we got the root node, check the parser language and see if its 'comment' (slower path)
-            if node:type() == 'source_file' then
+            if node:type() == "source_file" then
               local bufnr = vim.api.nvim_get_current_buf()
               local cursor = vim.api.nvim_win_get_cursor(0)
               local row, col = cursor[1] - 1, cursor[2]
@@ -161,7 +162,7 @@ return {
               local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
               if ok and parser then
                 local lang_tree = parser:language_for_range({ row, col, row, col })
-                if lang_tree and lang_tree:lang() == 'comment' then
+                if lang_tree and lang_tree:lang() == "comment" then
                   return simple_sources
                 end
               end
@@ -169,7 +170,7 @@ return {
           end
 
           -- None of the above, return the default
-          return { 'lsp', 'path', 'snippets', 'buffer', 'copilot' }
+          return { "lsp", "path", "snippets", "buffer", "copilot" }
         end,
         providers = {
           -- Use the cwd of the buffer for path completions
@@ -201,14 +202,14 @@ return {
       fuzzy = { implementation = "prefer_rust_with_warning" },
 
       -- Use a preset for snippets, check the snippets documentation for more information
-      snippets = { preset = 'luasnip' },
+      snippets = { preset = "luasnip" },
 
       -- Experimental signature help support
       signature = { enabled = true },
     },
-    opts_extend = { "sources.default" }
+    opts_extend = { "sources.default" },
   },
   {
-    'xzbdmw/colorful-menu.nvim'
-  }
+    "xzbdmw/colorful-menu.nvim",
+  },
 }

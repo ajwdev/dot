@@ -19,7 +19,7 @@ return {
         {
           name = "work",
           path = "~/Documents/obsidian_work",
-        }
+        },
       },
       daily_notes = {
         -- Optional, if you keep daily notes in a separate directory.

@@ -5,9 +5,9 @@ return {
     dir = vim.fn.expand("~/dot/dotfiles/nvim/lua/local/slides"),
     name = "slides",
     config = function()
-      require('slides').setup({
-        next_key = '<leader>s<Right>',
-        prev_key = '<leader>s<Left>',
+      require("slides").setup({
+        next_key = "<leader>s<Right>",
+        prev_key = "<leader>s<Left>",
       })
     end,
   },

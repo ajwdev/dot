@@ -33,10 +33,10 @@ return {
       words = { enabled = false },
 
       -- TODO Look into these
-      scope = { enabled = false },    -- REVIEW
+      scope = { enabled = false }, -- REVIEW
       notifier = { enabled = false }, -- Maybe?
       -- input = { enabled = true },    -- TODO Might want this
-      dim = { enabled = true },       -- TODO Repalce twight
+      dim = { enabled = true }, -- TODO Repalce twight
       -- layout = { enabled = false },
       --
       styles = {
@@ -47,31 +47,121 @@ return {
       },
     },
     keys = {
-      { "<leader>.", function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+      {
+        "<leader>.",
+        function()
+          Snacks.scratch()
+        end,
+        desc = "Toggle Scratch Buffer",
+      },
 
       -- Picker keybindings (replacing Telescope)
-      { '<leader>T', function() Snacks.picker.pick() end, desc = "Snacks Picker" },
+      {
+        "<leader>T",
+        function()
+          Snacks.picker.pick()
+        end,
+        desc = "Snacks Picker",
+      },
 
       -- File pickers
-      { '<C-P>', function() Snacks.picker.files() end, desc = "Picker: Find files" },
-      { '<leader>b', function() Snacks.picker.buffers() end, desc = "Picker: Show buffers" },
+      {
+        "<C-P>",
+        function()
+          Snacks.picker.files()
+        end,
+        desc = "Picker: Find files",
+      },
+      {
+        "<leader>b",
+        function()
+          Snacks.picker.buffers()
+        end,
+        desc = "Picker: Show buffers",
+      },
 
       -- Search
-      { '<leader>rg', function() Snacks.picker.grep() end, desc = "Picker: Live grep" },
-      { '<leader>H', function() Snacks.picker.help() end, desc = "Picker: Help tags" },
+      {
+        "<leader>rg",
+        function()
+          Snacks.picker.grep()
+        end,
+        desc = "Picker: Live grep",
+      },
+      {
+        "<leader>H",
+        function()
+          Snacks.picker.help()
+        end,
+        desc = "Picker: Help tags",
+      },
 
       -- Treesitter symbols (document level)
-      { '<leader>ts', function() Snacks.picker.lsp_symbols() end, desc = "Picker: Document symbols" },
+      {
+        "<leader>ts",
+        function()
+          Snacks.picker.lsp_symbols()
+        end,
+        desc = "Picker: Document symbols",
+      },
 
       -- LSP pickers
-      { '<leader>ls', function() Snacks.picker.lsp_symbols() end, desc = "Picker: LSP document symbols" },
-      { '<leader>lws', function() Snacks.picker.lsp_workspace_symbols() end, desc = "Picker: LSP workspace symbols" },
-      { '<leader>lr', function() Snacks.picker.lsp_references() end, desc = "Picker: LSP references" },
-      { '<leader>li', function() Snacks.picker.lsp_implementations() end, desc = "Picker: LSP implementations" },
-      { '<leader>ld', function() Snacks.picker.lsp_definitions() end, desc = "Picker: LSP definitions" },
-      { '<leader>lD', function() Snacks.picker.lsp_type_definitions() end, desc = "Picker: LSP type definitions" },
-      { '<leader>lci', function() Snacks.picker.lsp_incoming_calls() end, desc = "Picker: LSP calls incoming" },
-      { '<leader>lco', function() Snacks.picker.lsp_outgoing_calls() end, desc = "Picker: LSP calls outgoing" },
+      {
+        "<leader>ls",
+        function()
+          Snacks.picker.lsp_symbols()
+        end,
+        desc = "Picker: LSP document symbols",
+      },
+      {
+        "<leader>lws",
+        function()
+          Snacks.picker.lsp_workspace_symbols()
+        end,
+        desc = "Picker: LSP workspace symbols",
+      },
+      {
+        "<leader>lr",
+        function()
+          Snacks.picker.lsp_references()
+        end,
+        desc = "Picker: LSP references",
+      },
+      {
+        "<leader>li",
+        function()
+          Snacks.picker.lsp_implementations()
+        end,
+        desc = "Picker: LSP implementations",
+      },
+      {
+        "<leader>ld",
+        function()
+          Snacks.picker.lsp_definitions()
+        end,
+        desc = "Picker: LSP definitions",
+      },
+      {
+        "<leader>lD",
+        function()
+          Snacks.picker.lsp_type_definitions()
+        end,
+        desc = "Picker: LSP type definitions",
+      },
+      {
+        "<leader>lci",
+        function()
+          Snacks.picker.lsp_incoming_calls()
+        end,
+        desc = "Picker: LSP calls incoming",
+      },
+      {
+        "<leader>lco",
+        function()
+          Snacks.picker.lsp_outgoing_calls()
+        end,
+        desc = "Picker: LSP calls outgoing",
+      },
     },
     init = function()
       vim.api.nvim_create_autocmd("User", {
@@ -108,7 +198,7 @@ return {
   },
 
   {
-    'folke/which-key.nvim',
+    "folke/which-key.nvim",
     event = "VeryLazy",
     keys = {
       {
@@ -151,12 +241,16 @@ return {
     keys = {
       {
         "]d",
-        function() require("trouble").next() end,
+        function()
+          require("trouble").next()
+        end,
         desc = "Next Item (Trouble)",
       },
       {
         "[d",
-        function() require("trouble").prev() end,
+        function()
+          require("trouble").prev()
+        end,
         desc = "Previous Item (Trouble)",
       },
       {
@@ -225,7 +319,7 @@ return {
 
   {
     "folke/todo-comments.nvim",
-    event = 'BufReadPost',
+    event = "BufReadPost",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       keywords = {
@@ -233,9 +327,9 @@ return {
       },
       highlight = {
         pattern = [[.*<(KEYWORDS)\s*:?]], -- pattern or table of patterns, used for highlighting (vim regex)
-        keyword = "bg",                   -- "fg" or "bg" or empty
+        keyword = "bg", -- "fg" or "bg" or empty
       },
-    }
+    },
   },
 
   {
@@ -243,5 +337,5 @@ return {
     opts = {},
     event = "VeryLazy",
     enabled = vim.fn.has("nvim-0.10.0") == 1,
-  }
+  },
 }

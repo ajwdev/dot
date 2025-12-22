@@ -1,20 +1,23 @@
 return {
-
   { -- Linting
-    'mfussenegger/nvim-lint',
-    event = { 'BufReadPre', 'BufNewFile' },
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
-      local lint = require 'lint'
+      local lint = require("lint")
       lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
+        markdown = { "markdownlint" },
         -- go = { 'golangcilint' },
       }
 
-      local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
         group = lint_augroup,
         callback = function()
-          lint.try_lint()
+          -- Skip linting in floating windows
+          local config = vim.api.nvim_win_get_config(0)
+          if config.relative == "" then
+            lint.try_lint()
+          end
         end,
       })
 
