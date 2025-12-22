@@ -1,14 +1,14 @@
 local Snacks = require("snacks")
 
 -- Configure LSP servers using the modern vim.lsp.config() + vim.lsp.enable() API
-local capabilities = require('blink.cmp').get_lsp_capabilities({
+local capabilities = require("blink.cmp").get_lsp_capabilities({
   textDocument = {
     completion = {
       completionItem = {
-        snippetSupport = true
-      }
-    }
-  }
+        snippetSupport = true,
+      },
+    },
+  },
 })
 
 -- Configure diagnostics display
@@ -67,8 +67,8 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Configure each server
-vim.lsp.config('gopls', {
-  cmd = { 'gopls', '--remote=auto' },
+vim.lsp.config("gopls", {
+  cmd = { "gopls", "--remote=auto" },
   settings = {
     gopls = {
       hints = {
@@ -82,7 +82,7 @@ vim.lsp.config('gopls', {
       },
       codelenses = {
         generate = false, -- Don't show the `go generate` lens.
-        gc_details = true -- Show a code lens toggling the display of gc's choices.
+        gc_details = true, -- Show a code lens toggling the display of gc's choices.
       },
       staticcheck = true,
     },
@@ -90,11 +90,11 @@ vim.lsp.config('gopls', {
   capabilities = capabilities,
   init_options = {
     usePlaceholders = true,
-    completeUnimported = true
-  }
+    completeUnimported = true,
+  },
 })
 
-vim.lsp.config('rust_analyzer', {
+vim.lsp.config("rust_analyzer", {
   capabilities = capabilities,
   settings = {
     ["rust-analyzer"] = {
@@ -121,12 +121,12 @@ vim.lsp.config('rust_analyzer', {
   },
 })
 
-vim.lsp.config('lua_ls', {
+vim.lsp.config("lua_ls", {
   capabilities = capabilities,
   settings = {
     Lua = {
       runtime = {
-        version = 'LuaJIT',
+        version = "LuaJIT",
       },
       telemetry = {
         enable = false,
@@ -138,16 +138,16 @@ vim.lsp.config('lua_ls', {
         defaultConfig = {
           indent_style = "space",
           indent_size = "2",
-        }
+        },
       },
-    }
-  }
+    },
+  },
 })
 
-vim.lsp.config('nil_ls', {
+vim.lsp.config("nil_ls", {
   capabilities = capabilities,
   settings = {
-    ['nil'] = {
+    ["nil"] = {
       formatting = {
         command = { "nixfmt" },
       },
@@ -155,61 +155,67 @@ vim.lsp.config('nil_ls', {
   },
 })
 
-vim.lsp.config('yamlls', {
+vim.lsp.config("yamlls", {
   capabilities = capabilities,
   settings = {
     yaml = {
       schemas = {
         ["https://api.spinnaker.mgmt.netflix.net/managed/delivery-configs/schema"] = "spinnaker.yml",
       },
-    }
-  }
+    },
+  },
+})
+
+vim.lsp.config("qmlls", {
+  cmd = { "qmlls", "-E" },
+  capabilities = capabilities,
 })
 
 -- Configure servers with just capabilities (using nvim-lspconfig defaults for everything else)
-vim.lsp.config('clangd', {
+vim.lsp.config("clangd", {
   capabilities = capabilities,
 })
 
-vim.lsp.config('solargraph', {
+vim.lsp.config("solargraph", {
   capabilities = capabilities,
 })
 
-vim.lsp.config('bashls', {
+vim.lsp.config("bashls", {
   capabilities = capabilities,
 })
 
-vim.lsp.config('racket_langserver', {
+vim.lsp.config("racket_langserver", {
   capabilities = capabilities,
 })
 
-vim.lsp.config('tilt_ls', {
+vim.lsp.config("tilt_ls", {
   capabilities = capabilities,
 })
 
-vim.lsp.config('ruby_lsp', {
+vim.lsp.config("ruby_lsp", {
   capabilities = capabilities,
 })
 
-vim.lsp.config('zls', {
+vim.lsp.config("zls", {
   capabilities = capabilities,
 })
 
 -- Enable all configured servers at once
 vim.lsp.enable({
-  'gopls',
-  'rust_analyzer',
-  'lua_ls',
-  'nil_ls',
-  'yamlls',
-  'clangd',
-  'solargraph',
-  'bashls',
-  'racket_langserver',
-  'tilt_ls',
-  'ruby_lsp',
-  'zls',
-  'kotlin_lsp',
+  "bashls",
+  "clangd",
+  "gopls",
+  "kotlin_lsp",
+  "lua_ls",
+  "nil_ls",
+  "qmlls",
+  "racket_langserver",
+  "ruby_lsp",
+  "rust_analyzer",
+  "solargraph",
+  "tilt_ls",
+  "yamlls",
+  "zls",
 })
 
 local function keymap_opts(desc)
@@ -232,8 +238,8 @@ end, keymap_opts("Goto next diagnostic"))
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
@@ -248,68 +254,79 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-      local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
-      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+      local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         buffer = ev.buf,
         group = highlight_augroup,
         callback = vim.lsp.buf.document_highlight,
       })
 
-      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
         buffer = ev.buf,
         group = highlight_augroup,
         callback = vim.lsp.buf.clear_references,
       })
 
-      vim.api.nvim_create_autocmd('LspDetach', {
-        group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
+      vim.api.nvim_create_autocmd("LspDetach", {
+        group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
         callback = function(event2)
           vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
+          vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
         end,
       })
     end
 
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
-    vim.keymap.set('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', keymap_opts("Goto definition"))
-    vim.keymap.set('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.declaration()<CR>', keymap_opts("Goto declaration"))
-    vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.type_definition()<CR>', keymap_opts("Goto type definition"))
+    vim.keymap.set("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", keymap_opts("Goto definition"))
+    vim.keymap.set("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.declaration()<CR>", keymap_opts("Goto declaration"))
+    vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.type_definition()<CR>", keymap_opts("Goto type definition"))
     -- Same as above but in a vertical split
-    vim.keymap.set('n', '<c-w>gd', '<Cmd>vsp<CR><Cmd>lua vim.lsp.buf.definition()<CR>',
-      keymap_opts("Goto definition in vertical split"))
-    vim.keymap.set('n', '<c-w>gD', '<Cmd>vsp<CR><cmd>lua vim.lsp.buf.type_definition()<CR>',
-      keymap_opts("Goto type definition in vertical split"))
-
-    vim.keymap.set('n', 'K',
-      function() vim.lsp.buf.hover() end,
-      keymap_opts("Show symbol information under cursor in floating window")
-    )
-    vim.keymap.set('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
-      keymap_opts("List all references in quickfix"))
-
-    vim.keymap.set('n', '<leader>Wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', keymap_opts())
-    vim.keymap.set('n', '<leader>Wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', keymap_opts())
-    vim.keymap.set('n', '<leader>Wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>',
-      keymap_opts())
-
-    vim.keymap.set('n', 'grn', '<cmd>lua vim.lsp.buf.rename()<CR>', keymap_opts("Rename symbol under cursor"))
-    vim.keymap.set('n', 'gra', '<cmd>lua vim.lsp.buf.code_action()<CR>', keymap_opts("Execute LSP code action"))
     vim.keymap.set(
-      'n',
-      'grr',
-      function() Snacks.picker.lsp_references() end,
-      keymap_opts("List all references in Picker")
+      "n",
+      "<c-w>gd",
+      "<Cmd>vsp<CR><Cmd>lua vim.lsp.buf.definition()<CR>",
+      keymap_opts("Goto definition in vertical split")
     )
-    vim.keymap.set('n', 'gri', '<cmd>lua vim.lsp.buf.implementation()<CR>',
-      keymap_opts("List all implementations in quickfix"))
     vim.keymap.set(
-      'n',
-      'gO',
-      function() Snacks.picker.lsp_symbols() end,
-      keymap_opts("List document symbols")
+      "n",
+      "<c-w>gD",
+      "<Cmd>vsp<CR><cmd>lua vim.lsp.buf.type_definition()<CR>",
+      keymap_opts("Goto type definition in vertical split")
     )
 
-    -- vim.keymap.set("n", "<leader>F", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", keymap_opts("Format buffer"))
-  end
+    vim.keymap.set("n", "K", function()
+      vim.lsp.buf.hover()
+    end, keymap_opts("Show symbol information under cursor in floating window"))
+    vim.keymap.set(
+      "n",
+      "<C-k>",
+      "<cmd>lua vim.lsp.buf.signature_help()<CR>",
+      keymap_opts("List all references in quickfix")
+    )
+
+    vim.keymap.set("n", "<leader>Wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", keymap_opts())
+    vim.keymap.set("n", "<leader>Wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", keymap_opts())
+    vim.keymap.set(
+      "n",
+      "<leader>Wl",
+      "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+      keymap_opts()
+    )
+
+    vim.keymap.set("n", "grn", "<cmd>lua vim.lsp.buf.rename()<CR>", keymap_opts("Rename symbol under cursor"))
+    vim.keymap.set("n", "gra", "<cmd>lua vim.lsp.buf.code_action()<CR>", keymap_opts("Execute LSP code action"))
+    vim.keymap.set("n", "grr", function()
+      Snacks.picker.lsp_references()
+    end, keymap_opts("List all references in Picker"))
+    vim.keymap.set(
+      "n",
+      "gri",
+      "<cmd>lua vim.lsp.buf.implementation()<CR>",
+      keymap_opts("List all implementations in quickfix")
+    )
+    vim.keymap.set("n", "gO", function()
+      Snacks.picker.lsp_symbols()
+    end, keymap_opts("List document symbols"))
+  end,
 })

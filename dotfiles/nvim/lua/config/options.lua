@@ -1,8 +1,7 @@
 -- Many of these options are lifted/inspired by the configs I've read below:
 --
--- https://github.com/tjdevries/config_manager/blob/66d5262e1d142bfde5ebc19ba120ae86cb16d1d9/xdg_config/nvim/plugin/options.lua. 
+-- https://github.com/tjdevries/config_manager/blob/66d5262e1d142bfde5ebc19ba120ae86cb16d1d9/xdg_config/nvim/plugin/options.lua.
 -- https://github.com/wbthomason/dotfiles/blob/a6379cb7a1e50654247ecce5344f76ad90970418/dot_config/nvim/lua/config/options.lua
-
 
 local opt = vim.opt
 
@@ -106,9 +105,9 @@ opt.formatoptions = opt.formatoptions
   - "o" -- O and o should not continue comments
   + "r" -- But newlines should
   + "j" -- Auto-remove comments when joining lines
-  -- + "n" -- When formatting text, recognize numbered lists and wrap accordingly
-  -- + "1" -- Dont break lines after a one character word
-  -- + "p" -- Dont break lines at single spaces that follow periods
+-- + "n" -- When formatting text, recognize numbered lists and wrap accordingly
+-- + "1" -- Dont break lines after a one character word
+-- + "p" -- Dont break lines at single spaces that follow periods
 
 -- Enable spelling
 opt.spell = true

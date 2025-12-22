@@ -1,4 +1,4 @@
-local luasnip = require('luasnip')
+local luasnip = require("luasnip")
 
 -- NOTE I dont love these variable names, but those are the defaults used
 -- by the snip_env defaults. Might as well be consistent :shrug:
@@ -6,18 +6,20 @@ local luasnip = require('luasnip')
 local s = luasnip.snippet
 local f = luasnip.function_node
 
-local date = function() return {os.date('%Y-%m-%d')} end
+local date = function()
+  return { os.date("%Y-%m-%d") }
+end
 
 luasnip.add_snippets(nil, {
-    all = {
-        s({
-            trig = "date",
-            namr = "Date",
-            dscr = "Date in the form of YYYY-MM-DD",
-        }, {
-            f(date, {}),
-        }),
-    },
+  all = {
+    s({
+      trig = "date",
+      namr = "Date",
+      dscr = "Date in the form of YYYY-MM-DD",
+    }, {
+      f(date, {}),
+    }),
+  },
 })
 
 local curdir = debug.getinfo(1).source:match("@?(.*/)")

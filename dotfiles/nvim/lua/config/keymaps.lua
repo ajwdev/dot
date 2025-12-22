@@ -6,7 +6,7 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("v", "<Tab>", ">gv")
 vim.keymap.set("v", "<S-Tab>", "<gv")
 
- -- Yank to end of line
+-- Yank to end of line
 vim.keymap.set("n", "Y", "yg_")
 
 vim.keymap.set("c", "w!!", "w !sudo tee % >/dev/null")

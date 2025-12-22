@@ -1,14 +1,14 @@
 return {
   {
-    'nvimtools/hydra.nvim',
-    event = { 'BufReadPost', 'BufNew' },
+    "nvimtools/hydra.nvim",
+    event = { "BufReadPost", "BufNew" },
     config = function()
-      require "config.hydra"
+      require("config.hydra")
     end,
   },
 
   {
-    'jbyuki/venn.nvim',
+    "jbyuki/venn.nvim",
     cmd = "VBox",
   },
 }

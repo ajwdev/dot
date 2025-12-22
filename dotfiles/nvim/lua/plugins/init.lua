@@ -4,9 +4,9 @@
 return {
   {
     "lewis6991/gitsigns.nvim",
-    event = 'BufReadPost',
+    event = "BufReadPost",
     config = function()
-      require('gitsigns').setup()
+      require("gitsigns").setup()
     end,
   },
 
@@ -21,8 +21,22 @@ return {
   {
     "monaqa/dial.nvim",
     keys = {
-      { "<C-a>", function() return require("dial.map").inc_normal() end, expr = true, desc = "Increment" },
-      { "<C-x>", function() return require("dial.map").dec_normal() end, expr = true, desc = "Decrement" },
+      {
+        "<C-a>",
+        function()
+          return require("dial.map").inc_normal()
+        end,
+        expr = true,
+        desc = "Increment",
+      },
+      {
+        "<C-x>",
+        function()
+          return require("dial.map").dec_normal()
+        end,
+        expr = true,
+        desc = "Decrement",
+      },
     },
     config = function()
       local augend = require("dial.augend")
@@ -44,7 +58,9 @@ return {
     keys = {
       {
         "<leader>S",
-        function() require("ssr").open() end,
+        function()
+          require("ssr").open()
+        end,
         mode = { "n", "x" },
         desc = "Structural Search and Replace",
       },
@@ -55,21 +71,34 @@ return {
   -- Productivity
   --
   {
-    'yorickpeterse/nvim-window',
-    url = 'https://gitlab.com/yorickpeterse/nvim-window.git',
+    "yorickpeterse/nvim-window",
+    url = "https://gitlab.com/yorickpeterse/nvim-window.git",
     keys = {
-      { "<leader>w", function() require('nvim-window').pick() end, desc = "Pick a window" },
+      {
+        "<leader>w",
+        function()
+          require("nvim-window").pick()
+        end,
+        desc = "Pick a window",
+      },
     },
   },
 
   {
-    'stevearc/oil.nvim',
+    "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     keys = {
-      { "-", mode = "n", function() require("oil").toggle_float() end, { desc = "Open parent directory" } },
+      {
+        "-",
+        mode = "n",
+        function()
+          require("oil").toggle_float()
+        end,
+        { desc = "Open parent directory" },
+      },
     },
     config = function()
-      require("oil").setup {
+      require("oil").setup({
         columns = {
           "icon",
           "permissions",
@@ -77,22 +106,26 @@ return {
           "mtime",
         },
         keymaps = {
-          ["<C-v>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
+          ["<C-v>"] = {
+            "actions.select",
+            opts = { vertical = true },
+            desc = "Open the entry in a vertical split",
+          },
         },
         view_options = {
           show_hidden = true,
         },
-      }
+      })
     end,
   },
 
   {
-    'rgroli/other.nvim',
+    "rgroli/other.nvim",
     cmd = { "OtherVSplit", "Other", "OtherSplit" },
     config = function()
       require("other-nvim").setup({
         showMissingFiles = false,
-        mappings         = {
+        mappings = {
           -- builtin mappings
           "rails",
           "golang",
@@ -109,14 +142,14 @@ return {
         --     return inputString:lower()
         --   end
         -- },
-        style            = {
+        style = {
           -- How the plugin paints its window borders
           -- Allowed values are none, single, double, rounded, solid and shadow
           -- border = WindowStyle.boder,
-          border = 'rounded',
+          border = "rounded",
 
-          -- -- Column seperator for the window
-          -- seperator = "|",
+          -- -- Column separator for the window
+          -- separator = "|",
           --
           -- -- width of the window in percent. e.g. 0.5 is 50%, 1.0 is 100%
           -- width = 0.7,
@@ -128,17 +161,17 @@ return {
       })
 
       vim.keymap.set("c", "AV<CR>", "<cmd>OtherVSplit<CR>", { silent = true })
-    end
+    end,
   },
 
   {
-    'iamcco/markdown-preview.nvim',
+    "iamcco/markdown-preview.nvim",
     ft = "markdown",
-    build = 'cd app && yarn install',
+    build = "cd app && yarn install",
   },
 
   {
-    'mbbill/undotree',
+    "mbbill/undotree",
     cmd = "UndotreeToggle",
     keys = {
       { "<F3>", "<cmd>UndotreeToggle<cr>", silent = true, desc = "Join Toggle" },
@@ -148,8 +181,8 @@ return {
   -- TODO Figure out if I need this. Pretty sure its just to open qfuix file
   -- in a  split
   {
-    'yssl/QFEnter',
-    event = "BufEnter quickfix"
+    "yssl/QFEnter",
+    event = "BufEnter quickfix",
   },
 
   {
