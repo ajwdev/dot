@@ -115,7 +115,8 @@
   services.usbmuxd.enable = true;
 
   programs.ryzen-monitor-ng.enable = true;
-  programs.rog-control-center.enable = true;
+
+  virtualisation.waydroid.enable = true;
 
   # https://github.com/NixOS/nixpkgs/issues/375910#issuecomment-2608558305
   # nixpkgs.config.rocmSupport = true;
@@ -147,6 +148,7 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+  networking.nftables.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";
