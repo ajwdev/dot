@@ -47,7 +47,7 @@ zstyle ':completion:*' menu select
 # Automatically update PATH entries
 zstyle ':completion:*' rehash true
 # Show message while waiting for completion
-# XXX This ends up showing a blip of text everytime you tab complete :/
+# XXX This ends up showing a blip of text every time you tab complete :/
 # zstyle ':completion:*' show-completer true
 # Keep directories and files separated
 zstyle ':completion:*' list-dirs-first true
@@ -161,6 +161,7 @@ alias kgp='kubectl get pods'
 alias kgs='kubectl get svc'
 alias kgd='kubectl get deployments'
 alias kgi='kubectl get ingress'
+alias kar='kubectl api-resources'
 
 alias -g J='-o json'
 alias -g Y='-o yaml'
