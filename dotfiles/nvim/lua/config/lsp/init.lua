@@ -11,6 +11,15 @@ local capabilities = require('blink.cmp').get_lsp_capabilities({
   }
 })
 
+-- Configure diagnostics display
+vim.diagnostic.config({
+  virtual_text = true, -- Enable virtual text
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
+
 -- Configure each server
 vim.lsp.config('gopls', {
   cmd = { 'gopls', '--remote=auto' },
