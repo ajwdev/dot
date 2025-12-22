@@ -98,18 +98,27 @@ vim.lsp.config('rust_analyzer', {
   capabilities = capabilities,
   settings = {
     ["rust-analyzer"] = {
+      -- Imports
       assist = {
         importGranularity = "module",
         importPrefix = "by_self",
       },
-      cargo = {
-        loadOutDirsFromCheck = true
-      },
+      -- NOTE: Uncomment if using proc macros or build.rs heavy projects (e.g., lalrpop)
+      -- This can cause rust-analyzer to restart on every save, so only enable when needed
+      -- cargo = {
+      -- 	buildScripts = {
+      -- 		enable = true,
+      -- 	},
+      -- },
+      -- Enable checking on save (default: true)
+      checkOnSave = true,
+      -- Proc macro support (recommended)
       procMacro = {
-        enable = true
+        enable = true,
       },
-    }
-  }
+      -- Inlay hints are configured via the LspAttach autocmd below
+    },
+  },
 })
 
 vim.lsp.config('lua_ls', {
