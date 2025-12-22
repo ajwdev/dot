@@ -223,8 +223,12 @@ end
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 -- vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts("Open floating diagnostic window"))
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, keymap_opts("Goto previous diagnostic"))
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, keymap_opts("Goto next diagnostic"))
+vim.keymap.set("n", "[d", function()
+  vim.diagnostic.jump({ count = -1 })
+end, keymap_opts("Goto previous diagnostic"))
+vim.keymap.set("n", "]d", function()
+  vim.diagnostic.jump({ count = 1 })
+end, keymap_opts("Goto next diagnostic"))
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
