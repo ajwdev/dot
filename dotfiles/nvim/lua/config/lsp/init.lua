@@ -309,11 +309,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
       function() Snacks.picker.lsp_symbols() end,
       keymap_opts("List document symbols")
     )
-    -- TODO Deprecate these and move to default bindings above
-    vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', keymap_opts("Execute LSP code action"))
-    vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', keymap_opts("Rename symbol under cursor"))
-    vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>',
-      keymap_opts("List all implementations in quickfix"))
 
     -- vim.keymap.set("n", "<leader>F", "<cmd>lua vim.lsp.buf.format { async = true }<CR>", keymap_opts("Format buffer"))
   end
