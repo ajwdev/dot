@@ -1,3 +1,5 @@
+local Snacks = require("snacks")
+
 -- Configure LSP servers using the modern vim.lsp.config() + vim.lsp.enable() API
 local capabilities = require('blink.cmp').get_lsp_capabilities({
   textDocument = {
