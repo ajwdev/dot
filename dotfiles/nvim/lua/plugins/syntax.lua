@@ -1,7 +1,6 @@
-return {
+return({
   { "lifepillar/pgsql.vim", ft = "sql" },
   { "fatih/vim-go", ft = "go" },
-  { "rust-lang/rust.vim", ft = "rust" },
   { "qnighy/lalrpop.vim", ft = "lalrpop" },
   { "wlangstroth/vim-racket", ft = "racket" },
   -- TODO What should the type be here?
@@ -15,4 +14,4 @@ return {
   -- { 'leafgarland/typescript-vim' }
   -- { 'maxmellon/vim-jsx-pretty' }
   -- { 'peitalin/vim-jsx-typescript' }
-}
+})
