@@ -74,6 +74,7 @@
   # services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
+  nixpkgs.config.rocmSupport = true;
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -104,7 +105,7 @@
     kdePackages.k3b
     cdrkit
     discord
-    blender-hip
+    blender
     amdgpu_top
   ];
 
@@ -118,8 +119,6 @@
 
   virtualisation.waydroid.enable = true;
 
-  # https://github.com/NixOS/nixpkgs/issues/375910#issuecomment-2608558305
-  # nixpkgs.config.rocmSupport = true;
   # services = {
   #   ollama = {
   #     enable = true;
