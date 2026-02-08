@@ -31,6 +31,7 @@ in
         httpie
         gnumake
         gdb
+        kind
       ]
       ++ lib.optionals (isEnabled "go") [
         go
