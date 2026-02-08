@@ -100,9 +100,9 @@ return {
       {
         "<leader>ts",
         function()
-          Snacks.picker.lsp_symbols()
+          Snacks.picker.treesitter()
         end,
-        desc = "Picker: Document symbols",
+        desc = "Picker: Treesitter symbols",
       },
 
       -- LSP pickers
