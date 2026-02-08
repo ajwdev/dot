@@ -3,7 +3,7 @@ let
   pinPackage = (import ../nix/lib/pinPackage.nix { inherit pkgs; }).pinPackage;
 in
 {
-  imports = [./hyprland.nix];
+  imports = [ ./hyprland.nix ];
 
   environment.systemPackages = with pkgs; [
     # wayland things
