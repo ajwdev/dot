@@ -14,6 +14,7 @@ in
     discord
     obsidian
     signal-desktop
+    high-tide
 
     playerctl
     # XXX Addresses regression with Opus 5.1 audio tracks. Rolls back to
