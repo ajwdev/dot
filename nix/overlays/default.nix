@@ -40,7 +40,7 @@ rec {
   # be accessible through 'pkgs.stable'
   stable-packages = final: _prev: {
     stable = import inputs.nixpkgs-stable {
-      system = final.system;
+      system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     };
   };
@@ -51,7 +51,7 @@ rec {
   my-neovim-env = final: prev: {
     neovim = import ./my-neovim.nix {
       pkgs = final;
-      nightlyNvim = inputs.neovim-nightly.packages.${final.system}.default;
+      nightlyNvim = inputs.neovim-nightly.packages.${final.stdenv.hostPlatform.system}.default;
     };
   };
 }

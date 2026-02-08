@@ -90,7 +90,7 @@
     antidote # zsh plugin manager
     tmux
     neovim
-    nixfmt-rfc-style
+    nixfmt
 
     # Qt theme configuration tools for menu bar fix
     libsForQt5.qt5ct
