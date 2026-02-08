@@ -3,7 +3,7 @@ let
   pinPackage = (import ../nix/lib/pinPackage.nix { inherit pkgs; }).pinPackage;
 in
 {
-  imports = [./hyprland.nix];
+  imports = [ ./hyprland.nix ];
 
   environment.systemPackages = with pkgs; [
     # wayland things
@@ -14,6 +14,7 @@ in
     discord
     obsidian
     signal-desktop
+    high-tide
 
     playerctl
     # XXX Addresses regression with Opus 5.1 audio tracks. Rolls back to
@@ -99,10 +100,16 @@ in
     };
   };
 
-  services.udev.packages = [ pkgs.yubikey-personalization ];
-
   security.pam.services = {
     login.u2fAuth = true;
     sudo.u2fAuth = true;
   };
+
+  services.udev.packages = [ pkgs.yubikey-personalization ];
+
+  # Adjust minidsp permissions
+  services.udev.extraRules = ''
+    ATTR{idVendor}=="2752", MODE="0660", GROUP="plugdev"
+    ATTR{idVendor}=="04d8", ATTRS{idProduct}=="003f", MODE="0660", GROUP="plugdev"
+  '';
 }
