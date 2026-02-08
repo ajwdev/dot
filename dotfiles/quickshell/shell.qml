@@ -61,6 +61,8 @@ ShellRoot {
                 right: 0
             }
 
+            WlrLayershell.layer: WlrLayer.Bottom
+
             Rectangle {
                 anchors.fill: parent
                 color: root.colBg
