@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Test script for Java LSP setup in Neovim
+
+set -euo pipefail
+
+echo "🔍 Testing Java LSP Setup..."
+echo ""
+
+# Check Java installation
+echo "1. Checking Java installation..."
+if command -v java &> /dev/null; then
+    java_version=$(java -version 2>&1 | head -n 1)
+    echo "   ✓ Java found: $java_version"
+else
+    echo "   ✗ Java not found!"
+    exit 1
+fi
+
+# Check JDTLS installation
+echo ""
+echo "2. Checking jdtls installation..."
+jdtls_found=false
+
+if [ -d "/opt/homebrew/opt/jdtls/libexec" ]; then
+    echo "   ✓ Homebrew jdtls found"
+    jdtls_found=true
+fi
+
+if command -v jdtls &> /dev/null && [ -d "$HOME/.nix-profile/share/java" ]; then
+    echo "   ✓ Nix jdtls found"
+    jdtls_found=true
+fi
+
+if [ "$jdtls_found" = false ]; then
+    echo "   ✗ jdtls not found!"
+    echo "   Install via: brew install jdtls"
+    echo "   Or enable in home-manager: devtools.java.enable = true"
+    exit 1
+fi
+
+# Check nvim-jdtls plugin
+echo ""
+echo "3. Checking nvim-jdtls plugin..."
+if nvim --headless -c "lua local ok = pcall(require, 'jdtls'); vim.cmd('qa!' .. (ok and '!' or ''))" 2>&1 | grep -q "E5113"; then
+    echo "   ⚠ nvim-jdtls not installed yet"
+    echo "   Run :Lazy sync in Neovim to install"
+else
+    echo "   ✓ nvim-jdtls plugin configured"
+fi
+
+# Check ftplugin exists
+echo ""
+echo "4. Checking Java ftplugin..."
+if [ -f "$HOME/dot/dotfiles/nvim/after/ftplugin/java.lua" ]; then
+    echo "   ✓ Java ftplugin exists"
+else
+    echo "   ✗ Java ftplugin not found!"
+    exit 1
+fi
+
+# Check project
+echo ""
+echo "5. Checking tn-nftitus project..."
+tn_nftitus_path="$HOME/src/github.netflix.net/corp/tn-nftitus"
+if [ -d "$tn_nftitus_path" ]; then
+    echo "   ✓ Project found at $tn_nftitus_path"
+    if [ -f "$tn_nftitus_path/gradlew" ]; then
+        echo "   ✓ Gradle wrapper found"
+    fi
+else
+    echo "   ⚠ Project not found at $tn_nftitus_path"
+fi
+
+echo ""
+echo "✅ Setup verification complete!"
+echo ""
+echo "To test the LSP functionality:"
+echo "  1. Open Neovim: nvim $tn_nftitus_path/nftitus-gateway-main/src/main/java/com/netflix/nftitus/gateway/main/NfTitusGateway.java"
+echo "  2. Wait for JDTLS to initialize (check statusline)"
+echo "  3. Try: K (hover), gd (go to definition), <leader>jo (organize imports)"
+echo ""
+echo "For more information, see: ~/dot/docs/JAVA_SETUP.md"

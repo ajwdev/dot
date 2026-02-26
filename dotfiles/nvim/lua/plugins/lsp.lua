@@ -212,4 +212,12 @@ return {
   {
     "xzbdmw/colorful-menu.nvim",
   },
+
+  --
+  -- Java LSP (jdtls)
+  --
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = "java",
+  },
 }

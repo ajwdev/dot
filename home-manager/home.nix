@@ -93,8 +93,9 @@
     nixfmt
 
     # Qt theme configuration tools for menu bar fix
-    libsForQt5.qt5ct
-    kdePackages.qt6ct
+    # TODO linux only?
+    # libsForQt5.qt5ct
+    # kdePackages.qt6ct
 
     # utils
     ripgrep # recursively searches directories for a regex pattern

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Fix jdtls workspace issues
+
+set -euo pipefail
+
+PROJECT_DIR="${1:-$HOME/src/github.netflix.net/corp/tn-nftitus}"
+PROJECT_NAME=$(basename "$PROJECT_DIR")
+WORKSPACE_DIR="$HOME/.local/share/eclipse/$PROJECT_NAME"
+
+echo "🔧 Fixing jdtls workspace for $PROJECT_NAME"
+echo ""
+
+# Step 1: Clear the jdtls workspace cache
+if [ -d "$WORKSPACE_DIR" ]; then
+    echo "1. Clearing old workspace cache..."
+    rm -rf "$WORKSPACE_DIR"
+    echo "   ✓ Cleared $WORKSPACE_DIR"
+else
+    echo "1. No existing workspace found (this is OK)"
+fi
+
+# Step 2: Run Gradle build
+if [ -d "$PROJECT_DIR" ]; then
+    echo ""
+    echo "2. Running Gradle build to resolve dependencies..."
+    cd "$PROJECT_DIR"
+
+    if [ -f "./gradlew" ]; then
+        echo "   Running: ./gradlew build -x test"
+        ./gradlew build -x test || {
+            echo "   ⚠ Build had errors, but continuing..."
+        }
+        echo "   ✓ Gradle build complete"
+    else
+        echo "   ✗ gradlew not found in $PROJECT_DIR"
+        exit 1
+    fi
+else
+    echo "   ✗ Project directory not found: $PROJECT_DIR"
+    exit 1
+fi
+
+echo ""
+echo "✅ Workspace reset complete!"
+echo ""
+echo "Next steps:"
+echo "  1. Open a Java file in Neovim"
+echo "  2. Wait for jdtls to initialize (may take 30-60 seconds first time)"
+echo "  3. Check :LspInfo to verify jdtls is attached"
+echo ""
+echo "If you still see errors, check :LspLog for details"

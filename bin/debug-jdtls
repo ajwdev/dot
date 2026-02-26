@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Debug jdtls LSP issues
+
+cat << 'EOF'
+Run these commands in Neovim when you have a Java file open:
+
+1. Check if LSP is attached:
+   :LspInfo
+
+   You should see:
+   - Client: jdtls (id=X, bufnr=X)
+   - Status: attached
+
+2. Check LSP logs for errors:
+   :LspLog
+
+3. Verify keymaps are loaded:
+   :nmap gd
+   :nmap K
+   :nmap grr
+
+   Should show LSP mappings
+
+4. Check if jdtls is working:
+   :lua =vim.lsp.get_active_clients()
+
+   Should show jdtls in the list
+
+5. Force restart jdtls:
+   :LspRestart
+
+Common issues:
+- jdtls still initializing (wait 30-60 seconds)
+- No LSP attached (check :LspInfo)
+- Keymaps not loaded (file wasn't recognized as Java)
+- jdtls crashed (check :LspLog for errors)
+
+If jdtls isn't attaching:
+- Verify you're in the project root with .git folder
+- Check that ftplugin loaded: :echo &filetype (should show "java")
+- Check for errors: :messages
+EOF

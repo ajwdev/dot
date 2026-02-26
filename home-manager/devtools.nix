@@ -19,6 +19,7 @@ in
     go.enable = lib.mkEnableOption "Enable Go";
     rust.enable = lib.mkEnableOption "Enable Rust";
     ruby.enable = lib.mkEnableOption "Enable Ruby";
+    java.enable = lib.mkEnableOption "Enable Java";
     # TODO
     # zig.enable = lib.mkEnableOption "Enable Zig";
     arduino.enable = lib.mkEnableOption "Enable Arduino tools+IDE";
@@ -40,6 +41,12 @@ in
         # gomod2nix.packages.${system}.default
       ]
       ++ lib.optionals (isEnabled "rust") [ rustup ]
+      ++ lib.optionals (isEnabled "java") [
+        jdk
+        jdt-language-server
+        gradle
+        maven
+      ]
       ++ lib.optionals (isEnabled "arduino") [
         arduino-ide
         arduino-cli

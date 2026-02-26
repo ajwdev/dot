@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Minimal test to see if jdtls LSP is working
+
+set -euo pipefail
+
+JAVA_FILE="${1:-$HOME/src/github.netflix.net/corp/tn-nftitus/nftitus-gateway-main/src/main/java/com/netflix/nftitus/gateway/main/NfTitusGateway.java}"
+
+if [ ! -f "$JAVA_FILE" ]; then
+    echo "Error: Java file not found: $JAVA_FILE"
+    echo "Usage: $0 [path-to-java-file]"
+    exit 1
+fi
+
+echo "Testing LSP with: $JAVA_FILE"
+echo ""
+echo "Opening in Neovim... Will run diagnostics and exit."
+echo ""
+
+# Create a minimal test script
+cat > /tmp/test-lsp.lua << 'EOLUA'
+-- Wait for LSP to attach
+vim.defer_fn(function()
+  print("\n=== LSP Diagnostics ===\n")
+
+  -- Check filetype
+  local ft = vim.bo.filetype
+  print("Filetype: " .. ft)
+
+  if ft ~= "java" then
+    print("ERROR: File not detected as Java!")
+  end
+
+  -- Check active clients
+  local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+  print("\nActive LSP clients: " .. #clients)
+
+  for _, client in ipairs(clients) do
+    print("  - " .. client.name .. " (id=" .. client.id .. ")")
+  end
+
+  if #clients == 0 then
+    print("\nERROR: No LSP clients attached!")
+    print("\nChecking why:")
+
+    -- Check if jdtls is available
+    local ok, jdtls = pcall(require, "jdtls")
+    if not ok then
+      print("  - nvim-jdtls plugin not loaded")
+    else
+      print("  - nvim-jdtls plugin is loaded")
+    end
+
+    -- Check if ftplugin ran
+    print("\nCheck :messages for any errors")
+  else
+    print("\n✓ LSP is attached!")
+
+    -- Test if keymaps are set
+    local gd_map = vim.fn.maparg("gd", "n", false, true)
+    if gd_map.buffer == 1 then
+      print("✓ gd keymap is set for this buffer")
+    else
+      print("✗ gd keymap is NOT set (might be global only)")
+    end
+  end
+
+  print("\n=== End Diagnostics ===\n")
+  print("\nPress ENTER to continue or :q to quit")
+end, 3000)  -- Wait 3 seconds for LSP to initialize
+EOLUA
+
+nvim -c "luafile /tmp/test-lsp.lua" "$JAVA_FILE"
+
+rm -f /tmp/test-lsp.lua
