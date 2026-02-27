@@ -14,20 +14,10 @@ let
 in
 {
   home.file = {
-    ".ssh/config".source = template.templateFile {
-      src = ../dotfiles/ssh/config.template;
-      config = {
-        ssh = (config.dotfiles.ssh or { hosts = ""; });
-      };
-    };
+    ".ssh/config".source = ../dotfiles/ssh/config;
     ".tmux.conf".source = ../dotfiles/tmux.conf;
     ".screenrc".source = ../dotfiles/screenrc;
-    ".gitconfig".source = template.templateFile {
-      src = ../dotfiles/git/gitconfig.template;
-      config = {
-        git = (config.dotfiles.git or { config = ""; });
-      };
-    };
+    ".gitconfig".source = ../dotfiles/git/gitconfig;
     ".gitignore_global".source = ../dotfiles/git/gitignore_global;
 
     # zsh things

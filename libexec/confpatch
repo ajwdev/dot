@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# Preserve Netflix tool config sections (metatron, coder-gateway) across make switch.
+# These tools inject delimited blocks into managed files that home-manager overwrites.
+# Uses git's three-way merge so blocks are re-inserted at their original positions.
+
+PATCH_DIR="${TMPDIR:-/tmp}/confpatch"
+FILES=("$HOME/.ssh/config" "$HOME/.gitconfig")
+
+save() {
+    rm -rf "$PATCH_DIR"
+    mkdir -p "$PATCH_DIR"
+    for file in "${FILES[@]}"; do
+        [[ -f "$file" ]] || continue
+        local name
+        name=$(basename "$file")
+
+        cp "$file" "$PATCH_DIR/${name}.orig"
+        echo "saved $name"
+    done
+}
+
+apply() {
+    for file in "${FILES[@]}"; do
+        local name
+        name=$(basename "$file")
+        local orig="$PATCH_DIR/${name}.orig"
+        [[ -f "$orig" ]] || continue
+
+        # Make writable if nix-store symlink
+        if [[ -L "$file" ]]; then
+            confrw "$file"
+        fi
+
+        # Three-way merge:
+        #   base  = current file (what home-manager just wrote — the clean template)
+        #   ours  = current file (no local changes)
+        #   theirs = saved original (template + injected blocks)
+        # This cleanly merges the injected blocks into the new template.
+        local base
+        base=$(mktemp)
+        cp "$file" "$base"
+
+        if git merge-file "$file" "$base" "$orig"; then
+            echo "merged $name"
+        else
+            echo "CONFLICT in $name — check for conflict markers" >&2
+            rm "$base"
+            exit 1
+        fi
+        rm "$base"
+    done
+}
+
+case "${1:-}" in
+    save)  save ;;
+    apply) apply ;;
+    *)     echo "Usage: confpatch {save|apply}" >&2; exit 1 ;;
+esac

@@ -1,7 +1,5 @@
 # vim: ft=gitconfig
 
-@GIT_CONFIG@
-
 [core]
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
