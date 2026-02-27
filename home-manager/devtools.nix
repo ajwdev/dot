@@ -30,8 +30,10 @@ in
       [
         httpie
         gnumake
-        gdb
         kind
+      ]
+      ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+        gdb
       ]
       ++ lib.optionals (isEnabled "go") [
         go
