@@ -4,6 +4,12 @@ UNAME := $(shell uname)
 NIXNAME := $(shell hostname)
 
 switch:
+ifeq ($(NIXNAME), work)
+	./libexec/confpatch save
+endif
+ifeq ($(FORCE), 1)
+	rm -f ~/.ssh/config.bak ~/.gitconfig.bak
+endif
 ifeq ($(UNAME), Darwin)
 	sudo darwin-rebuild switch --flake "$$(pwd)#${NIXNAME}"
 else ifeq ($(UNAME), Linux)
@@ -15,6 +21,9 @@ else ifeq ($(UNAME), Linux)
 else
 	echo "uknown system ${UNAME}"
 	exit 1
+endif
+ifeq ($(NIXNAME), work)
+	./libexec/confpatch apply
 endif
 
 test:
