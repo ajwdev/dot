@@ -12,6 +12,7 @@ With no arguments, lists all worktrees.
 OPTIONS:
   -b    Create a new branch from start-point (like git checkout -b)
   -d    Delete the worktree instead of creating it
+  -D    Force delete the worktree (like git branch -D)
   -M    Move current branch into a worktree, checkout default branch here
   -n    Dry-run mode (show what would be done)
   -v    Verbose mode (show detailed output)
@@ -31,11 +32,12 @@ EOF
 
 ECHO=
 DEL=
+FORCE_DEL=
 VERBOSE=
 CREATE_BRANCH=
 MOVE=
 
-while getopts "bdMnhv" o; do
+while getopts "bdDMnhv" o; do
   case "${o}" in
     b)
       CREATE_BRANCH=1
@@ -49,6 +51,10 @@ while getopts "bdMnhv" o; do
       ;;
     d)
       DEL=1
+      ;;
+    D)
+      DEL=1
+      FORCE_DEL=1
       ;;
     M)
       MOVE=1
@@ -174,7 +180,7 @@ if [ -n "${DEL}" ]; then
         exit 1
     fi
 
-    ${ECHO} git worktree remove "${wtpath}"
+    ${ECHO} git worktree remove ${FORCE_DEL:+--force} "${wtpath}"
 
     if [ -z "${ECHO}" ]; then
         echo "Removed worktree ${wtpath}"
