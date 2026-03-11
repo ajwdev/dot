@@ -136,7 +136,7 @@ done
 function _gclone_and_cd {
   local output repo_path
   output=$(gclone "$1" 2>&1)
-  local status=$?
+  local rc=$?
 
   # Print the output
   echo "$output"
@@ -145,11 +145,11 @@ function _gclone_and_cd {
   repo_path=$(echo "$output" | tail -1)
 
   # If successful and path exists, cd into it
-  if [[ $status -eq 0 ]] && [[ -d "$repo_path" ]]; then
+  if [[ $rc -eq 0 ]] && [[ -d "$repo_path" ]]; then
     cd "$repo_path"
   fi
 
-  return $status
+  return $rc
 }
 
 alias -s git='_gclone_and_cd'
@@ -178,10 +178,6 @@ alias gtt='pushd $(git rev-parse --show-toplevel)'
 
 function github_url {
   git remote -v | grep git@github.com | grep fetch | head -1 | cut -f2 | cut -d' ' -f1 | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//'
-}
-
-function gh {
-  open $(github_url)
 }
 
 function pr {
