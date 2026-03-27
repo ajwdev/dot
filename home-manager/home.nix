@@ -38,8 +38,8 @@
     # For GTK apps
     GTK_SHELL_SHOWS_MENUBAR = "0";
     GTK_SHELL_SHOWS_APP_MENU = "0";
-
-    # For Qt/KDE apps
+  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+    # For Qt/KDE apps (Linux/Wayland only)
     QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
@@ -91,10 +91,6 @@
     tmux
     neovim
     nixfmt
-
-    # Qt theme configuration tools for menu bar fix
-    libsForQt5.qt5ct
-    kdePackages.qt6ct
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
@@ -153,6 +149,10 @@
         pry
       ]
     ))
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    # Qt theme configuration tools for menu bar fix (Wayland only)
+    libsForQt5.qt5ct
+    kdePackages.qt6ct
   ];
 
   programs = {
