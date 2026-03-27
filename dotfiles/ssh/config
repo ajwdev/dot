@@ -1,5 +1,6 @@
 Host github.com
     User git
+    GSSAPIAuthentication no
     VisualHostKey no
 
 Host tomservo tomservo.local tomservo.localdomain
