@@ -26,6 +26,7 @@ EXAMPLES:
   ${0} -b new-feature main   # Create new branch and worktree from main
   ${0} -d feature-branch     # Delete worktree for feature-branch
   ${0} -M                    # Move current branch to a worktree, return to default
+  ${0} -M feature-branch     # Move named branch to a worktree (from any branch)
   ${0} -n feature-branch     # Show what would be created (dry-run)
 EOF
 }
@@ -87,13 +88,21 @@ if [ -n "${MOVE}" ]; then
         exit 1
     fi
 
-    if ! branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"; then
-        echo "Error: could not determine current branch" >&2
-        exit 1
-    fi
-    if [ "${branch}" = "HEAD" ]; then
-        echo "Error: currently in detached HEAD state" >&2
-        exit 1
+    if [ -n "${1}" ]; then
+        branch="${1}"
+        if ! git rev-parse --verify "${branch}" >/dev/null 2>&1; then
+            echo "Error: branch '${branch}' does not exist" >&2
+            exit 1
+        fi
+    else
+        if ! branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"; then
+            echo "Error: could not determine current branch" >&2
+            exit 1
+        fi
+        if [ "${branch}" = "HEAD" ]; then
+            echo "Error: currently in detached HEAD state" >&2
+            exit 1
+        fi
     fi
 
     default_branch="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')"
