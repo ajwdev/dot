@@ -116,4 +116,4 @@ opt.spelloptions = "noplainbuffer"
 
 vim.o.winborder = "rounded"
 
-opt.conceallevel = 2
+opt.conceallevel = 0
