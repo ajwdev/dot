@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+# confdiff - show diffs for dotfiles that have had confrw applied
+#
+# Usage: confdiff [-a] [file ...]
+
+require "fileutils"
+require "optparse"
+require "pathname"
+
+dot        = ENV.fetch("DOT", File.join(Dir.home, "dot"))
+nix_file   = File.join(dot, "home-manager/dotfiles.nix")
+dotfiles   = File.join(dot, "dotfiles")
+
+apply = false
+OptionParser.new do |o|
+  o.banner = "Usage: confdiff [-a] [file ...]"
+  o.on("-a", "Apply changes back to the ~/dot repo") { apply = true }
+end.parse!
+
+# Parse dotfiles.nix for: "<target>".source = ../dotfiles/<source>;
+managed = {}
+File.foreach(nix_file) do |line|
+  if line =~ /^\s*"([^"]+)"\.source\s*=\s*\.\.\/dotfiles\/([^;\s]+)/
+    managed[$1] = File.join(dotfiles, $2)
+  end
+end
+
+# Resolve requested files to home-relative paths, or default to all managed files
+targets =
+  if ARGV.empty?
+    managed.keys
+  else
+    ARGV.map do |arg|
+      abs = Pathname.new(arg).expand_path.to_s
+      rel = abs.delete_prefix("#{Dir.home}/")
+      unless managed.key?(rel)
+        abort "error: #{arg} is not a home-manager managed dotfile"
+      end
+      target_file = File.join(Dir.home, rel)
+      if File.symlink?(target_file)
+        dest = File.readlink(target_file)
+        abort "error: #{arg} is still symlinked to #{dest} (run confrw first)"
+      end
+      rel
+    end
+  end
+
+found = false
+
+targets.each do |target|
+  source_file = managed[target]
+  target_file = File.join(Dir.home, target)
+
+  # confrw'd = regular file, not a symlink
+  next unless File.file?(target_file) && !File.symlink?(target_file)
+
+  found = true
+
+  if system("git", "diff", "--no-index", "--quiet", source_file, target_file, err: File::NULL)
+    puts "# #{target} (confrw'd, no changes)"
+  else
+    puts "# #{target}"
+    system("git", "diff", "--no-index", source_file, target_file)
+    if apply
+      FileUtils.cp(target_file, source_file)
+      puts "# -> applied to #{source_file}"
+    end
+  end
+end
+
+puts "No confrw'd files found." unless found

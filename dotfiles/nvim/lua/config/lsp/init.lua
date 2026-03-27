@@ -173,8 +173,13 @@ vim.lsp.config("zls", {
   capabilities = capabilities,
 })
 
+vim.lsp.config("basedpyright", {
+  capabilities = capabilities,
+})
+
 -- Enable all configured servers at once
 vim.lsp.enable({
+  "basedpyright",
   "bashls",
   "clangd",
   "gopls",

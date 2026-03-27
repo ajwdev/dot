@@ -1,0 +1,50 @@
+#compdef git-cowt
+
+_git-cowt() {
+  local context state line
+  typeset -A opt_args
+
+  _arguments -s -S \
+    '-b[create new branch from start-point]' \
+    '-d[delete worktree]' \
+    '-D[force delete worktree]' \
+    '-M[move branch into a worktree]' \
+    '-n[dry-run mode]' \
+    '-v[verbose mode]' \
+    '-h[show help]' \
+    ':branch:->branch' \
+    '::start-point:->startpoint'
+
+  case $state in
+    branch)
+      if [[ -n ${opt_args[-d]} || -n ${opt_args[-D]} ]]; then
+        _git_cowt_worktree_branches
+      elif [[ -n ${opt_args[-b]} ]]; then
+        _message 'new branch name'
+      else
+        _git_cowt_branches
+      fi
+      ;;
+    startpoint)
+      _git_cowt_branches
+      ;;
+  esac
+}
+
+_git_cowt_branches() {
+  local -a branches
+  branches=(${(f)"$(git branch --format='%(refname:short)' 2>/dev/null)"})
+  _describe 'branch' branches
+}
+
+_git_cowt_worktree_branches() {
+  local repo_root wtdir
+  repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || return
+  wtdir="${repo_root}/.worktrees"
+  [[ -d "$wtdir" ]] || return
+  local -a branches
+  branches=(${wtdir}/*(/:t))
+  _describe 'worktree branch' branches
+}
+
+_git-cowt "$@"

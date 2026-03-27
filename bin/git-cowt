@@ -12,6 +12,8 @@ With no arguments, lists all worktrees.
 OPTIONS:
   -b    Create a new branch from start-point (like git checkout -b)
   -d    Delete the worktree instead of creating it
+  -D    Force delete the worktree (like git branch -D)
+  -M    Move current branch into a worktree, checkout default branch here
   -n    Dry-run mode (show what would be done)
   -v    Verbose mode (show detailed output)
   -h    Show this help message
@@ -23,16 +25,20 @@ EXAMPLES:
   ${0} -b new-feature        # Create new branch and worktree from HEAD
   ${0} -b new-feature main   # Create new branch and worktree from main
   ${0} -d feature-branch     # Delete worktree for feature-branch
+  ${0} -M                    # Move current branch to a worktree, return to default
+  ${0} -M feature-branch     # Move named branch to a worktree (from any branch)
   ${0} -n feature-branch     # Show what would be created (dry-run)
 EOF
 }
 
 ECHO=
 DEL=
+FORCE_DEL=
 VERBOSE=
 CREATE_BRANCH=
+MOVE=
 
-while getopts "bdnhv" o; do
+while getopts "bdDMnhv" o; do
   case "${o}" in
     b)
       CREATE_BRANCH=1
@@ -46,6 +52,13 @@ while getopts "bdnhv" o; do
       ;;
     d)
       DEL=1
+      ;;
+    D)
+      DEL=1
+      FORCE_DEL=1
+      ;;
+    M)
+      MOVE=1
       ;;
     h)
       usage
@@ -67,6 +80,67 @@ fi
 if [ -n "${CREATE_BRANCH}" ] && [ -n "${DEL}" ]; then
     echo "Error: cannot use -b and -d together" >&2
     exit 1
+fi
+
+if [ -n "${MOVE}" ]; then
+    if [ -n "${CREATE_BRANCH}" ] || [ -n "${DEL}" ]; then
+        echo "Error: -M cannot be used with -b or -d" >&2
+        exit 1
+    fi
+
+    if [ -n "${1}" ]; then
+        branch="${1}"
+        if ! git rev-parse --verify "${branch}" >/dev/null 2>&1; then
+            echo "Error: branch '${branch}' does not exist" >&2
+            exit 1
+        fi
+    else
+        if ! branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"; then
+            echo "Error: could not determine current branch" >&2
+            exit 1
+        fi
+        if [ "${branch}" = "HEAD" ]; then
+            echo "Error: currently in detached HEAD state" >&2
+            exit 1
+        fi
+    fi
+
+    default_branch="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')"
+    if [ -z "${default_branch}" ]; then
+        if git rev-parse --verify main >/dev/null 2>&1; then
+            default_branch="main"
+        elif git rev-parse --verify master >/dev/null 2>&1; then
+            default_branch="master"
+        else
+            echo "Error: could not determine default branch" >&2
+            exit 1
+        fi
+    fi
+
+    if [ "${branch}" = "${default_branch}" ]; then
+        echo "Error: already on default branch '${default_branch}'" >&2
+        exit 1
+    fi
+
+    wtpath="${repo_root}/.worktrees/${branch}"
+
+    if [ ! -d "${wtpath}" ]; then
+        ${ECHO} git checkout "${default_branch}"
+        if [ -z "${ECHO}" ]; then
+            echo "Switched to ${default_branch}"
+        fi
+        ${ECHO} git worktree add "${wtpath}" "${branch}"
+        if [ -z "${ECHO}" ]; then
+            echo "Created worktree ${wtpath}"
+        fi
+    else
+        echo "Worktree ${wtpath} already exists, skipping creation"
+        ${ECHO} git checkout "${default_branch}"
+        if [ -z "${ECHO}" ]; then
+            echo "Switched to ${default_branch}"
+        fi
+    fi
+    exit 0
 fi
 
 if [ -z "${1}" ]; then
@@ -115,7 +189,7 @@ if [ -n "${DEL}" ]; then
         exit 1
     fi
 
-    ${ECHO} git worktree remove "${wtpath}"
+    ${ECHO} git worktree remove ${FORCE_DEL:+--force} "${wtpath}"
 
     if [ -z "${ECHO}" ]; then
         echo "Removed worktree ${wtpath}"
