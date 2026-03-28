@@ -53,7 +53,10 @@ in
   # derivation in the nix store.
   home.file.".config/nvim".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/nvim";
 
-  # home.file.".config/hypr".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/hypr";
+  home.file.".config/hypr/hyprland.conf".source = ../dotfiles/hypr/hyprland.conf;
+  home.file.".config/hypr/hyprlock.conf".source = ../dotfiles/hypr/hyprlock.conf;
+  home.file.".config/hypr/hypridle.conf".source = ../dotfiles/hypr/hypridle.conf;
+  home.file.".config/hypr/hyprpaper.conf".source = ../dotfiles/hypr/hyprpaper.conf;
   home.file.".config/quickshell".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/quickshell";
 
   # Shell scripts
