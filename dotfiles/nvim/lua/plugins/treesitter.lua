@@ -4,6 +4,19 @@ return {
     event = "BufReadPost",
     build = ":TSUpdate",
     config = function()
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      parser_config.mangle = {
+        install_info = {
+          url = "~/src/github.com/ajwdev/tree-sitter-mangle",
+          files = { "src/parser.c" },
+          branch = "main",
+          generate_requires_npm = false,
+          requires_generate_from_grammar = false,
+        },
+        filetype = "mangle",
+      }
+      vim.filetype.add({ extension = { mangle = "mangle", mg = "mangle" } })
+
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
           "c",

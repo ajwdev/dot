@@ -1,0 +1,1 @@
+/home/andrew/src/github.com/ajwdev/tree-sitter-mangle/queries/highlights.scm
