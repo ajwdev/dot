@@ -44,7 +44,7 @@
       device = "nodev";
       useOSProber = true;
       memtest86.enable = true;
-      configurationLimit = 30;
+      configurationLimit = 10;
     };
   };
 
