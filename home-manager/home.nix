@@ -38,8 +38,8 @@
     # For GTK apps
     GTK_SHELL_SHOWS_MENUBAR = "0";
     GTK_SHELL_SHOWS_APP_MENU = "0";
-  } // lib.optionalAttrs pkgs.stdenv.isLinux {
-    # For Qt/KDE apps (Linux/Wayland only)
+  }
+  // lib.optionalAttrs pkgs.stdenv.isLinux {
     QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
@@ -84,77 +84,80 @@
   # };
 
   # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [
-    comma
-    zsh
-    antidote # zsh plugin manager
-    tmux
-    neovim
-    nixfmt
+  home.packages =
+    with pkgs;
+    [
+      comma
+      zsh
+      antidote # zsh plugin manager
+      tmux
+      neovim
+      nixfmt
 
-    # utils
-    ripgrep # recursively searches directories for a regex pattern
-    jq # A lightweight and flexible command-line JSON processor
-    fzf # A command-line fuzzy finder
-    # networking tools
-    iperf3
-    ldns # replacement of `dig`, it provide the command `drill`
-    ipcalc # it is a calculator for the IPv4/v6 addresses
-    # system call monitoring
-    lsof # list open files
-    git
-    wget
-    curl
-    pv
-    rsync
-    screen
-    gnused
-    gnutar
-    gawk
-    lsof
-    mtr
-    dnsutils # `dig` + `nslookup`
-    socat
-    nmap
-    file
-    which
-    killall
-    watch
-    parallel
-    tio
-    minicom
+      # utils
+      ripgrep # recursively searches directories for a regex pattern
+      jq # A lightweight and flexible command-line JSON processor
+      fzf # A command-line fuzzy finder
+      # networking tools
+      iperf3
+      ldns # replacement of `dig`, it provide the command `drill`
+      ipcalc # it is a calculator for the IPv4/v6 addresses
+      # system call monitoring
+      lsof # list open files
+      git
+      wget
+      curl
+      pv
+      rsync
+      screen
+      gnused
+      gnutar
+      gawk
+      lsof
+      mtr
+      dnsutils # `dig` + `nslookup`
+      socat
+      nmap
+      file
+      which
+      killall
+      watch
+      parallel
+      tio
+      minicom
 
-    # misc
-    cowsay
-    tree
-    glow
+      # misc
+      cowsay
+      tree
+      glow
 
-    httpie
+      httpie
 
-    claude-code
+      claude-code
 
-    # Dev
-    gnumake
-    openssl
-    # https://github.com/mitchellh/zig-overlay/blob/d07b6a999f051b23ae7704f9d63a966b4b0284d1/flake.nix#L56-L60
+      # Dev
+      gnumake
+      openssl
+      # https://github.com/mitchellh/zig-overlay/blob/d07b6a999f051b23ae7704f9d63a966b4b0284d1/flake.nix#L56-L60
 
-    # TODO Linux specific
-    # gdb
-    # strace # system call monitoring
-    # ltrace # library call monitoring
+      # TODO Linux specific
+      # gdb
+      # strace # system call monitoring
+      # ltrace # library call monitoring
 
-    (ruby.withPackages (
-      ps: with ps; [
-        rugged
-        pry
-        rake
-      ]
-    ))
-  ] ++ lib.optionals pkgs.stdenv.isLinux [
-    # Qt theme configuration tools for menu bar fix (Wayland only)
-    libsForQt5.qt5ct
-    kdePackages.qt6ct
-  ];
+      (ruby.withPackages (
+        ps: with ps; [
+          rugged
+          pry
+          rake
+        ]
+      ))
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      # Qt theme configuration tools for menu bar fix (Wayland only)
+      libsForQt5.qt5ct
+      kdePackages.qt6ct
+    ];
 
   programs = {
     direnv = {

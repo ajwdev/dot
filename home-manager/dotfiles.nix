@@ -43,7 +43,7 @@ in
     '';
 
     # Hides/accepts the academic citation notice
-    ".parallel/will-cite".text = '''';
+    ".parallel/will-cite".text = "";
 
     ".sqliterc".source = ../dotfiles/sqliterc;
     ".irbrc".source = ../dotfiles/irbrc;
