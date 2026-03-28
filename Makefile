@@ -1,45 +1,22 @@
-# Based on Mitchell's config here https://github.com/mitchellh/nixos-config/blob/main/Makefile
-
-UNAME := $(shell uname)
-NIXNAME := $(shell hostname)
+# Delegates to Rakefile
+RAKE_WARN = @echo "WARNING: Makefile is deprecated, use rake directly" >&2
 
 switch:
-ifeq ($(NIXNAME), work)
-	./libexec/confpatch save
-endif
-ifeq ($(FORCE), 1)
-	rm -f ~/.ssh/config.bak ~/.gitconfig.bak
-endif
-ifeq ($(UNAME), Darwin)
-	sudo darwin-rebuild switch --flake "$$(pwd)#${NIXNAME}"
-else ifeq ($(UNAME), Linux)
-	if [ -f /etc/NIXOS ]; then \
-		sudo nixos-rebuild switch --flake ".#${NIXNAME}"; \
-	else \
-		home-manager switch --flake ".#${NIXNAME}"; \
-	fi
-else
-	echo "uknown system ${UNAME}"
-	exit 1
-endif
-ifeq ($(NIXNAME), work)
-	./libexec/confpatch apply
-endif
+	$(RAKE_WARN)
+	rake switch
 
 test:
-ifeq ($(UNAME), Darwin)
-	nix build ".#darwinConfigurations.${NIXNAME}.system"
-	./result/sw/bin/darwin-rebuild test --flake "$$(pwd)#${NIXNAME}"
-else
-	sudo nixos-rebuild test --flake ".#$(NIXNAME)" --show-trace
-endif
+	$(RAKE_WARN)
+	rake test
 
 build-live:
-	nixos-generate -f iso -c ./nixos/ajwlive/configuration.nix -o ajwliveiso
+	$(RAKE_WARN)
+	rake build_live
 
 fmt:
-	treefmt
+	$(RAKE_WARN)
+	rake fmt
 
-# Check formatting without making changes
 check:
-	treefmt --check
+	$(RAKE_WARN)
+	rake check

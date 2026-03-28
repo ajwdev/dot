@@ -147,6 +147,7 @@
       ps: with ps; [
         rugged
         pry
+        rake
       ]
     ))
   ] ++ lib.optionals pkgs.stdenv.isLinux [

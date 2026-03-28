@@ -14,8 +14,14 @@
       home-manager
       git
       gnumake
-      ruby
+      (ruby.withPackages (
+        ps: with ps; [
+          rake
+          pry
+        ]
+      ))
       nixos-generators
+      treefmt
     ];
   };
 }
