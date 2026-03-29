@@ -168,7 +168,6 @@
 
         "ajwlive" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          packages.x86_64-linux.default = self.nixosConfigurations.exampleIso.config.system.build.isoImage;
           modules = [
             ./nixos/ajwlive/configuration.nix
             # ({ pkgs, modulesPath, ... }: {

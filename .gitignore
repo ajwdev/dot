@@ -1,3 +1,6 @@
-result
 .claude/
 .gem
+
+# Nix outputs
+ajwliveiso
+result
