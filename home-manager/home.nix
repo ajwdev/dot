@@ -51,8 +51,6 @@
       iperf3
       ldns # replacement of `dig`, it provide the command `drill`
       ipcalc # it is a calculator for the IPv4/v6 addresses
-      # system call monitoring
-      lsof # list open files
       git
       wget
       curl
@@ -80,12 +78,9 @@
       tree
       glow
 
-      httpie
-
       claude-code
 
       # Dev
-      gnumake
       openssl
       # https://github.com/mitchellh/zig-overlay/blob/d07b6a999f051b23ae7704f9d63a966b4b0284d1/flake.nix#L56-L60
 

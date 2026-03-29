@@ -9,30 +9,18 @@
 {
 
   nixpkgs = {
-    # You can add overlays here
     overlays = [
-      # Add overlays your own flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
       outputs.overlays.stable-packages
       outputs.overlays.my-neovim-env
-
-      # You can also add overlays exported from other flakes:
+      outputs.overlays.nil
+      outputs.overlays.zls
       inputs.ghostty.overlays.default
       inputs.zig.overlays.default
-      # inputs.neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
     ];
 
-    # Configure your nixpkgs instance
     config = {
-      # Disable if you don't want unfree packages
       allowUnfree = true;
     };
   };
@@ -129,7 +117,6 @@
     # system call monitoring
     strace # system call monitoring
     ltrace # library call monitoring
-    lsof # list open files
 
     # system tools
     sysstat

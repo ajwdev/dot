@@ -1,6 +1,3 @@
-# This is your system's configuration file.
-# Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
-
 {
   inputs,
   outputs,
@@ -10,16 +7,8 @@
   ...
 }@args:
 {
-
-  # You can import other NixOS modules here
   imports = [
-
-    # If you want to use modules your own flake exports (from modules/nixos):
-    # outputs.nixosModules.example
-
-    # Or modules from other flakes (such as nixos-hardware):
     inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-ssd
 
     ./hardware-configuration.nix
 
@@ -70,8 +59,6 @@
     "net.ipv6.conf.default.accept_ra" = 2;
   };
 
-  # Enable a windowing system. This also applies to Wayland despite the name
-  # services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   nixpkgs.config.rocmSupport = true;
@@ -104,7 +91,6 @@
 
     kdePackages.k3b
     cdrkit
-    discord
     blender
     amdgpu_top
   ];
@@ -142,11 +128,6 @@
   #   };
   # };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
   networking.nftables.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
