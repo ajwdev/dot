@@ -17,6 +17,7 @@ in
     high-tide
 
     playerctl
+    sox
     # XXX Addresses regression with Opus 5.1 audio tracks. Rolls back to
     # version 3.0.20
     (pinPackage {
