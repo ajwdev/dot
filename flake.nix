@@ -235,8 +235,6 @@
               };
               home-manager.users.andrewwilliams = {
                 imports = [ ./home-manager/home.nix ];
-                # Work system overrides
-                dotfiles.user.email = nixpkgs.lib.mkForce "andrewwilliams@netflix.com";
                 dotfiles.work.enable = true;
               };
 
@@ -291,8 +289,6 @@
             )
             {
               imports = [ ./home-manager/home.nix ];
-              # Coder (work) system overrides
-              dotfiles.user.email = nixpkgs.lib.mkForce "andrewwilliams@netflix.com";
               dotfiles.work.enable = true;
             }
           ];
