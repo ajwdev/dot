@@ -70,4 +70,7 @@ in
   home.file."bin/git-related-files.rb".source =
     mkOutOfStoreSymlink "${repoRoot}/bin/git-related-files.rb";
   home.file."bin/sort-path.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/sort-path.sh";
+
+  home.file.".claude/CLAUDE.md".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/CLAUDE.md";
 }
