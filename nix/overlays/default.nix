@@ -46,7 +46,9 @@ rec {
   };
 
   nil = inputs.nil.overlays.nil;
-  zls = inputs.zls.overlays.zls;
+  zls = final: _prev: {
+    zls = inputs.zls.packages.${final.stdenv.hostPlatform.system}.zls;
+  };
 
   my-neovim-env = final: prev: {
     neovim = import ./my-neovim.nix {
