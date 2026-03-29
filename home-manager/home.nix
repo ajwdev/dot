@@ -26,10 +26,10 @@
     ./gui.nix
   ];
 
-  home = rec {
-    username = lib.mkDefault "andrew";
+  home = let user = "andrew"; in {
+    username = lib.mkDefault user;
     homeDirectory = lib.mkDefault (
-      if pkgs.stdenv.isDarwin then "/Users/${username.content}" else "/home/${username.content}"
+      if pkgs.stdenv.isDarwin then "/Users/${user}" else "/home/${user}"
     );
   };
 
