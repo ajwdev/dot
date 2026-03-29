@@ -61,6 +61,19 @@
     let
       inherit (self) outputs;
 
+      mkPkgs = system: import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          outputs.overlays.additions
+          outputs.overlays.modifications
+          outputs.overlays.stable-packages
+          outputs.overlays.my-neovim-env
+          inputs.ghostty.overlays.default
+          inputs.zig.overlays.default
+        ];
+      };
+
       forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-linux"
         "x86_64-linux"
@@ -234,6 +247,23 @@
       };
 
       homeConfigurations = {
+        "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
+          pkgs = mkPkgs "x86_64-linux";
+          extraSpecialArgs = {
+            inherit inputs outputs;
+            devtools.enable_all = true;
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
+
+        "andrew@bender" = home-manager.lib.homeManagerConfiguration {
+          pkgs = mkPkgs "x86_64-linux";
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
+
         "coder" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           extraSpecialArgs = {
