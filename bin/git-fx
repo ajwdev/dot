@@ -1,10 +1,21 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-usage() { echo "TODO"; }
+usage() {
+  echo "usage: git fx [-hnvT]"
+  echo ""
+  echo "Select a commit from the current branch (origin/HEAD..HEAD) and create a"
+  echo "fixup commit targeting it (git commit --fixup)."
+  echo ""
+  echo "  -n  dry run"
+  echo "  -T  use plain fzf instead of fzf-tmux"
+  echo "  -v  verbose (set -x)"
+  echo "  -h  show this help"
+}
 
 ECHO=
-FZF=fzf-tmux
+FZF=fzf
+[ -n "$TMUX" ] && FZF=fzf-tmux
 
 while getopts "nhvT" o; do
   case "${o}" in
@@ -26,7 +37,7 @@ while getopts "nhvT" o; do
 done
 shift $((OPTIND-1))
 
-COMMIT=$(git log --reverse --oneline origin/HEAD..HEAD | fzf-tmux --tac | awk '{print $1}')
+COMMIT=$(git log --reverse --oneline origin/HEAD..HEAD | $FZF --tac | awk '{print $1}')
 
 if [ -z $COMMIT ]; then
     return 0
