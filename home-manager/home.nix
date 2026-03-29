@@ -172,7 +172,10 @@
 
   # programs.zsh.enable = true;
   # Enable home-manager and git
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    signing.format = null;
+  };
   programs.home-manager.enable = true;
 
   # Nicely reload system units when changing configs
