@@ -22,6 +22,8 @@
       ))
       nixos-generators
       treefmt
+      shfmt
+      rufo
     ];
   };
 }

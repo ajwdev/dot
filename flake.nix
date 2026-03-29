@@ -58,20 +58,22 @@
     let
       inherit (self) outputs;
 
-      mkPkgs = system: import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = [
-          outputs.overlays.additions
-          outputs.overlays.modifications
-          outputs.overlays.stable-packages
-          outputs.overlays.my-neovim-env
-          outputs.overlays.nil
-          outputs.overlays.zls
-          inputs.ghostty.overlays.default
-          inputs.zig.overlays.default
-        ];
-      };
+      mkPkgs =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [
+            outputs.overlays.additions
+            outputs.overlays.modifications
+            outputs.overlays.stable-packages
+            outputs.overlays.my-neovim-env
+            outputs.overlays.nil
+            outputs.overlays.zls
+            inputs.ghostty.overlays.default
+            inputs.zig.overlays.default
+          ];
+        };
 
       forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-linux"
@@ -243,7 +245,10 @@
         "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
           pkgs = mkPkgs "x86_64-linux";
           extraSpecialArgs = { inherit inputs outputs; };
-          modules = [ ./home-manager/home.nix { devtools.enableAll = true; } ];
+          modules = [
+            ./home-manager/home.nix
+            { devtools.enableAll = true; }
+          ];
         };
 
         "andrew@bender" = home-manager.lib.homeManagerConfiguration {

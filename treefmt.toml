@@ -1,6 +1,18 @@
 # treefmt configuration
 # See https://treefmt.com/configuration/ for more options
 
+[global]
+excludes = [".worktrees/**"]
+
 [formatter.nixfmt]
 command = "nixfmt"
 includes = ["*.nix"]
+
+[formatter.shfmt]
+command = "shfmt"
+options = ["-w", "-i", "2"]
+includes = ["*.sh", "*.bash"]
+
+[formatter.rufo]
+command = "rufo"
+includes = ["*.rb", "Rakefile"]
