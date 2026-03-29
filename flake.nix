@@ -66,6 +66,8 @@
           outputs.overlays.modifications
           outputs.overlays.stable-packages
           outputs.overlays.my-neovim-env
+          outputs.overlays.nil
+          outputs.overlays.zls
           inputs.ghostty.overlays.default
           inputs.zig.overlays.default
         ];
