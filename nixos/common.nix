@@ -43,7 +43,6 @@
       experimental-features = "nix-command flakes";
       trusted-users = [
         "root"
-        "andrew"
         "@wheel"
       ];
       auto-optimise-store = true;
