@@ -16,11 +16,8 @@
       };
     };
 
-    # Extensible - work configs can add new sections
-    work = mkOption {
-      type = types.attrsOf types.anything;
-      default = { };
-      description = "Work-specific configuration sections";
+    work = {
+      enable = mkEnableOption "work mode (skips dotfiles that conflict with managed work tooling)";
     };
   };
 }
