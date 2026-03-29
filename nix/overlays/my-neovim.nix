@@ -21,7 +21,7 @@ let
       lua-language-server
       clang-tools
       nil # nix lsp
-      nixfmt
+      nixfmt-tree
       nodePackages.yaml-language-server
     ];
   };

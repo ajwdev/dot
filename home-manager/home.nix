@@ -43,7 +43,7 @@
       antidote # zsh plugin manager
       tmux
       neovim
-      nixfmt
+      nixfmt-tree
 
       # utils
       ripgrep # recursively searches directories for a regex pattern
