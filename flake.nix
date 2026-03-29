@@ -130,7 +130,7 @@
               home-manager.extraSpecialArgs = { inherit inputs outputs; };
               home-manager.users.andrew = {
                 imports = [ ./home-manager/home.nix ];
-                devtools.enable_all = true;
+                devtools.enableAll = true;
               };
             }
           ];
@@ -243,7 +243,7 @@
         "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
           pkgs = mkPkgs "x86_64-linux";
           extraSpecialArgs = { inherit inputs outputs; };
-          modules = [ ./home-manager/home.nix { devtools.enable_all = true; } ];
+          modules = [ ./home-manager/home.nix { devtools.enableAll = true; } ];
         };
 
         "andrew@bender" = home-manager.lib.homeManagerConfiguration {
