@@ -1,12 +1,11 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    ffmpeg
+    ffmpeg-full
     makemkv
     mkvtoolnix
     handbrake
     libdvdcss
     dvdbackup
-    ffmpeg-full
   ];
 }

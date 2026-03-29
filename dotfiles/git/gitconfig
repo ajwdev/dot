@@ -14,6 +14,7 @@
 	bb = !better-git-branch.sh
 	br = branch
 	ca = commit --amend -C HEAD
+	cm = commit -m
 	co = checkout
 	cob = checkout -b
 	cp = cherry-pick

@@ -4,8 +4,6 @@
   description = "Your new nix config";
 
   inputs = {
-    nixos.url = "github:NixOS/nix";
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # You can access packages and modules from different nixpkgs revs
     # at the same time. Here's an working example:
@@ -54,12 +52,28 @@
       nixpkgs,
       nixpkgs-stable,
       home-manager,
-      nixos,
       nix-darwin,
       ...
     }@inputs:
     let
       inherit (self) outputs;
+
+      mkPkgs =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [
+            outputs.overlays.additions
+            outputs.overlays.modifications
+            outputs.overlays.stable-packages
+            outputs.overlays.my-neovim-env
+            outputs.overlays.nil
+            outputs.overlays.zls
+            inputs.ghostty.overlays.default
+            inputs.zig.overlays.default
+          ];
+        };
 
       forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-linux"
@@ -115,11 +129,11 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "bak";
-              home-manager.extraSpecialArgs = {
-                inherit inputs outputs;
-                devtools.enable_all = true;
+              home-manager.extraSpecialArgs = { inherit inputs outputs; };
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
+                devtools.enableAll = true;
               };
-              home-manager.users.andrew = import ./home-manager/home.nix;
             }
           ];
         };
@@ -134,13 +148,11 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
-
-              # Optionally, use home-manager.extraSpecialArgs to pass
-              # arguments to home.nix
             }
           ];
         };
@@ -155,13 +167,11 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
               };
               home-manager.users.andrew = import ./home-manager/home.nix;
-
-              # Optionally, use home-manager.extraSpecialArgs to pass
-              # arguments to home.nix
             }
           ];
         };
@@ -223,8 +233,6 @@
               };
               home-manager.users.andrewwilliams = {
                 imports = [ ./home-manager/home.nix ];
-                # Work system overrides
-                dotfiles.user.email = nixpkgs.lib.mkForce "andrewwilliams@netflix.com";
                 dotfiles.work.enable = true;
               };
 
@@ -234,6 +242,23 @@
       };
 
       homeConfigurations = {
+        "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
+          pkgs = mkPkgs "x86_64-linux";
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            ./home-manager/home.nix
+            { devtools.enableAll = true; }
+          ];
+        };
+
+        "andrew@bender" = home-manager.lib.homeManagerConfiguration {
+          pkgs = mkPkgs "x86_64-linux";
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [ ./home-manager/home.nix ];
+        };
+
         "coder" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           extraSpecialArgs = {
@@ -265,8 +290,6 @@
             )
             {
               imports = [ ./home-manager/home.nix ];
-              # Coder (work) system overrides
-              dotfiles.user.email = nixpkgs.lib.mkForce "andrewwilliams@netflix.com";
               dotfiles.work.enable = true;
             }
           ];

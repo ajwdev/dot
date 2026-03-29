@@ -6,11 +6,11 @@
 }:
 let
   cfg = config.devtools;
-  isEnabled = lang: cfg.enable_all || lib.getAttr "enable" (lib.getAttr lang cfg);
+  isEnabled = lang: cfg.enableAll || lib.getAttr "enable" (lib.getAttr lang cfg);
 in
 {
   options.devtools = {
-    enable_all = lib.mkOption {
+    enableAll = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = "Enable all dev tools";
@@ -30,7 +30,6 @@ in
       [
         httpie
         gnumake
-        kind
       ]
       ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
         gdb
