@@ -1,6 +1,6 @@
 { pkgs, lib }:
 
-rec {
+{
   # Generic template function that automatically loads ALL attributes from config
   templateFile =
     {
@@ -35,8 +35,4 @@ rec {
     in
     pkgs.replaceVars src allSubstitutions;
 
-  # Convenience function for common template patterns
-  configTemplate =
-    src: config: buildTimeConfig:
-    templateFile { inherit src config buildTimeConfig; };
 }
