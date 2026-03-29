@@ -17,12 +17,10 @@
     ./gui.nix
   ];
 
-  home = let user = "andrew"; in {
-    username = lib.mkDefault user;
-    homeDirectory = lib.mkDefault (
-      if pkgs.stdenv.isDarwin then "/Users/${user}" else "/home/${user}"
-    );
-  };
+  home.username = lib.mkDefault "andrew";
+  home.homeDirectory = lib.mkDefault (
+    if pkgs.stdenv.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}"
+  );
 
   # Fix menu bar visibility in Hyprland
   home.sessionVariables = {
