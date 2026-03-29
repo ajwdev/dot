@@ -30,7 +30,6 @@ in
       [
         httpie
         gnumake
-        kind
       ]
       ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
         gdb
