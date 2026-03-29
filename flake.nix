@@ -128,11 +128,11 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.backupFileExtension = "bak";
-              home-manager.extraSpecialArgs = {
-                inherit inputs outputs;
+              home-manager.extraSpecialArgs = { inherit inputs outputs; };
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
                 devtools.enable_all = true;
               };
-              home-manager.users.andrew = import ./home-manager/home.nix;
             }
           ];
         };
@@ -249,11 +249,8 @@
       homeConfigurations = {
         "andrew@tomservo" = home-manager.lib.homeManagerConfiguration {
           pkgs = mkPkgs "x86_64-linux";
-          extraSpecialArgs = {
-            inherit inputs outputs;
-            devtools.enable_all = true;
-          };
-          modules = [ ./home-manager/home.nix ];
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [ ./home-manager/home.nix { devtools.enable_all = true; } ];
         };
 
         "andrew@bender" = home-manager.lib.homeManagerConfiguration {
