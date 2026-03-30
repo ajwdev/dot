@@ -207,6 +207,7 @@ in
 
   networking.hostName = hostname;
   networking.enableIPv6 = true;
+  networking.useDHCP = false;
 
   # Prevent dhcpcd from assigning IPv4 link-local to overlay interfaces
   networking.dhcpcd.denyInterfaces = [
