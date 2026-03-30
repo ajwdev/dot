@@ -149,10 +149,6 @@ vim.lsp.config("clangd", {
   capabilities = capabilities,
 })
 
-vim.lsp.config("solargraph", {
-  capabilities = capabilities,
-})
-
 vim.lsp.config("bashls", {
   capabilities = capabilities,
 })
@@ -190,7 +186,6 @@ vim.lsp.enable({
   "racket_langserver",
   "ruby_lsp",
   "rust_analyzer",
-  "solargraph",
   "tilt_ls",
   "yamlls",
   "zls",
