@@ -103,7 +103,7 @@
       );
 
       # Formatter configuration for 'nix fmt'
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
 
       # Your custom packages and modifications, exported as overlays
       overlays = import ./nix/overlays { inherit inputs; };
@@ -171,7 +171,12 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
               };
-              home-manager.users.andrew = import ./home-manager/home.nix;
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
+                # glados01/02 use nixpkgs-stable; home-manager follows unstable.
+                # useGlobalPkgs = true means pkgs are stable regardless, so this is safe.
+                home.enableNixpkgsReleaseCheck = false;
+              };
             }
           ];
         };
@@ -190,7 +195,10 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
               };
-              home-manager.users.andrew = import ./home-manager/home.nix;
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
+                home.enableNixpkgsReleaseCheck = false;
+              };
             }
           ];
         };
