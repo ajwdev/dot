@@ -103,7 +103,7 @@
       );
 
       # Formatter configuration for 'nix fmt'
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
 
       # Your custom packages and modifications, exported as overlays
       overlays = import ./nix/overlays { inherit inputs; };
