@@ -34,6 +34,7 @@
         "@wheel"
       ];
       auto-optimise-store = true;
+      download-buffer-size = 536870912;
     };
   };
 
