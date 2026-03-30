@@ -14,11 +14,11 @@ task :switch do
     rm_f [File.expand_path("~/.ssh/config.bak"), File.expand_path("~/.gitconfig.bak")]
   end
   if NIXNAME == "work"
-    sh "./libexec/confpatch save"
+    sh "./hack/confpatch save"
   end
   sh "#{nix_command} switch --flake \".##{NIXNAME}\""
   if NIXNAME == "work"
-    sh "./libexec/confpatch apply"
+    sh "./hack/confpatch apply"
   end
 end
 
