@@ -6,7 +6,7 @@
 require 'rake'
 
 UNAME = `uname`.strip
-NIXNAME = `hostname`.strip
+NIXNAME = ENV["NIXNAME"] || `hostname`.strip
 
 desc "Switch to the new configuration. Examples: rake switch / rake switch REMOTE=glados01 / rake switch REMOTE=glados01 TARGET=192.168.15.10"
 task :switch do
