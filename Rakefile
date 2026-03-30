@@ -8,28 +8,41 @@ require 'rake'
 UNAME = `uname`.strip
 NIXNAME = `hostname`.strip
 
-desc "Switch to the new configuration"
+desc "Switch to the new configuration. Examples: rake switch / rake switch REMOTE=glados01 / rake switch REMOTE=glados01 TARGET=192.168.15.10"
 task :switch do
+  remote = ENV["REMOTE"]
+  host = remote || NIXNAME
+  target = ENV["TARGET"] || remote
+
   if ENV["FORCE"] == "1"
     rm_f [File.expand_path("~/.ssh/config.bak"), File.expand_path("~/.gitconfig.bak")]
   end
-  if NIXNAME == "work"
-    sh "./hack/confpatch save"
-  end
-  sh "#{nix_command} switch --flake \".##{NIXNAME}\""
-  if NIXNAME == "work"
-    sh "./hack/confpatch apply"
+
+  if target
+    sh "nixos-rebuild switch --flake \".##{host}\" --target-host #{target} --build-host localhost --sudo --ask-sudo-password"
+  else
+    sh "./hack/confpatch save" if host == "work"
+    sh "#{nix_command} switch --flake \".##{host}\""
+    sh "./hack/confpatch apply" if host == "work"
   end
 end
 
-desc "Test the configuration"
+desc "Test the configuration. Examples: rake test / rake test REMOTE=glados01 / rake test REMOTE=glados01 TARGET=192.168.15.10"
 task :test do
-  case UNAME
-  when "Darwin"
-    sh "nix build \".#darwinConfigurations.#{NIXNAME}.system\""
-    sh "./result/sw/bin/#{nix_command(false)} test --flake \".##{NIXNAME}\""
+  remote = ENV["REMOTE"]
+  host = remote || NIXNAME
+  target = ENV["TARGET"] || remote
+
+  if target
+    sh "nixos-rebuild test --flake \".##{host}\" --target-host #{target} --build-host localhost --sudo --ask-sudo-password"
   else
-    sh "#{nix_command} test --flake \".##{NIXNAME}\" --show-trace"
+    case UNAME
+    when "Darwin"
+      sh "nix build \".#darwinConfigurations.#{host}.system\""
+      sh "./result/sw/bin/#{nix_command(false)} test --flake \".##{host}\""
+    else
+      sh "#{nix_command} test --flake \".##{host}\" --show-trace"
+    end
   end
 end
 
