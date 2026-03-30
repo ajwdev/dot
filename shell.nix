@@ -24,6 +24,7 @@
       treefmt
       shfmt
       rufo
+      stylua
     ];
   };
 }

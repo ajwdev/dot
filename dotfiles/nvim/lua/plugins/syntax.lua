@@ -1,4 +1,4 @@
-return({
+return {
   { "lifepillar/pgsql.vim", ft = "sql" },
   { "fatih/vim-go", ft = "go" },
   { "qnighy/lalrpop.vim", ft = "lalrpop" },
@@ -14,4 +14,4 @@ return({
   -- { 'leafgarland/typescript-vim' }
   -- { 'maxmellon/vim-jsx-pretty' }
   -- { 'peitalin/vim-jsx-typescript' }
-})
+}

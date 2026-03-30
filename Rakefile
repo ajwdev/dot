@@ -46,6 +46,7 @@ end
 desc "Check formatting without making changes"
 task :check do
   sh "treefmt --fail-on-change"
+  sh "stylua --check **/*.lua"
 end
 
 task default: :check
