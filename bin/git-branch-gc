@@ -21,7 +21,7 @@ while IFS= read -r line; do
     fi
 done < <(git worktree list --porcelain)
 
-for br in $(git branch --merged $HEAD | awk 'NF == 1 && ($1 != main && $1 != master) {print $1}'); do
+for br in $(git branch --merged $HEAD | awk 'NF == 1 && ($1 != "main" && $1 != "master") {print $1}'); do
     in_worktree=false
     for wt_br in "${worktree_branches[@]}"; do
         if [[ "$br" == "$wt_br" ]]; then
