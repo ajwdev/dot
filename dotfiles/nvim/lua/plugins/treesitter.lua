@@ -142,9 +142,6 @@ return {
     "RRethy/nvim-treesitter-endwise",
     event = "InsertEnter",
     dependencies = "nvim-treesitter/nvim-treesitter",
-    config = function()
-      require("nvim-treesitter-endwise").setup()
-    end,
   },
 
   -- TODO: nvim-treesitter-textsubjects is broken with the new nvim-treesitter main branch
