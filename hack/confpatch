@@ -17,7 +17,7 @@ save() {
         name=$(basename "$file")
 
         cp "$file" "$PATCH_DIR/${name}.orig"
-        echo "saved $name"
+        echo "saved $file"
     done
 }
 
@@ -43,9 +43,9 @@ apply() {
         cp "$file" "$base"
 
         if git merge-file "$file" "$base" "$orig"; then
-            echo "merged $name"
+            echo "merged $file"
         else
-            echo "CONFLICT in $name — check for conflict markers" >&2
+            echo "CONFLICT in $file — check for conflict markers" >&2
             rm "$base"
             exit 1
         fi

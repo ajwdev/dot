@@ -6,7 +6,7 @@
 require 'rake'
 
 UNAME = `uname`.strip
-NIXNAME = `hostname`.strip
+NIXNAME = ENV["NIXNAME"] || `hostname`.strip
 
 desc "Switch to the new configuration. Examples: rake switch / rake switch REMOTE=glados01 / rake switch REMOTE=glados01 TARGET=192.168.15.10"
 task :switch do
@@ -21,9 +21,12 @@ task :switch do
   if target
     sh "nixos-rebuild switch --flake \".##{host}\" --target-host #{target} --build-host localhost --sudo --ask-sudo-password"
   else
-    sh "./hack/confpatch save" if host == "work"
+    sh "./hack/confpatch save" if confpatch_host?(host)
     sh "#{nix_command} switch --flake \".##{host}\""
-    sh "./hack/confpatch apply" if host == "work"
+    if confpatch_host?(host)
+      sh "./hack/confpatch apply"
+      sh "./hack/confpatch save"
+    end
   end
 end
 
@@ -63,6 +66,10 @@ task :check do
 end
 
 task default: :check
+
+def confpatch_host?(host)
+  %w[work coder].include?(host)
+end
 
 def nix_command(use_sudo = true)
   sudo_wrap = lambda do |s|
