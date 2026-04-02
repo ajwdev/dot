@@ -2,15 +2,10 @@ vim.cmd [[
 set ts=4 sw=4 sts=4 noet
 ]]
 
-require('nvim-treesitter.configs').setup({
-  textobjects = {
-    move = {
-      goto_next_start = {
-        ["]t"] = { query = "@x.realtarget", desc = "Next target", query_group = "locals" },
-      },
-      goto_previous_start = {
-        ["[t"] = { query = "@x.realtarget", desc = "Next target", query_group = "locals" },
-      },
-    },
-  },
-})
+local move = require("nvim-treesitter-textobjects.move")
+vim.keymap.set({ "n", "x", "o" }, "]t", function()
+  move.goto_next_start("@x.realtarget", "locals")
+end, { buffer = true, desc = "Next target" })
+vim.keymap.set({ "n", "x", "o" }, "[t", function()
+  move.goto_previous_start("@x.realtarget", "locals")
+end, { buffer = true, desc = "Previous target" })
