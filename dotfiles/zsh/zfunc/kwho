@@ -1,0 +1,26 @@
+# vim: set ft=zsh
+
+function kwho() {
+  local context cluster server namespace user kubeconfig
+
+  context=$(kubectl config current-context 2>/dev/null)
+  if [[ -z "$context" ]]; then
+    echo "No current context set" >&2
+    return 1
+  fi
+
+  cluster=$(kubectl config view --minify -o jsonpath='{.contexts[0].context.cluster}' 2>/dev/null)
+  server=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}' 2>/dev/null)
+  namespace=$(kubectl config view --minify -o jsonpath='{.contexts[0].context.namespace}' 2>/dev/null)
+  user=$(kubectl config view --minify -o jsonpath='{.contexts[0].context.user}' 2>/dev/null)
+
+  printf "Context:   %s\n" "$context"
+  printf "Cluster:   %s\n" "$cluster"
+  printf "Server:    %s\n" "$server"
+  printf "Namespace: %s\n" "${namespace:-default}"
+  printf "User:      %s\n" "$user"
+
+  if [[ -n "$KUBECONFIG" ]]; then
+    printf "KUBECONFIG: %s\n" "$KUBECONFIG"
+  fi
+}
