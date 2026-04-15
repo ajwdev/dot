@@ -261,7 +261,7 @@ fi
 
 # Put bigger functions in .zfunc
 # TODO Make this automatic
-autoload -Uz kc webserver gosum-unmerge gethostbyname
+autoload -Uz kc webserver gosum-unmerge gethostbyname jwt
 
 eval "$(direnv hook zsh)"
 [[ -f "$HOME/.zshrc.local" ]] && source $HOME/.zshrc.local

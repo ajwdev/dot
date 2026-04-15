@@ -1,0 +1,14 @@
+# vim: set ft=zsh
+
+function jwt() {
+  local token="${1:-$(cat)}"
+
+  _jwt_decode_part() {
+    local p="$1" pad=$(( 4 - ${#1} % 4 ))
+    [[ $pad -lt 4 ]] && p="${p}$(printf '=%.0s' $(seq 1 $pad))"
+    echo "$p" | tr '_-' '/+' | base64 -d 2>/dev/null
+  }
+
+  _jwt_decode_part "$(echo "$token" | cut -d. -f1)" | jq .
+  _jwt_decode_part "$(echo "$token" | cut -d. -f2)" | jq .
+}
