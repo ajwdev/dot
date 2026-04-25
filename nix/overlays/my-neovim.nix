@@ -22,7 +22,7 @@ let
       clang-tools
       nil # nix lsp
       nixfmt
-      nodePackages.yaml-language-server
+      yaml-language-server
     ];
   };
 
