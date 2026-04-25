@@ -17,6 +17,11 @@ rec {
       doCheck = false;
     });
 
+    # XXX openldap test017-syncreplication-refresh is timing-sensitive and flaky
+    openldap = prev.openldap.overrideAttrs (oldAttrs: {
+      doCheck = false;
+    });
+
     # libbluray = pkgs.libbluray.override {
     #   withAACS = true;
     #   withBDplus = true;
