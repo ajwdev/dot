@@ -49,6 +49,14 @@ task :test do
   end
 end
 
+namespace :hm do
+  desc "Switch home-manager configuration. Examples: rake hm:switch / rake hm:switch NIXNAME=bender"
+  task :switch do
+    host = ENV["NIXNAME"] || NIXNAME
+    sh "home-manager switch --flake \".#andrew@#{host}\""
+  end
+end
+
 desc "Build live ISO. ARCH=aarch64 for ARM (default: x86_64)"
 task :build_live do
   arch = ENV["ARCH"]
