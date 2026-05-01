@@ -105,7 +105,7 @@ if [ -n "${MOVE}" ]; then
         fi
     fi
 
-    default_branch="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')"
+    default_branch="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||' || true)"
     if [ -z "${default_branch}" ]; then
         if git rev-parse --verify main >/dev/null 2>&1; then
             default_branch="main"
