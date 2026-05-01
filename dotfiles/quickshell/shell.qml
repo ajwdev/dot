@@ -44,6 +44,7 @@ ShellRoot {
             id: panelWindow
             property var modelData
             screen: modelData
+            visible: modelData.name !== "HDMI-A-1"
 
             anchors {
                 top: true
@@ -72,7 +73,7 @@ ShellRoot {
                     spacing: 0
 
                     WorkspacesWidget {
-                        workspaceCount: 4
+                        workspaceCount: 10
                         activeColor: root.colCyan
                         occupiedColor: root.colCyan
                         emptyColor: root.colMuted
