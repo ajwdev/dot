@@ -73,6 +73,7 @@ in
   home.file."bin/sort-path.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/sort-path.sh";
 
   home.file.".claude/CLAUDE.md".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/CLAUDE.md";
+  home.file.".claude/skills/makemkv-key.md".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/makemkv-key.md";
 
   # Skip on work/coder — the Netflix wrapper manages settings.json and will overwrite it
   home.file.".claude/settings.json" = lib.mkIf (!config.dotfiles.work.enable) {
