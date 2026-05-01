@@ -20,7 +20,7 @@ return {
       })
       vim.filetype.add({ extension = { mangle = "mangle", mg = "mangle" } })
 
-      require("nvim-treesitter").install({
+      require("nvim-treesitter.install").install({
         "c",
         "cpp",
         "go",
