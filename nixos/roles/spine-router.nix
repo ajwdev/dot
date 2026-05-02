@@ -10,7 +10,12 @@
 #       mgmtIP = "192.168.15.10";
 #     })
 #   ];
-{ hostname, loopbackIP, uplinkIP, mgmtIP }:
+{
+  hostname,
+  loopbackIP,
+  uplinkIP,
+  mgmtIP,
+}:
 {
   inputs,
   outputs,
