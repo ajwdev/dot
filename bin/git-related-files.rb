@@ -4,7 +4,7 @@
 # Pulled from (4/8/25)
 # https://gist.github.com/schacon/a5da5f2e2e076eb2434f8775ac5ff55e
 
-require 'rugged'
+require "rugged"
 
 # Your specified file is the first argument
 file_path = ARGV[0]
@@ -39,4 +39,3 @@ top_files = file_changes.sort_by { |_, v| -v }.first(5)
 top_files.each do |file, count|
   puts "#{count} - #{file}"
 end
-

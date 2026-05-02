@@ -3,7 +3,7 @@
 
 # Based on Mitchell's config here https://github.com/mitchellh/nixos-config/blob/main/Makefile
 
-require 'rake'
+require "rake"
 
 UNAME = `uname`.strip
 NIXNAME = ENV["NIXNAME"] || `hostname`.strip
@@ -75,7 +75,7 @@ def nix_command(use_sudo = true)
   sudo_wrap = lambda do |s|
     return s unless use_sudo
 
-   "sudo #{s}"
+    "sudo #{s}"
   end
 
   case UNAME
