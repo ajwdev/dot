@@ -27,6 +27,22 @@ return {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
+    keys = {
+      {
+        "<leader>;p",
+        function()
+          local client = require("copilot.client")
+          if client.is_disabled() then
+            require("copilot.command").enable()
+            vim.notify("Copilot enabled", vim.log.levels.INFO)
+          else
+            require("copilot.command").disable()
+            vim.notify("Copilot disabled", vim.log.levels.WARN)
+          end
+        end,
+        desc = "Toggle Copilot",
+      },
+    },
     config = function()
       require("copilot").setup({
         suggestion = { enabled = false },
