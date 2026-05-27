@@ -20,6 +20,7 @@
     ../virt.nix
     ../sdr.nix
     ../power.nix
+    ../ups.nix
     ../_1password.nix
   ];
 

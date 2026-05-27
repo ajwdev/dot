@@ -1,6 +1,6 @@
 { ... }:
 {
-  services.nut = {
+  power.ups = {
     enable = true;
     mode = "standalone";
     ups.cyberpower = {
@@ -10,12 +10,17 @@
     };
     users.admin = {
       passwordFile = "/etc/nut/admin.passwd";
-      instcmds = "ALL";
+      instcmds = [ "ALL" ];
       actions = [ "set" ];
     };
     users.upsmon = {
       passwordFile = "/etc/nut/upsmon.passwd";
-      upsmon = "master";
+      upsmon = "primary";
+    };
+    upsmon.monitor.cyberpower = {
+      system = "cyberpower@localhost";
+      user = "upsmon";
+      powerValue = 1;
     };
   };
 }
