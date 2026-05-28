@@ -54,6 +54,14 @@ task :build_live do
   sh "nixos-generate -f iso -c ./nixos/ajwlive/configuration.nix -o ajwliveiso"
 end
 
+desc "Update flake inputs to the latest fully-cached nixos-unstable commit"
+task :update do
+  rev = `curl -sL https://channels.nixos.org/nixos-unstable/git-revision`.strip
+  abort "Failed to fetch nixos-unstable revision" if rev.empty?
+  puts "Pinning nixpkgs to nixos-unstable @ #{rev}"
+  sh "nix flake update --override-input nixpkgs github:NixOS/nixpkgs/#{rev}"
+end
+
 desc "Format code"
 task :fmt do
   sh "treefmt"

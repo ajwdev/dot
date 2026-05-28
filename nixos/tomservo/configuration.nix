@@ -20,6 +20,7 @@
     ../virt.nix
     ../sdr.nix
     ../power.nix
+    ../ups.nix
     ../_1password.nix
   ];
 
@@ -61,7 +62,6 @@
 
   services.xserver.videoDrivers = [ "amdgpu" ];
 
-  nixpkgs.config.rocmSupport = true;
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -89,9 +89,8 @@
     ifuse # optional, to mount using 'ifuse'
     idevicerestore
 
-    kdePackages.k3b
     cdrkit
-    blender
+    (blender.override { rocmSupport = true; })
     amdgpu_top
   ];
 
