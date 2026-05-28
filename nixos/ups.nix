@@ -6,7 +6,7 @@
     ups.cyberpower = {
       driver = "usbhid-ups";
       port = "auto";
-      description = "CyberPower ST900U";
+      description = "CyberPower PR1500LCDRT2U";
     };
     users.admin = {
       passwordFile = "/etc/nut/admin.passwd";
