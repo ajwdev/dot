@@ -3,10 +3,11 @@
   power.ups = {
     enable = true;
     mode = "standalone";
+    # Use `upsc cyberpower@localhost` to mess around with settings
     ups.cyberpower = {
       driver = "usbhid-ups";
       port = "auto";
-      description = "CyberPower PR1500LCDRT2U";
+      description = "CyberPower CP1500PFCLCD";
     };
     users.admin = {
       passwordFile = "/etc/nut/admin.passwd";
