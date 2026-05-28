@@ -3,6 +3,7 @@
   power.ups = {
     enable = true;
     mode = "standalone";
+    # Use `upsc cyberpower@localhost` to mess around with settings
     ups.cyberpower = {
       driver = "usbhid-ups";
       port = "auto";
