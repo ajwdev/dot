@@ -49,9 +49,11 @@ task :test do
   end
 end
 
-desc "Build live ISO"
+desc "Build live ISO. ARCH=aarch64 for ARM (default: x86_64)"
 task :build_live do
-  sh "nixos-generate -f iso -c ./nixos/ajwlive/configuration.nix -o ajwliveiso"
+  arch = ENV["ARCH"]
+  host = arch == "aarch64" ? "ajwlive-aarch64" : "ajwlive"
+  sh "nix build '.#nixosConfigurations.#{host}.config.system.build.isoImage' --out-link ajwliveiso"
 end
 
 desc "Update flake inputs to the latest fully-cached nixos-unstable commit"
