@@ -44,6 +44,26 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Use cambot (UTM aarch64 VM on MacBook) as a remote Nix builder.
+  # Requires bridged networking in UTM and cambot reachable as cambot.local.
+  # Once working, boot.binfmt.emulatedSystems can be removed.
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  nix.distributedBuilds = true;
+  nix.buildMachines = [
+    {
+      hostName = "cambot.local";
+      systems = [ "aarch64-linux" ];
+      sshUser = "andrew";
+      sshKey = "/home/andrew/.ssh/id_rsa";
+      maxJobs = 4;
+      speedFactor = 10;
+      supportedFeatures = [
+        "nixos-test"
+        "benchmark"
+        "big-parallel"
+      ];
+    }
+  ];
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
