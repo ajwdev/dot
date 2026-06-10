@@ -38,6 +38,20 @@ VERBOSE=
 CREATE_BRANCH=
 MOVE=
 
+copy_claude_memory() {
+    local src_path="${1}"
+    local dst_path="${2}"
+    local claude_projects="${HOME}/.claude/projects"
+    local claude_src="${claude_projects}/$(echo "${src_path}" | tr '/.' '-')"
+    local claude_dst="${claude_projects}/$(echo "${dst_path}" | tr '/.' '-')"
+
+    if [ -d "${claude_src}/memory" ] && [ ! -e "${claude_dst}/memory" ]; then
+        ${ECHO} mkdir -p "${claude_dst}"
+        ${ECHO} cp -r "${claude_src}/memory" "${claude_dst}/memory"
+        [ -z "${ECHO}" ] && echo "Copied Claude memory to worktree session"
+    fi
+}
+
 while getopts "bdDMnhv" o; do
   case "${o}" in
     b)
@@ -133,6 +147,7 @@ if [ -n "${MOVE}" ]; then
         if [ -z "${ECHO}" ]; then
             echo "Created worktree ${wtpath}"
         fi
+        copy_claude_memory "${repo_root}" "${wtpath}"
     else
         echo "Worktree ${wtpath} already exists, skipping creation"
         ${ECHO} git checkout "${default_branch}"
@@ -223,3 +238,5 @@ ${ECHO} git worktree add "${wtpath}" "${branch}"
 if [ -z "${ECHO}" ]; then
     echo "Created worktree ${wtpath}"
 fi
+
+copy_claude_memory "${repo_root}" "${wtpath}"
