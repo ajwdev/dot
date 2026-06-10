@@ -31,6 +31,7 @@
 	pot = push origin tag
 	r1 = reset HEAD~1
 	rbc = rebase --cont
+	rom = !git fetch -p && git rebase origin/main
 	related = !git-related-files.rb
 	ri = rebase --interactive
 	root = rev-parse --show-toplevel
