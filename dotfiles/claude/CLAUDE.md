@@ -33,6 +33,9 @@ Python/Java/Kotlin are fine for Netflix ecosystem work (SBN, DGS, Titus, etc.) b
 ## Communication Style
 - Be concise, skip preamble, don't over-explain
 - Cite sources when possible
+- Do not use em dashes. Use regular dashes, commas, or parentheses instead.
+- **Show evidence, not just conclusions.** When making a claim about system state, code behavior, or a finding, back it with a reproducible command and its output (e.g. don't just say "the disk is full", show `df -h` output). This prevents confident-but-wrong assertions and avoids back-and-forth when the user pushes back.
+- **Show the commands you run.** Especially for tooling the user may be less familiar with, make the exact command visible so they can validate or reproduce it themselves.
 
 ## Design Philosophy
 - Prefer "Worse is Better" (New Jersey style): implementation simplicity over interface completeness. Ship something simple that works, iterate later. Don't over-design.
@@ -40,6 +43,13 @@ Python/Java/Kotlin are fine for Netflix ecosystem work (SBN, DGS, Titus, etc.) b
 ## Code Style
 - Follows language conventions; defer to patterns in Neovim config at `~/dot`
 - When in doubt, match the style of surrounding code in the project
+
+## Mermaid Diagrams
+- For Google Docs: render at 1400px wide, white background, PNG format
+  ```
+  mmdc -i <file>.mmd -o <file>.png -w 1400 -b white
+  ```
+- Use PNG (not JPEG) for diagrams — preserves sharp lines and text
 
 ## Obsidian Vaults
 - Work vault: `~/Documents/obsidian_work/`

@@ -23,7 +23,8 @@
       "Bash(kubectl top:*)",
       "Bash(kubectl describe:*)",
       "Bash(git show:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(nslookup)"
     ]
   },
   "model": "opusplan",
@@ -146,10 +147,27 @@
     ]
   },
   "enabledPlugins": {
+    "cc-skills-golang@samber": true,
     "frontend-design@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "jdtls-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "samber": {
+      "source": {
+        "repo": "samber/cc",
+        "source": "github"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
-  "fastMode": false
+  "effortLevel": "medium",
+  "fastMode": false,
+  "fastModePerSessionOptIn": true,
+  "preferredNotifChannel": "ghostty",
+  "skipAutoPermissionPrompt": true,
+  "skipWorkflowUsageWarning": true
 }

@@ -111,6 +111,7 @@ fi
 alias mv='nocorrect mv'
 alias cp='nocorrect cp'
 alias mkdir='nocorrect mkdir'
+alias nix='noglob nix'
 alias l='ls -l'
 alias ll='ls -lh'
 alias la='ls -lha'

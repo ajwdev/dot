@@ -75,6 +75,10 @@ in
   home.file.".claude/CLAUDE.md".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/CLAUDE.md";
   home.file.".claude/skills/makemkv-key.md".source =
     mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/makemkv-key.md";
+  home.file.".claude/skills/andrews-voice".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/andrews-voice";
+  home.file.".claude/skills/obsidian".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/obsidian";
 
   # Skip on work/coder — the Netflix wrapper manages settings.json and will overwrite it
   home.file.".claude/settings.json" = lib.mkIf (!config.dotfiles.work.enable) {
