@@ -133,6 +133,7 @@
               home-manager.users.andrew = {
                 imports = [ ./home-manager/home.nix ];
                 devtools.enableAll = true;
+                gui.enable = true;
               };
             }
           ];
@@ -152,7 +153,10 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs outputs;
               };
-              home-manager.users.andrew = import ./home-manager/home.nix;
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
+                gui.enable = true;
+              };
             }
           ];
         };
@@ -225,6 +229,43 @@
           modules = [ ./nixos/cambot/configuration.nix ];
         };
 
+        # Headless aarch64 dev VM in UTM on the work MacBook Pro (M3).
+        # Carries the home-manager work profile (work dotfiles + Go), no GUI.
+        "workvm" = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/workvm/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
+              home-manager.extraSpecialArgs = { inherit inputs outputs; };
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
+                dotfiles.work.enable = true;
+                devtools.go.enable = true;
+                # gui.enable stays false → headless
+              };
+            }
+          ];
+        };
+
+        # Lean bootstrap of workvm — same base, no home-manager. Small enough to
+        # install inside UTM's RAM-backed installer store. Install this first,
+        # boot, then `nixos-rebuild switch --flake .#workvm` to layer on the
+        # full home-manager dev environment (built on-disk, not in the RAM store).
+        "workvm-base" = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [ ./nixos/workvm/configuration.nix ];
+        };
+
         # Headless audio orchestration appliance — runs minidsp-rs server.
         # gypsy:    Raspberry Pi 3 (aarch64) — SD image target.
         # gypsy-vm: KVM guest (x86_64) — fast dev/test target.
@@ -264,7 +305,10 @@
               users.users.andrew = {
                 name = nixpkgs.lib.mkForce "andrew";
               };
-              home-manager.users.andrew = import ./home-manager/home.nix;
+              home-manager.users.andrew = {
+                imports = [ ./home-manager/home.nix ];
+                gui.enable = true;
+              };
             }
           ];
         };
@@ -291,6 +335,7 @@
               home-manager.users.andrewwilliams = {
                 imports = [ ./home-manager/home.nix ];
                 dotfiles.work.enable = true;
+                gui.enable = true;
               };
 
             }
@@ -304,7 +349,10 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/home.nix
-            { devtools.enableAll = true; }
+            {
+              devtools.enableAll = true;
+              gui.enable = true;
+            }
           ];
         };
 
@@ -313,6 +361,20 @@
           extraSpecialArgs = {
             inherit inputs outputs;
           };
+          modules = [
+            ./home-manager/home.nix
+            { gui.enable = true; }
+          ];
+        };
+
+        # growler: Raspberry Pi 3B+ (aarch64), non-NixOS headless base.
+        # Minimal by default — gui and devtools off. mkPkgs gives allowUnfree
+        # (the base pulls claude-code); overlays are lazy so they cost nothing
+        # unless referenced. Apply with:
+        #   home-manager switch --flake .#andrew@growler
+        "andrew@growler" = home-manager.lib.homeManagerConfiguration {
+          pkgs = mkPkgs "aarch64-linux";
+          extraSpecialArgs = { inherit inputs outputs; };
           modules = [ ./home-manager/home.nix ];
         };
 
