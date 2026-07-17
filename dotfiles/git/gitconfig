@@ -31,12 +31,11 @@
 	pot = push origin tag
 	r1 = reset HEAD~1
 	rbc = rebase --cont
-	rom = !git fetch -p && git rebase origin/main
 	related = !git-related-files.rb
 	ri = rebase --interactive
-	rom = !git fetch -p origin && rebase origin/main
+	rom = !git fetch -p origin && git rebase origin/main
 	root = rev-parse --show-toplevel
-	rum = !git fetc -p upstream && rebase upstream/main
+	rum = !git fetch -p upstream && git rebase upstream/main
 	st = status
 	tags = tag --list
 	uncommit = reset --soft HEAD^

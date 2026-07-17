@@ -25,7 +25,6 @@ task :switch do
     sh "#{nix_command} switch --flake \".##{host}\""
     if confpatch_host?(host)
       sh "./hack/confpatch apply"
-      sh "./hack/confpatch save"
     end
   end
 end
