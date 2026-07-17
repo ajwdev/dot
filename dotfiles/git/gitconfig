@@ -34,7 +34,9 @@
 	rom = !git fetch -p && git rebase origin/main
 	related = !git-related-files.rb
 	ri = rebase --interactive
+	rom = !git fetch -p origin && rebase origin/main
 	root = rev-parse --show-toplevel
+	rum = !git fetc -p upstream && rebase upstream/main
 	st = status
 	tags = tag --list
 	uncommit = reset --soft HEAD^
