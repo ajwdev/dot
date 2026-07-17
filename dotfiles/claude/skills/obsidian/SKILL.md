@@ -117,6 +117,11 @@ Extract today's shell commands to infer projects, repos, and tasks worked on.
 today_start=$(date -j -f '%Y-%m-%d %H:%M:%S' "$(date +%Y-%m-%d) 00:00:00" +%s)
 awk -v start="$today_start" -F'[:;]' '/^:/ { ts=$2; gsub(/ /,"",ts); if (ts+0 >= start+0) { sub(/^[^;]*;/, ""); print } }' ~/.zsh_history
 ```
+
+**Guard:** this parser assumes `EXTENDED_HISTORY` (lines shaped `: <ts>:<dur>;<cmd>`). If the command above returns nothing, the setopt is likely off and there are no timestamps to filter on. Fall back to the tail of raw history (no date filtering possible) and note in the roundup that shell activity is approximate:
+```bash
+grep -q '^: [0-9]' ~/.zsh_history || tail -n 200 ~/.zsh_history
+```
 Look for:
 - `cd`, `z` commands → directories/repos visited
 - `git` commands → branches, commits, repos
@@ -132,26 +137,39 @@ find ~/.claude/projects -name "*.jsonl" -mtime 0 -maxdepth 2
 ```
 For each session JSONL file, extract:
 - **cwd** and **gitBranch** from the first entry (identifies the repo/project)
-- **First few user messages** (identifies the topic — read via python3 one-liner)
+- **First and last user messages** — the first names the topic, the last shows where the session ended up (sessions often pivot). Capturing both gives the arc, not just the opening.
 - **Project name** from the directory path (format: `-Users-andrewwilliams-src-...-REPONAME`)
 
-Python extraction pattern:
+Python extraction pattern (collects the first and last user text messages):
 ```python
 import json, sys
+first = last = None
 with open(sys.argv[1]) as f:
     for line in f:
-        obj = json.loads(line)
-        if obj.get('type') == 'user':
-            msg = obj.get('message', {})
-            content = msg.get('content', '')
-            if isinstance(content, str):
-                print(content[:200])
-            elif isinstance(content, list):
-                for c in content:
-                    if isinstance(c, dict) and c.get('type') == 'text':
-                        print(c['text'][:200])
-                        break
-            break  # first user message is enough for topic
+        try:
+            obj = json.loads(line)
+        except ValueError:
+            continue
+        if obj.get('type') != 'user':
+            continue
+        content = obj.get('message', {}).get('content', '')
+        text = None
+        if isinstance(content, str):
+            text = content
+        elif isinstance(content, list):
+            for c in content:
+                if isinstance(c, dict) and c.get('type') == 'text':
+                    text = c['text']
+                    break
+        if not text:
+            continue
+        if first is None:
+            first = text[:200]
+        last = text[:200]
+if first:
+    print("FIRST:", first)
+    if last and last != first:
+        print("LAST: ", last)
 ```
 
 #### 3. Git Activity
@@ -170,6 +188,12 @@ Each entry in the JSON output has:
 
 Repos with no commits and no WIP are omitted from output automatically.
 
+**Fallback:** `daily-git` is a custom tool and may not be on every machine. If `command -v daily-git` fails, skip it and reconstruct commits directly per repo:
+```bash
+git -C <dir> log --since="YYYY-MM-DD 00:00" --until="YYYY-MM-DD 23:59" \
+  --author="$(git -C <dir> config user.email)" --pretty='%h %s'
+```
+
 #### 4. Calendar
 Fetch the day's meetings using the `daily-calendar` tool:
 ```bash
@@ -185,10 +209,21 @@ Each event in the JSON output has:
 
 Only include meetings the user attended — the tool already filters out declined, needs-action, solo blocks, Clockwise events (lunch, breaks, focus time), and meetings moved to another day.
 
+**Fallback:** `daily-calendar` is a custom tool requiring `DAILY_ICS_URL`. If `command -v daily-calendar` fails or the env var is unset, skip the Meetings section entirely rather than erroring — do not block the roundup on it.
+
 Include a **Meetings** section in the roundup listing each meeting and any linked notes/docs.
 
 #### 5. Slack (Optional)
 If the user asks to include Slack activity, use `rag-slack-prod` to search for recent threads. This is optional — only include if explicitly requested or if the user says "include everything".
+
+#### 6. Aimee Journal (highest-signal for Aimee sessions)
+If `~/.aimee/workspace/journal/YYYY-MM-DD.md` exists, read it. This is the Aimee agent's own curated same-day notes — already deduplicated, cross-referenced, and written in past tense per topic. It is the richest signal for any work done _through Aimee_, so prefer it over reconstructing those same topics from raw transcripts.
+
+```bash
+cat ~/.aimee/workspace/journal/$(date +%Y-%m-%d).md 2>/dev/null
+```
+
+Note: the journal only covers work routed through Aimee. Other agents and manual work do **not** appear there, so still run sources #1–#3 (zsh history, Claude transcripts, git) to catch everything else. Cross-reference: when a journal topic and a git/transcript signal describe the same work, merge them into one entry (the journal usually has the better summary).
 
 ### Roundup Output Format
 
@@ -226,8 +261,8 @@ Adapt sections as needed — omit empty sections, combine if there's little acti
 
 ### Steps
 
-1. Run all data collection (ZSH history, Claude sessions, git logs) in parallel.
-2. Deduplicate and cross-reference — e.g., a Claude session in `oakum-federated` on branch `ajw-first-pass-authz-story` with git commits on that branch tells a single story.
+1. Run all data collection (ZSH history, Claude sessions, git logs, Aimee journal) in parallel.
+2. Deduplicate and cross-reference — e.g., a Claude session in `oakum-federated` on branch `ajw-first-pass-authz-story` with git commits on that branch tells a single story. When the Aimee journal already covers a topic, prefer its summary and fold the raw signals into it.
 3. Group by project/repo, not by data source.
 4. Present a draft summary to the user and ask for confirmation before writing.
 5. Write/append to the daily note following Mode 2's file handling rules.
