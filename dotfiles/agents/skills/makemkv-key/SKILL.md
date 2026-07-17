@@ -1,4 +1,5 @@
 ---
+name: makemkv-key
 description: Fetch the current MakeMKV beta license key from the official forum. Use when the user asks for the MakeMKV beta key, license key, or expiry date.
 ---
 
