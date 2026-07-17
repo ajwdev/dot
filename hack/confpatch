@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-# Preserve Netflix tool config sections (metatron, coder-gateway) across make switch.
+# Preserve Netflix tool config sections (metatron, coder-gateway) across rake switch.
 # These tools inject delimited blocks into managed files that home-manager overwrites.
-# Uses git's three-way merge so blocks are re-inserted at their original positions.
 
 PATCH_DIR="${TMPDIR:-/tmp}/confpatch"
 FILES=("$HOME/.ssh/config" "$HOME/.gitconfig")
@@ -16,8 +15,12 @@ save() {
         local name
         name=$(basename "$file")
 
-        cp "$file" "$PATCH_DIR/${name}.orig"
-        echo "saved $file"
+        extract_blocks "$file" > "$PATCH_DIR/${name}.blocks"
+        if [[ -s "$PATCH_DIR/${name}.blocks" ]]; then
+            echo "saved $file"
+        else
+            rm -f "$PATCH_DIR/${name}.blocks"
+        fi
     done
 }
 
@@ -25,36 +28,109 @@ apply() {
     for file in "${FILES[@]}"; do
         local name
         name=$(basename "$file")
-        local orig="$PATCH_DIR/${name}.orig"
-        [[ -f "$orig" ]] || continue
+        local blocks="$PATCH_DIR/${name}.blocks"
+        [[ -s "$blocks" ]] || continue
+        [[ -f "$file" ]] || continue
 
         # Make writable if nix-store symlink
         if [[ -L "$file" ]]; then
             confrw "$file"
         fi
 
-        # Three-way merge:
-        #   base  = current file (what home-manager just wrote — the clean template)
-        #   ours  = current file (no local changes)
-        #   theirs = saved original (template + injected blocks)
-        # This cleanly merges the injected blocks into the new template.
-        local base
-        base=$(mktemp)
-        cp "$file" "$base"
+        local clean merged
+        clean=$(mktemp)
+        merged=$(mktemp)
+        strip_blocks "$file" > "$clean"
 
-        if git merge-file "$file" "$base" "$orig"; then
-            echo "merged $file"
-        else
-            echo "CONFLICT in $file — check for conflict markers" >&2
-            rm "$base"
-            exit 1
-        fi
-        rm "$base"
+        case "$name" in
+            .gitconfig)
+                cat "$blocks" > "$merged"
+                printf '\n' >> "$merged"
+                cat "$clean" >> "$merged"
+                ;;
+            config)
+                cat "$clean" > "$merged"
+                printf '\n' >> "$merged"
+                cat "$blocks" >> "$merged"
+                ;;
+        esac
+
+        cat "$merged" > "$file"
+        rm "$clean" "$merged"
+        echo "patched $file"
     done
+}
+
+extract_blocks() {
+    awk '
+        /^##### BEGIN / { keep=1 }
+        keep { print }
+        /^##### END / { keep=0 }
+    ' "$1"
+}
+
+strip_blocks() {
+    awk '
+        /^##### BEGIN / { skip=1; next }
+        /^##### END / { skip=0; next }
+        !skip { print }
+    ' "$1"
+}
+
+selftest() {
+    local tmp home
+    tmp=$(mktemp -d)
+    home="$tmp/home"
+    mkdir -p "$home/.ssh" "$tmp/run"
+    trap 'rm -rf "$tmp"' EXIT
+
+    cat > "$home/.gitconfig" <<'EOF'
+##### BEGIN METATRON AUTOCONFIG
+[include]
+    path = /fake/proxy
+##### END METATRON AUTOCONFIG
+[alias]
+    co = checkout
+EOF
+
+    cat > "$home/.ssh/config" <<'EOF'
+Host github.com
+    User git
+##### BEGIN METATRON AUTOCONFIG
+Match exec "test -z $NFSSH_DISABLED"
+    Include ~/.ssh/nflx_ssh.config
+##### END METATRON AUTOCONFIG
+EOF
+
+    HOME="$home" TMPDIR="$tmp/run" bash "$0" save >/dev/null
+
+    cat > "$home/.gitconfig" <<'EOF'
+[alias]
+    co = checkout
+    rom = !git fetch -p origin && git rebase origin/main
+    rum = !git fetch -p upstream && git rebase upstream/main
+EOF
+
+    cat > "$home/.ssh/config" <<'EOF'
+Host github.com
+    User git
+Host *
+    ForwardAgent yes
+EOF
+
+    HOME="$home" TMPDIR="$tmp/run" bash "$0" apply >/dev/null
+
+    grep -q 'BEGIN METATRON AUTOCONFIG' "$home/.gitconfig"
+    grep -q 'rom = !git fetch -p origin && git rebase origin/main' "$home/.gitconfig"
+    grep -q 'rum = !git fetch -p upstream && git rebase upstream/main' "$home/.gitconfig"
+    grep -q 'Host \*' "$home/.ssh/config"
+    grep -q 'nflx_ssh.config' "$home/.ssh/config"
+    echo "selftest ok"
 }
 
 case "${1:-}" in
     save)  save ;;
     apply) apply ;;
-    *)     echo "Usage: confpatch {save|apply}" >&2; exit 1 ;;
+    selftest) selftest ;;
+    *)     echo "Usage: confpatch {save|apply|selftest}" >&2; exit 1 ;;
 esac
