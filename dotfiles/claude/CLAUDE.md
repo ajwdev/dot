@@ -22,6 +22,14 @@ Python/Java/Kotlin are fine for Netflix ecosystem work (SBN, DGS, Titus, etc.) b
   - Blank line between subject and body
   - Body wrapped at 72 characters
 - **Do NOT commit unless explicitly asked.** Instead, suggest a commit message as a reminder. The user owns the git commit process.
+- Worktrees are managed with `git cowt` (custom script at `~/bin/git-cowt`). Worktrees live in `.worktrees/<branch-name>` under the repo root. Common usage:
+  - `git cowt` — list all worktrees
+  - `git cowt -b <branch> [start-point]` — create a new branch (from HEAD or start-point) and its worktree
+  - `git cowt <existing-branch>` — create a worktree for an existing branch
+  - `git cowt -M [branch]` — move the current (or named) branch into a worktree and return the main checkout to the default branch
+  - `git cowt -d <branch>` / `-D` — remove (force-remove) a worktree
+  - `-n` dry-run, `-v` verbose. It also copies Claude session memory into the new worktree.
+  - Prefer `git cowt` over raw `git worktree add/remove` for this user.
 
 ## Editor / Terminal
 - Ghostty terminal, Neovim, Tmux
