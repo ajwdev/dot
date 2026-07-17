@@ -141,6 +141,9 @@ For each session JSONL file, extract:
 - **Project name** from the directory path (format: `-Users-andrewwilliams-src-...-REPONAME`)
 
 Python extraction pattern (collects the first and last user text messages):
+
+Note: This intentionally uses Python instead of `jq` even though global prefs favor `jq` for JSON. Claude transcript content can be either a string or a list of typed blocks, and this is clearer than the equivalent `jq`.
+
 ```python
 import json, sys
 first = last = None

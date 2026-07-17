@@ -73,8 +73,8 @@ in
   home.file."bin/sort-path.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/sort-path.sh";
 
   home.file.".claude/CLAUDE.md".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/CLAUDE.md";
-  home.file.".claude/skills/makemkv-key.md".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/makemkv-key.md";
+  home.file.".claude/skills/makemkv-key".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/makemkv-key";
   home.file.".claude/skills/andrews-voice".source =
     mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/andrews-voice";
   home.file.".claude/skills/obsidian".source =
