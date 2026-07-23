@@ -157,6 +157,25 @@
           ];
         };
 
+        "bolt" = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/bolt/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
+          ];
+        };
+
         "glados01" = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
