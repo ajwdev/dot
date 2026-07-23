@@ -1,4 +1,23 @@
 { inputs, pkgs, ... }:
+let
+  hyprlandPkg = inputs.hyprland.packages.${pkgs.system}.hyprland;
+  hyprscroller = pkgs.stdenv.mkDerivation {
+    pname = "hyprscroller";
+    version = "git";
+    src = inputs.hyprscroller;
+    nativeBuildInputs = [
+      pkgs.cmake
+      pkgs.pkg-config
+      hyprlandPkg
+    ];
+    buildInputs = [ hyprlandPkg ] ++ hyprlandPkg.buildInputs;
+    buildPhase = "make all";
+    installPhase = ''
+      mkdir -p $out/lib
+      cp ./hyprscroller.so $out/lib/libhyprscroller.so
+    '';
+  };
+in
 {
   imports = [ inputs.hyprland.nixosModules.default ];
 
@@ -38,5 +57,6 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    plugins = [ hyprscroller ];
   };
 }

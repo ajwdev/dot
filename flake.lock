@@ -424,6 +424,22 @@
         "type": "github"
       }
     },
+    "hyprscroller": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1745344100,
+        "narHash": "sha256-+lwcWkUyqm3tKOPy1hjPDZG+pPIw6io4YBNeL8ThjV8=",
+        "owner": "dawsers",
+        "repo": "hyprscroller",
+        "rev": "7e63677d2cfa5722870fef10377d0a5d3de02db6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dawsers",
+        "repo": "hyprscroller",
+        "type": "github"
+      }
+    },
     "hyprtoolkit": {
       "inputs": {
         "aquamarine": [
@@ -797,6 +813,7 @@
         "home-manager": "home-manager_2",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
+        "hyprscroller": "hyprscroller",
         "neovim-nightly": "neovim-nightly",
         "nil": "nil",
         "nix-darwin": "nix-darwin",

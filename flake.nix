@@ -44,6 +44,10 @@
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
+    hyprscroller = {
+      url = "github:dawsers/hyprscroller";
+      flake = false;
+    };
   };
 
   outputs =

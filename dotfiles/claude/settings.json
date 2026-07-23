@@ -27,7 +27,6 @@
       "Bash(nslookup)"
     ]
   },
-  "model": "opusplan",
   "hooks": {
     "Notification": [
       {
@@ -158,8 +157,8 @@
   "extraKnownMarketplaces": {
     "samber": {
       "source": {
-        "repo": "samber/cc",
-        "source": "github"
+        "source": "github",
+        "repo": "samber/cc"
       }
     }
   },
@@ -167,7 +166,8 @@
   "effortLevel": "medium",
   "fastMode": false,
   "fastModePerSessionOptIn": true,
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "preferredNotifChannel": "ghostty",
-  "skipAutoPermissionPrompt": true,
-  "skipWorkflowUsageWarning": true
+  "skipAutoPermissionPrompt": true
 }
