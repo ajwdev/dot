@@ -157,6 +157,25 @@
           ];
         };
 
+        "bolt" = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/bolt/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "bak";
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs;
+              };
+              home-manager.users.andrew = import ./home-manager/home.nix;
+            }
+          ];
+        };
+
         "glados01" = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
@@ -205,13 +224,43 @@
 
         "ajwlive" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [
-            ./nixos/ajwlive/configuration.nix
-            # ({ pkgs, modulesPath, ... }: {
-            #   imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
-            #   environment.systemPackages = [ pkgs.neovim ];
-            # })
-          ];
+          specialArgs = { inherit inputs outputs; };
+          modules = [ ./nixos/ajwlive/configuration.nix ];
+        };
+
+        "ajwlive-aarch64" = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = { inherit inputs outputs; };
+          modules = [ ./nixos/ajwlive/configuration.nix ];
+        };
+
+        # aarch64 NixOS VM running in UTM on MacBook Pro — remote Nix builder.
+        # Use bridged networking in UTM so cambot is reachable from tomservo.
+        "cambot" = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [ ./nixos/cambot/configuration.nix ];
+        };
+
+        # Headless audio orchestration appliance — runs minidsp-rs server.
+        # gypsy:    Raspberry Pi 3 (aarch64) — SD image target.
+        # gypsy-vm: KVM guest (x86_64) — fast dev/test target.
+        "gypsy" = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [ ./nixos/gypsy/configuration.nix ];
+        };
+
+        "gypsy-vm" = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [ ./nixos/gypsy-vm/configuration.nix ];
         };
       };
 
