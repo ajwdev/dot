@@ -72,13 +72,19 @@ in
     mkOutOfStoreSymlink "${repoRoot}/bin/git-related-files.rb";
   home.file."bin/sort-path.sh".source = mkOutOfStoreSymlink "${repoRoot}/bin/sort-path.sh";
 
-  home.file.".claude/CLAUDE.md".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/CLAUDE.md";
-  home.file.".claude/skills/makemkv-key.md".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/makemkv-key.md";
+  # Agent-shared memory and skills
+  home.file.".pi/agent/AGENTS.md".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/AGENTS.md";
+  home.file.".agents/skills".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills";
+  home.file.".claude/CLAUDE.md".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/AGENTS.md";
+  home.file.".claude/skills/makemkv-key".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills/makemkv-key";
   home.file.".claude/skills/andrews-voice".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/andrews-voice";
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills/andrews-voice";
   home.file.".claude/skills/obsidian".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/claude/skills/obsidian";
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills/obsidian";
 
   # Skip on work/coder — the Netflix wrapper manages settings.json and will overwrite it
   home.file.".claude/settings.json" = lib.mkIf (!config.dotfiles.work.enable) {

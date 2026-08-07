@@ -101,7 +101,8 @@
           {
             "type": "command",
             "command": "/Users/andrewwilliams/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10
+            "timeout": 10,
+            "async": true
           }
         ]
       }
