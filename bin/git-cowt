@@ -12,6 +12,7 @@ With no arguments, lists all worktrees.
 OPTIONS:
   -b    Create a new branch from start-point (like git checkout -b)
   -d    Delete the worktree instead of creating it
+        Pass git-worktree-remove args after --, e.g. -d foo -- --force
   -D    Force delete the worktree (like git branch -D)
   -M    Move current branch into a worktree, checkout default branch here
   -n    Dry-run mode (show what would be done)
@@ -25,6 +26,7 @@ EXAMPLES:
   ${0} -b new-feature        # Create new branch and worktree from HEAD
   ${0} -b new-feature main   # Create new branch and worktree from main
   ${0} -d feature-branch     # Delete worktree for feature-branch
+  ${0} -d feature-branch -- --force  # Pass args to git worktree remove
   ${0} -M                    # Move current branch to a worktree, return to default
   ${0} -M feature-branch     # Move named branch to a worktree (from any branch)
   ${0} -n feature-branch     # Show what would be created (dry-run)
@@ -178,6 +180,10 @@ fi
 
 wtdir="${repo_root}/.worktrees"
 wtpath="${wtdir}/${branch}"
+worktree_remove_args=()
+if [ -n "${DEL}" ] && [ "${2:-}" = "--" ]; then
+    worktree_remove_args=("${@:3}")
+fi
 
 if [ -n "${CREATE_BRANCH}" ]; then
     start_point="${2:-HEAD}"
@@ -204,7 +210,7 @@ if [ -n "${DEL}" ]; then
         exit 1
     fi
 
-    ${ECHO} git worktree remove ${FORCE_DEL:+--force} "${wtpath}"
+    ${ECHO} git worktree remove ${FORCE_DEL:+--force} "${worktree_remove_args[@]}" "${wtpath}"
 
     if [ -z "${ECHO}" ]; then
         echo "Removed worktree ${wtpath}"
