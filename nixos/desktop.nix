@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./hyprland.nix
+    ./niri.nix
     ./minidsp.nix
   ];
 

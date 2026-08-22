@@ -60,6 +60,13 @@ in
   home.file.".config/hypr/hyprpaper.conf".source = ../dotfiles/hypr/hyprpaper.conf;
   home.file.".config/quickshell".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/quickshell";
 
+  # niri (trialing alongside Hyprland). Out-of-store symlinks so niri's live
+  # config reload and quickshell iteration work without a home-manager rebuild.
+  home.file.".config/niri/config.kdl".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/niri/config.kdl";
+  home.file.".config/quickshell-niri".source =
+    mkOutOfStoreSymlink "${repoRoot}/dotfiles/quickshell-niri";
+
   # Shell scripts
   home.file."bin/git-cowt".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
   home.file."bin/git-wip".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-wip";

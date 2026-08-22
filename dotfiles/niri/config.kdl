@@ -1,0 +1,220 @@
+// niri config for tomservo — ported from ../hypr/hyprland.conf.
+// Trialing niri's scrolling tiling against Hyprland. KDL reference:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Overview
+//
+// NOTE: niri rejects the entire config on an unknown node, so this sticks to
+// well-established nodes. Hyprland-only concepts that don't map (dwindle/master
+// layouts, per-window idle-inhibit, pseudo/togglesplit) are intentionally
+// dropped — niri is a single scrolling-column layout.
+
+/////////////
+// INPUT
+/////////////
+
+input {
+    keyboard {
+        xkb {
+            layout "us"
+            // Caps Lock as Shift-escape, Alt and Win swapped (matches hyprland).
+            options "caps:escape_shifted_capslock,altwin:swap_alt_win"
+        }
+        numlock
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+    }
+
+    mouse {
+        natural-scroll
+    }
+
+    // hyprland: follow_mouse = 1
+    focus-follows-mouse
+}
+
+/////////////
+// OUTPUTS
+/////////////
+// hyprland:
+//   monitor=HDMI-A-1,3840x2160@60,0x0,1
+//   monitor=desc:Samsung ... Odyssey G95NC HNTX401001,7680x2160@120,3840x0,1
+
+output "HDMI-A-1" {
+    mode "3840x2160@60.000"
+    scale 1
+    position x=0 y=0
+}
+
+output "Samsung Electric Company Odyssey G95NC HNTX401001" {
+    mode "7680x2160@120.000"
+    scale 1
+    position x=3840 y=0
+}
+
+/////////////
+// LAYOUT
+/////////////
+// Rough analog to hyprland gaps_in=5 / gaps_out=20 / border_size=2.
+
+layout {
+    gaps 12
+    border {
+        width 2
+        active-color "#33ccff"
+        inactive-color "#595959"
+    }
+}
+
+/////////////
+// STARTUP
+/////////////
+// hyprland exec-once: qs, dunst, hyprpaper, hyprpolkitagent, copyq, hypridle.
+// niri equivalents (swaybg/swayidle/swaylock replace the hypr* daemons).
+
+// Forked quickshell bar (see ../quickshell-niri). Uses --path so it doesn't
+// collide with the Hyprland config symlinked at ~/.config/quickshell.
+spawn-at-startup "sh" "-c" "qs --path ~/.config/quickshell-niri"
+spawn-at-startup "dunst"
+spawn-at-startup "copyq" "--start-server"
+spawn-at-startup "sh" "-c" "systemctl --user start hyprpolkitagent"
+spawn-at-startup "xwayland-satellite"
+// Wallpaper (replaces hyprpaper). Point at your wallpaper when picked.
+// spawn-at-startup "swaybg" "-i" "/path/to/wallpaper" "-m" "fill"
+// Idle → lock (replaces hypridle/hyprlock).
+spawn-at-startup "swayidle" "-w" \
+    "timeout" "600" "swaylock -f" \
+    "timeout" "900" "niri msg action power-off-monitors" \
+    "resume" "niri msg action power-on-monitors" \
+    "before-sleep" "swaylock -f"
+
+// niri needs to know xwayland-satellite's display for X11 clients.
+environment {
+    DISPLAY ":0"
+}
+
+prefer-no-csd
+
+/////////////
+// KEYBINDS
+/////////////
+// Mod = Super (physical Win; with altwin:swap_alt_win the physical Alt).
+
+binds {
+    // Programs
+    Mod+Q { spawn "ghostty"; }
+    Mod+E { spawn "dolphin"; }
+    Mod+L { spawn "swaylock" "-f"; }
+    // hyprland: Alt_L, Space -> launcher (fuzzel replaces hyprlauncher).
+    Alt+Space { spawn "fuzzel"; }
+
+    // Window management
+    Mod+C { close-window; }
+    Mod+F { toggle-window-floating; }
+    Mod+M { quit; }
+    Mod+Tab { focus-window-down-or-column-right; }
+
+    // Focus movement (hyprland movefocus l/r/u/d).
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Up    { focus-window-up; }
+    Mod+Down  { focus-window-down; }
+
+    // Move columns/windows.
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+    Mod+Shift+Up    { move-window-up; }
+    Mod+Shift+Down  { move-window-down; }
+
+    // Workspaces (hyprland Mod+1..0). niri workspaces are dynamic/per-output,
+    // but focus-workspace N keeps numbered access working.
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
+
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    // Mod+Shift+3/4/5 are reserved for the macOS-style screenshot binds below
+    // (as in hyprland.conf, where the screenshot binds shadowed these moves).
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+    Mod+Shift+0 { move-column-to-workspace 10; }
+
+    // Scroll through workspaces (hyprland Mod+mouse scroll).
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+
+    // Column width presets (rough analog to hyprland resize).
+    Mod+R { switch-preset-column-width; }
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+
+    // Volume / mic / brightness (allow-when-locked matches hyprland bindel/bindl).
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "-l" "1" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "-e4" "-n2" "set" "5%+"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "-e4" "-n2" "set" "5%-"; }
+
+    // Media keys (playerctl).
+    XF86AudioNext  allow-when-locked=true { spawn "playerctl" "next"; }
+    XF86AudioPause allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPlay  allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev  allow-when-locked=true { spawn "playerctl" "previous"; }
+
+    // macOS-like screenshots (grim/slurp/swappy), ported verbatim.
+    Mod+Shift+3 { spawn "sh" "-c" "grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png && notify-send 'Screenshot saved' 'Saved to ~/Pictures'"; }
+    Mod+Shift+4 { spawn "sh" "-c" "grim -g \"$(slurp)\" - | swappy -f -"; }
+    Mod+Shift+5 { spawn "sh" "-c" "grim -g \"$(slurp -w)\" - | swappy -f -"; }
+    Ctrl+Shift+3 { spawn "sh" "-c" "grim - | wl-copy && notify-send 'Screenshot copied' 'Copied to clipboard'"; }
+    Ctrl+Shift+4 { spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy && notify-send 'Screenshot copied' 'Copied to clipboard'"; }
+    Ctrl+Shift+5 { spawn "sh" "-c" "grim -g \"$(slurp -w)\" - | wl-copy && notify-send 'Screenshot copied' 'Copied to clipboard'"; }
+
+    // Fullscreen the focused window (hyprland has no direct bind; handy in niri).
+    Mod+Shift+F { fullscreen-window; }
+}
+
+/////////////
+// WINDOW RULES
+/////////////
+// Ported float rules from hyprland. niri has no per-window center/idle-inhibit,
+// so those aspects are dropped.
+
+// Fallout: New Vegas
+window-rule {
+    match app-id="steam_app_22380"
+    open-floating true
+}
+
+// Diablo II: Resurrected
+window-rule {
+    match app-id="steam_app_2536520"
+    open-floating true
+}
+
+// waydroid
+window-rule {
+    match app-id="waydroid.+"
+    open-floating true
+}
+
+// Picture-in-Picture (Firefox / Brave)
+window-rule {
+    match title="Picture-in-Picture"
+    open-floating true
+}
+window-rule {
+    match title="Picture in picture"
+    open-floating true
+}
