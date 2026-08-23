@@ -60,6 +60,18 @@ in
   home.file.".config/hypr/hyprpaper.conf".source = ../dotfiles/hypr/hyprpaper.conf;
   home.file.".config/quickshell".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/quickshell";
 
+  # niri (trialing alongside Hyprland). TRIAL SETUP: out-of-store symlinks into
+  # the live `niri` worktree so niri (config hot-reload) and quickshell (file
+  # watch) pick up edits instantly — no rebuild while iterating on the bar.
+  # The main checkout at ${repoRoot} is on another branch that lacks these
+  # files, so we point at the worktree explicitly. Revert to
+  # `mkOutOfStoreSymlink "${repoRoot}/dotfiles/..."` after merging niri into the
+  # branch checked out at ~/dot (then the worktree can be removed).
+  home.file.".config/niri/config.kdl".source =
+    mkOutOfStoreSymlink "${repoRoot}/.worktrees/niri/dotfiles/niri/config.kdl";
+  home.file.".config/quickshell-niri".source =
+    mkOutOfStoreSymlink "${repoRoot}/.worktrees/niri/dotfiles/quickshell-niri";
+
   # Shell scripts
   home.file."bin/git-cowt".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
   home.file."bin/git-wip".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-wip";
