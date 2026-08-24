@@ -92,7 +92,7 @@ gestures {
 
 // Forked quickshell bar (see ../quickshell-niri). Uses --path so it doesn't
 // collide with the Hyprland config symlinked at ~/.config/quickshell.
-spawn-at-startup "sh" "-c" "qs --path ~/.config/quickshell-niri"
+spawn-at-startup "qs"
 spawn-at-startup "dunst"
 spawn-at-startup "copyq" "--start-server"
 spawn-at-startup "sh" "-c" "systemctl --user start hyprpolkitagent"

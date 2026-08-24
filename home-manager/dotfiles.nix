@@ -62,8 +62,6 @@ in
 
   home.file.".config/niri/config.kdl".source =
     mkOutOfStoreSymlink "${repoRoot}/dotfiles/niri/config.kdl";
-  home.file.".config/quickshell-niri".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/quickshell-niri";
 
   # Shell scripts
   home.file."bin/git-cowt".source = mkOutOfStoreSymlink "${repoRoot}/bin/git-cowt";
