@@ -25,7 +25,7 @@
     # Ecosystem replacements for the Hyprland-only daemons/tools. niri can't
     # run hypridle/hyprlock/hyprpaper/hyprlauncher.
     fuzzel # launcher (replaces hyprlauncher)
-    swaylock # screen locker (replaces hyprlock)
+    swaylock-effects # screen locker with blur (replaces hyprlock)
     swayidle # idle daemon (replaces hypridle)
     swaybg # wallpaper (replaces hyprpaper)
 
