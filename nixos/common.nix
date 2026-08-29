@@ -123,6 +123,8 @@
 
     # system tools
     sysstat
+    linuxPackages.perf
+    flamegraph
 
     ndisc6
   ];
