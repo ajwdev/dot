@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Services.Pipewire
 import Quickshell.Wayland
@@ -32,6 +31,7 @@ ShellRoot {
     property color colRed: "#f7768e"
     property color colYellow: "#e0af68"
     property color colBlue: "#7aa2f7"
+    property color colGreen: "#9ece6a"
 
     // Font
     property string fontFamily: "JetBrainsMono Nerd Font"
@@ -127,6 +127,8 @@ ShellRoot {
                         cpuColor: root.colYellow
                         memColor: root.colCyan
                         diskColor: root.colBlue
+                        tempColor: root.colPurple
+                        gpuColor: root.colGreen
                         separatorColor: root.colMuted
                         fontFamily: root.fontFamily
                         fontSize: root.fontSize

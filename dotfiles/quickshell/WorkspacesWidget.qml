@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Hyprland
 
 RowLayout {
     spacing: 0
@@ -24,9 +23,15 @@ RowLayout {
             Layout.fillHeight: true
             color: "transparent"
 
-            property var workspace: Hyprland.workspaces.values.find(ws => ws.id === index + 1) ?? null
-            property bool isActive: Hyprland.focusedWorkspace?.id === (index + 1)
-            property bool hasWindows: workspace !== null
+            property var workspace: {
+                var list = CompositorService.workspaces;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].idx === index + 1) return list[i];
+                }
+                return null;
+            }
+            property bool isActive: workspace ? workspace.id === CompositorService.focusedWorkspaceId : false
+            property bool hasWindows: workspace ? CompositorService.workspaceHasWindows(workspace.id) : false
 
             Text {
                 text: index + 1
@@ -47,7 +52,7 @@ RowLayout {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: Hyprland.dispatch("workspace " + (index + 1))
+                onClicked: CompositorService.focusWorkspace(index + 1)
             }
         }
     }

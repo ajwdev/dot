@@ -62,8 +62,25 @@ layout {
     gaps 12
     border {
         width 2
-        active-color "#33ccff"
+        active-color "#5599bb"
         inactive-color "#595959"
+    }
+    shadow {
+        on
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#00000060"
+    }
+}
+
+animations {
+    slowdown 0.8
+}
+
+gestures {
+    hot-corners {
+        off
     }
 }
 
@@ -75,19 +92,18 @@ layout {
 
 // Forked quickshell bar (see ../quickshell-niri). Uses --path so it doesn't
 // collide with the Hyprland config symlinked at ~/.config/quickshell.
-spawn-at-startup "sh" "-c" "qs --path ~/.config/quickshell-niri"
+spawn-at-startup "qs"
 spawn-at-startup "dunst"
 spawn-at-startup "copyq" "--start-server"
 spawn-at-startup "sh" "-c" "systemctl --user start hyprpolkitagent"
 spawn-at-startup "xwayland-satellite"
-// Wallpaper (replaces hyprpaper). Point at your wallpaper when picked.
-// spawn-at-startup "swaybg" "-i" "/path/to/wallpaper" "-m" "fill"
+spawn-at-startup "swaybg" "-i" "/home/andrew/Pictures/Wallpapers/wp6654679.png" "-m" "fill"
 // Idle → lock (replaces hypridle/hyprlock).
 spawn-at-startup "swayidle" "-w" \
-    "timeout" "600" "swaylock -f" \
+    "timeout" "600" "swaylock --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2" \
     "timeout" "900" "niri msg action power-off-monitors" \
     "resume" "niri msg action power-on-monitors" \
-    "before-sleep" "swaylock -f"
+    "before-sleep" "swaylock --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2"
 
 // niri needs to know xwayland-satellite's display for X11 clients.
 environment {
@@ -110,7 +126,7 @@ binds {
     Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
     Mod+D hotkey-overlay-title="Launcher: fuzzel" { spawn "fuzzel"; }
     Alt+Space hotkey-overlay-title="Launcher: fuzzel" { spawn "fuzzel"; } // [hypr]
-    Super+Alt+L hotkey-overlay-title="Lock: swaylock" { spawn "swaylock" "-f"; }
+    Super+Alt+L hotkey-overlay-title="Lock: swaylock" { spawn-sh "swaylock --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2"; }
 
     // Overview — niri's zoomed-out workspace/window view.
     Mod+O repeat=false { toggle-overview; }
