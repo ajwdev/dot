@@ -130,4 +130,6 @@
   ];
 
   programs.mtr.enable = true;
+
+  system.configurationRevision = inputs.self.dirtyRev or inputs.self.rev or "unknown";
 }
