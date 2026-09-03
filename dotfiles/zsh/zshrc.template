@@ -129,9 +129,12 @@ for i in {1..9}; do
 done
 
 # Shortcut for opening non-executable source
-for ext in c cc S ld rs go js lua elm xml json yaml yml md; do
+# TODO(ajw) Do I even need this anymore?
+for ext in c cc S ld rs go js ts jsx tsx rb lua elm xml toml json yaml yml; do
   alias -s $ext="$EDITOR"
 done
+
+alias -s md=glow
 
 # Wrapper function for gclone that also cds into the cloned repo
 function _gclone_and_cd {
