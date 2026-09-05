@@ -46,8 +46,9 @@
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
 
     # niri scrolling-tiling compositor. Trialing alongside Hyprland on tomservo.
+    # XXX Don't follow nixpkgs: niri-flake pins libdisplay-info_0_2 which was
+    # removed from nixpkgs-unstable in 2026-08-04. Let it use its own nixpkgs.
     niri.url = "github:sodiboo/niri-flake";
-    niri.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

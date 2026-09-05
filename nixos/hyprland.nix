@@ -24,7 +24,7 @@
     quickshell
     qt6.qtdeclarative # for qmlls
 
-    hyprpanel
+    wayle # hyprpanel was archived; wayle is the successor
     waybar
     ashell
     dunst

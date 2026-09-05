@@ -5,9 +5,6 @@
   # alongside Hyprland — both sessions install and are selectable in SDDM.
   imports = [ inputs.niri.nixosModules.niri ];
 
-  # Exposes pkgs.niri-stable / pkgs.niri-unstable.
-  nixpkgs.overlays = [ inputs.niri.overlays.niri ];
-
   # niri-flake enables gnome-keyring, which auto-enables gcr-ssh-agent and
   # conflicts with programs.ssh.startAgent (desktop.nix). Keep the existing
   # OpenSSH agent authoritative for both sessions.
@@ -15,7 +12,10 @@
 
   programs.niri = {
     enable = true;
-    package = pkgs.niri-stable;
+    # XXX niri-flake's niri-stable overlay depends on libdisplay-info_0_2 which
+    # was removed from nixpkgs-unstable on 2026-08-04. Use nixpkgs's own niri
+    # until niri-flake catches up.
+    package = pkgs.niri;
   };
 
   environment.systemPackages = with pkgs; [
