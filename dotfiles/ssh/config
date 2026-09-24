@@ -8,6 +8,8 @@ Host tomservo tomservo.local tomservo.localdomain
     ForwardX11Trusted yes
 
 Host *
+    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_rsa
     ForwardAgent yes
     TCPKeepAlive yes
     ServerAliveInterval 30
