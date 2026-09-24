@@ -17,16 +17,22 @@ done
 git fetch -p
 
 deleted=()
+worktrees_removed=()
 failed=()
-skipped=()
 skipped_empty=()
+skipped_dirty=()
 
 worktree_branches=()
+worktree_paths=()
+current_path=""
 while IFS= read -r line; do
-    if [[ $line == branch\ * ]]; then
+    if [[ $line == worktree\ * ]]; then
+        current_path="${line#worktree }"
+    elif [[ $line == branch\ * ]]; then
         branch="${line#branch }"
         branch="${branch#refs/heads/}"
         worktree_branches+=("$branch")
+        worktree_paths+=("$current_path")
     fi
 done < <(git worktree list --porcelain)
 
@@ -41,54 +47,86 @@ branch_in_worktree() {
     return 1
 }
 
+worktree_path_for_branch() {
+    local br=$1
+    local i
+    for i in "${!worktree_branches[@]}"; do
+        if [[ "$br" == "${worktree_branches[$i]}" ]]; then
+            printf '%s' "${worktree_paths[$i]}"
+            return 0
+        fi
+    done
+    return 1
+}
+
 for br in $(git for-each-ref --format='%(refname:short)' refs/heads); do
     if [[ "$br" == "main" || "$br" == "master" ]]; then
         continue
     fi
 
-    if branch_in_worktree "$br"; then
-        echo "== Skipping $br (in use by worktree)"
-        skipped+=("$br")
-        continue
-    fi
+    mergeable=false
+    reason=""
 
     if [[ $(git rev-list --count "$HEAD..$br") == "0" ]]; then
-        if [[ "$delete_empty" != "true" ]]; then
-            echo "== Skipping $br (no commits on top of $HEAD)"
+        if [[ "$delete_empty" == "true" ]]; then
+            mergeable=true
+            reason="no commits on top of $HEAD"
+        else
+            echo "== Skipping $br (no commits on top of $HEAD; use --delete-empty)"
             skipped_empty+=("$br")
             continue
         fi
+    else
+        if ! cherry=$(git cherry "$HEAD" "$br"); then
+            echo "== Failed to inspect $br"
+            failed+=("$br")
+            continue
+        fi
 
-        echo "== Deleting $br (no commits on top of $HEAD)"
-        if git branch -D "$br" 2>&1; then
+        if [[ -n "$cherry" ]] && ! grep -q '^+' <<<"$cherry"; then
+            mergeable=true
+            reason="squash/cherry-picked into $HEAD"
+        fi
+    fi
+
+    if [[ "$mergeable" != "true" ]]; then
+        continue
+    fi
+
+    if branch_in_worktree "$br"; then
+        wt_path=$(worktree_path_for_branch "$br")
+        if [[ -n "$(git -C "$wt_path" status --porcelain --ignore-submodules -uall)" ]]; then
+            echo "== Skipping $br (worktree at $wt_path has uncommitted changes; $reason)"
+            skipped_dirty+=("$br")
+            continue
+        fi
+
+        echo "== Removing worktree $wt_path and deleting $br ($reason)"
+        if git worktree remove "$wt_path" && git branch -D "$br" 2>&1; then
             deleted+=("$br")
+            worktrees_removed+=("$br")
         else
             failed+=("$br")
         fi
         continue
     fi
 
-    if ! cherry=$(git cherry "$HEAD" "$br"); then
-        echo "== Failed to inspect $br"
+    echo "== Deleting $br ($reason)"
+    if git branch -D "$br" 2>&1; then
+        deleted+=("$br")
+    else
         failed+=("$br")
-        continue
-    fi
-
-    if [[ -n "$cherry" ]] && ! grep -q '^+' <<<"$cherry"; then
-        echo "== Deleting $br (squash/cherry-picked into $HEAD)"
-        if git branch -D "$br" 2>&1; then
-            deleted+=("$br")
-        else
-            failed+=("$br")
-        fi
     fi
 done
 
 echo ""
 echo "Summary:"
 echo "  Deleted: ${#deleted[@]} branches"
-if [ ${#skipped[@]} -gt 0 ]; then
-    echo "  Skipped: ${#skipped[@]} branches (in use by worktrees)"
+if [ ${#worktrees_removed[@]} -gt 0 ]; then
+    echo "    (${#worktrees_removed[@]} of which had their worktree removed too)"
+fi
+if [ ${#skipped_dirty[@]} -gt 0 ]; then
+    echo "  Skipped: ${#skipped_dirty[@]} branches (merged, but worktree has uncommitted changes)"
 fi
 if [ ${#skipped_empty[@]} -gt 0 ]; then
     echo "  Skipped empty: ${#skipped_empty[@]} branches (use --delete-empty to delete)"
@@ -99,10 +137,15 @@ if [ ${#failed[@]} -gt 0 ]; then
     echo "Failed branches (inspect/delete manually):"
     printf '    %s\n' "${failed[@]}"
 fi
-if [ ${#skipped[@]} -gt 0 ]; then
+if [ ${#worktrees_removed[@]} -gt 0 ]; then
     echo ""
-    echo "Skipped branches (checked out in worktrees):"
-    printf '    %s\n' "${skipped[@]}"
+    echo "Worktrees removed (branch was merged/squashed):"
+    printf '    %s\n' "${worktrees_removed[@]}"
+fi
+if [ ${#skipped_dirty[@]} -gt 0 ]; then
+    echo ""
+    echo "Skipped branches (merged, worktree dirty - clean up manually):"
+    printf '    %s\n' "${skipped_dirty[@]}"
 fi
 if [ ${#skipped_empty[@]} -gt 0 ]; then
     echo ""
