@@ -263,6 +263,10 @@ if [[ $TERM == tmux* ]]; then
   alias timg=_timg_pk
 fi
 
+function tmux-bg {
+  tmux set -g status-style "bg=${1:?usage: tmux-bg <color>}"
+}
+
 # Put bigger functions in .zfunc
 # TODO Make this automatic
 autoload -Uz kc kwho webserver gosum-unmerge gethostbyname jwt
