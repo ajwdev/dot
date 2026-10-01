@@ -15,10 +15,18 @@ let
 in
 {
   home.file = {
-    ".ssh/config".source = ../dotfiles/ssh/config;
+    # On work hosts confpatch turns these into real files after each switch,
+    # so skip the .bak dance and let home-manager overwrite them.
+    ".ssh/config" = {
+      source = ../dotfiles/ssh/config;
+      force = config.dotfiles.work.enable;
+    };
     ".tmux.conf".source = ../dotfiles/tmux.conf;
     ".screenrc".source = ../dotfiles/screenrc;
-    ".gitconfig".source = ../dotfiles/git/gitconfig;
+    ".gitconfig" = {
+      source = ../dotfiles/git/gitconfig;
+      force = config.dotfiles.work.enable;
+    };
     ".gitignore_global".source = ../dotfiles/git/gitignore_global;
 
     # zsh things

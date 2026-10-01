@@ -14,10 +14,6 @@ task :switch do
   host = remote || NIXNAME
   target = ENV["TARGET"] || remote
 
-  if ENV["FORCE"] == "1"
-    rm_f [File.expand_path("~/.ssh/config.bak"), File.expand_path("~/.gitconfig.bak")]
-  end
-
   if target
     sh "nixos-rebuild switch --flake \".##{host}\" --target-host #{target} --build-host localhost --sudo --ask-sudo-password"
   else
