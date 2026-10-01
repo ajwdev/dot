@@ -125,6 +125,12 @@
   # Nicely reload system units when changing configs
   systemd.user.startServices = lib.mkIf pkgs.stdenv.isLinux "sd-switch";
 
+  # Run ssh-agent as a user systemd service (Linux only). The socket lives at
+  # $XDG_RUNTIME_DIR/ssh-agent and SSH_AUTH_SOCK is exported into the session,
+  # so re-attaching tmux or opening a new SSH session reuses the same agent
+  # instead of losing it. On Darwin the system keychain-backed agent is used.
+  services.ssh-agent.enable = lib.mkIf pkgs.stdenv.isLinux true;
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.05";
 }
