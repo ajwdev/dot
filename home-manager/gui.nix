@@ -4,7 +4,7 @@
   disabledModules = [ "services/mako.nix" ];
   xdg.configFile."ghostty/config".text =
     builtins.readFile ../dotfiles/ghostty/config
-    + lib.optionalString pkgs.stdenv.isDarwin (builtins.readFile ../dotfiles/ghostty/config.macos);
+    + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin (builtins.readFile ../dotfiles/ghostty/config.macos);
 
   fonts.fontconfig.enable = true;
 

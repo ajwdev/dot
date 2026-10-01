@@ -19,7 +19,7 @@
 
   home.username = lib.mkDefault "andrew";
   home.homeDirectory = lib.mkDefault (
-    if pkgs.stdenv.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}"
+    if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}"
   );
 
   # Fix menu bar visibility in Hyprland
@@ -28,7 +28,7 @@
     GTK_SHELL_SHOWS_MENUBAR = "0";
     GTK_SHELL_SHOWS_APP_MENU = "0";
   }
-  // lib.optionalAttrs pkgs.stdenv.isLinux {
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
@@ -97,7 +97,7 @@
         ]
       ))
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       # Qt theme configuration tools for menu bar fix (Wayland only)
       libsForQt5.qt5ct
       kdePackages.qt6ct
@@ -123,13 +123,13 @@
   programs.home-manager.enable = true;
 
   # Nicely reload system units when changing configs
-  systemd.user.startServices = lib.mkIf pkgs.stdenv.isLinux "sd-switch";
+  systemd.user.startServices = lib.mkIf pkgs.stdenv.hostPlatform.isLinux "sd-switch";
 
   # Run ssh-agent as a user systemd service (Linux only). The socket lives at
   # $XDG_RUNTIME_DIR/ssh-agent and SSH_AUTH_SOCK is exported into the session,
   # so re-attaching tmux or opening a new SSH session reuses the same agent
   # instead of losing it. On Darwin the system keychain-backed agent is used.
-  services.ssh-agent.enable = lib.mkIf pkgs.stdenv.isLinux true;
+  services.ssh-agent.enable = lib.mkIf pkgs.stdenv.hostPlatform.isLinux true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.05";
