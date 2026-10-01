@@ -122,6 +122,10 @@
   };
   programs.home-manager.enable = true;
 
+  # Skip building the home-manager man page (its options.json triggers a store
+  # context warning).
+  manual.manpages.enable = false;
+
   # Nicely reload system units when changing configs
   systemd.user.startServices = lib.mkIf pkgs.stdenv.hostPlatform.isLinux "sd-switch";
 
