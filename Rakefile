@@ -25,6 +25,11 @@ task :switch do
   end
 end
 
+desc "Build the configuration without activating it. Example: rake build / rake build NIXNAME=work"
+task :build do
+  sh "#{nix_command(false)} build --flake \".##{NIXNAME}\""
+end
+
 desc "Test the configuration. Examples: rake test / rake test REMOTE=glados01 / rake test REMOTE=glados01 TARGET=192.168.15.10"
 task :test do
   remote = ENV["REMOTE"]
