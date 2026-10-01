@@ -159,6 +159,10 @@ function _gclone_and_cd {
 alias -s git='_gclone_and_cd'
 alias -s json='jq .'
 
+# nvm (interactive shells only; keep out of .zshenv)
+export NVM_DIR="$HOME/.nvm"
+[[ -s $NVM_DIR/nvm.sh ]] && source $NVM_DIR/nvm.sh && nvm use node >/dev/null
+
 # Kubernetes things
 alias k=kubectl
 alias kgp='kubectl get pods'
