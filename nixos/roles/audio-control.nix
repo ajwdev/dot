@@ -45,7 +45,10 @@
       ExecStart = "${pkgs.minidsp}/bin/minidsp server --bind 0.0.0.0:5333";
       Restart = "on-failure";
       DynamicUser = true;
-      SupplementaryGroups = [ "plugdev" "audio" ];
+      SupplementaryGroups = [
+        "plugdev"
+        "audio"
+      ];
       ProtectSystem = "strict";
       ProtectHome = true;
       PrivateTmp = true;

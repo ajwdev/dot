@@ -78,10 +78,8 @@ in
   # Agent-shared memory and skills
   home.file.".pi/agent/AGENTS.md".source =
     mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/AGENTS.md";
-  home.file.".agents/skills".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills";
-  home.file.".claude/CLAUDE.md".source =
-    mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/AGENTS.md";
+  home.file.".agents/skills".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills";
+  home.file.".claude/CLAUDE.md".source = mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/AGENTS.md";
   home.file.".claude/skills/makemkv-key".source =
     mkOutOfStoreSymlink "${repoRoot}/dotfiles/agents/skills/makemkv-key";
   home.file.".claude/skills/andrews-voice".source =
