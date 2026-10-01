@@ -1,0 +1,15 @@
+# vim: set ft=zsh
+
+function tmux-bg() {
+  local -A color_aliases=(
+    k8s '#316CE6'
+  )
+
+  local flag=""
+  if [[ "$1" == "-g" ]]; then flag="-g"; shift; fi
+  local bg="${1:?usage: tmux-bg [-g] <bg> [fg]}"
+  local fg="$2"
+  local style="bg=${color_aliases[$bg]:-$bg}"
+  [[ -n "$fg" ]] && style+=",fg=${color_aliases[$fg]:-$fg}"
+  tmux set $flag status-style "$style"
+}

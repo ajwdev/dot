@@ -267,17 +267,9 @@ if [[ $TERM == tmux* ]]; then
   alias timg=_timg_pk
 fi
 
-function tmux-bg {
-  local flag=""
-  if [[ "$1" == "-g" ]]; then flag="-g"; shift; fi
-  local style="bg=${1:?usage: tmux-bg [-g] <bg> [fg]}"
-  [[ -n "$2" ]] && style+=",fg=$2"
-  tmux set $flag status-style "$style"
-}
-
 # Put bigger functions in .zfunc
 # TODO Make this automatic
-autoload -Uz kc kwho webserver gosum-unmerge gethostbyname jwt
+autoload -Uz kc kwho webserver gosum-unmerge gethostbyname jwt tmux-bg
 
 eval "$(direnv hook zsh)"
 [[ -f "$HOME/.zshrc.local" ]] && source $HOME/.zshrc.local
