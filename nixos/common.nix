@@ -122,7 +122,7 @@
 
     # system call monitoring
     strace # system call monitoring
-    ltrace # library call monitoring
+    # ltrace removed: flaky testsuite, not cached (always builds locally and fails `make check`)
 
     # system tools
     sysstat
