@@ -268,7 +268,9 @@ if [[ $TERM == tmux* ]]; then
 fi
 
 function tmux-bg {
-  tmux set -g status-style "bg=${1:?usage: tmux-bg <color>}"
+  local flag=""
+  if [[ "$1" == "-g" ]]; then flag="-g"; shift; fi
+  tmux set $flag status-style "bg=${1:?usage: tmux-bg [-g] <color>}"
 }
 
 # Put bigger functions in .zfunc
