@@ -1,0 +1,10 @@
+
+# macOS only (appended by home-manager/gui.nix on darwin)
+keybind = alt+backspace=text:\x1b\x7f
+
+# Thicken Core Text glyphs, but lighter than the default strength (255)
+font-thicken = true
+font-thicken-strength = 50
+
+# Blend in linear space with correction to avoid edge darkening
+alpha-blending = linear-corrected

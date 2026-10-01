@@ -1,8 +1,10 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   # Disable broken mako module to prevent build errors
   disabledModules = [ "services/mako.nix" ];
-  xdg.configFile."ghostty/config".source = ../dotfiles/ghostty/config;
+  xdg.configFile."ghostty/config".text =
+    builtins.readFile ../dotfiles/ghostty/config
+    + lib.optionalString pkgs.stdenv.isDarwin (builtins.readFile ../dotfiles/ghostty/config.macos);
 
   fonts.fontconfig.enable = true;
 
