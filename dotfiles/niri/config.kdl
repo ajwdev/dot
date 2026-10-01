@@ -99,11 +99,14 @@ spawn-at-startup "sh" "-c" "systemctl --user start hyprpolkitagent"
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "swaybg" "-i" "/home/andrew/Pictures/Wallpapers/wp6654679.png" "-m" "fill"
 // Idle → lock (replaces hypridle/hyprlock).
+// `pidof swaylock ||` guards against stacking multiple lockers (same guard as
+// hypr/hypridle.conf's lock_cmd). `-f` daemonizes so before-sleep returns and
+// swayidle -w can let the system sleep with the lock already up.
 spawn-at-startup "swayidle" "-w" \
-    "timeout" "600" "swaylock --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2" \
+    "timeout" "600" "pidof swaylock || swaylock -f --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2" \
     "timeout" "900" "niri msg action power-off-monitors" \
     "resume" "niri msg action power-on-monitors" \
-    "before-sleep" "swaylock --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2"
+    "before-sleep" "pidof swaylock || swaylock -f --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2"
 
 // niri needs to know xwayland-satellite's display for X11 clients.
 environment {
@@ -126,7 +129,7 @@ binds {
     Mod+T hotkey-overlay-title="Terminal: ghostty" { spawn "ghostty"; }
     Mod+D hotkey-overlay-title="Launcher: fuzzel" { spawn "fuzzel"; }
     Alt+Space hotkey-overlay-title="Launcher: fuzzel" { spawn "fuzzel"; } // [hypr]
-    Super+Alt+L hotkey-overlay-title="Lock: swaylock" { spawn-sh "swaylock --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2"; }
+    Super+Alt+L hotkey-overlay-title="Lock: swaylock" { spawn-sh "pidof swaylock || swaylock -f --screenshots --effect-blur 7x5 --effect-greyscale --fade-in 0.2"; }
 
     // Overview — niri's zoomed-out workspace/window view.
     Mod+O repeat=false { toggle-overview; }
