@@ -6,11 +6,15 @@ Host tomservo tomservo.local tomservo.localdomain
     User andrew
     ForwardX11 yes
     ForwardX11Trusted yes
+    # Use tomservo's own systemd ssh-agent; a forwarded socket goes stale
+    # in long-lived tmux sessions.
+    ForwardAgent no
 
 Host *
     IdentityFile ~/.ssh/id_ed25519
     IdentityFile ~/.ssh/id_rsa
     ForwardAgent yes
+    AddKeysToAgent yes
     TCPKeepAlive yes
     ServerAliveInterval 30
     ServerAliveCountMax 10
