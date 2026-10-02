@@ -99,15 +99,16 @@ opt.shortmess = opt.shortmess + "c"
 
 -- See :h fo-table for options. Default is "tcqj". Some options are
 -- unnessecarily removed for commentary purposes.
-opt.formatoptions = opt.formatoptions
-  - "t" -- Don't auto format text by text width (only comments)
-  + "c" -- ^^
-  - "o" -- O and o should not continue comments
-  + "r" -- But newlines should
-  + "j" -- Auto-remove comments when joining lines
--- + "n" -- When formatting text, recognize numbered lists and wrap accordingly
--- + "1" -- Dont break lines after a one character word
--- + "p" -- Dont break lines at single spaces that follow periods
+-- One flag per call: nvim 0.13 rejects chained infix ops and silently
+-- ignores multi-flag tables/strings in :remove().
+opt.formatoptions:remove("t") -- Don't auto format text by text width (only comments)
+opt.formatoptions:append("c") -- Auto format comments by text width
+opt.formatoptions:remove("o") -- O and o should not continue comments
+opt.formatoptions:append("r") -- But newlines should
+opt.formatoptions:append("j") -- Auto-remove comments when joining lines
+-- opt.formatoptions:append("n") -- When formatting text, recognize numbered lists and wrap accordingly
+-- opt.formatoptions:append("1") -- Dont break lines after a one character word
+-- opt.formatoptions:append("p") -- Dont break lines at single spaces that follow periods
 
 -- Enable spelling
 opt.spell = true
