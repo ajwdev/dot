@@ -126,7 +126,7 @@
 
     # system tools
     sysstat
-    linuxPackages.perf
+    perf
     flamegraph
 
     ndisc6
