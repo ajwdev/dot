@@ -32,7 +32,9 @@
       # inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    ghostty.url = "github:ghostty-org/ghostty";
+    # Pinned: GtkGLArea -> EGL/DMA-BUF rewrite (ghostty-org/ghostty#14052)
+    # renders garbled on tomservo (RX 7900, mesa 26.2.3). Unpin once fixed.
+    ghostty.url = "github:ghostty-org/ghostty/5659cef41f4f2f7a478d0800a11836fa17e64d66";
     zig.url = "github:mitchellh/zig-overlay";
     nil.url = "github:oxalica/nil";
     zls.url = "github:zigtools/zls";
