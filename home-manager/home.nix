@@ -52,6 +52,7 @@
       ldns # replacement of `dig`, it provide the command `drill`
       ipcalc # it is a calculator for the IPv4/v6 addresses
       git
+      gh
       wget
       curl
       pv

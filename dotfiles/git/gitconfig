@@ -81,3 +81,11 @@
 
 [includeIf "gitdir:~/src/*netflix*/"]
 	path = ~/.gitconfig-work
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/env gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/env gh auth git-credential
