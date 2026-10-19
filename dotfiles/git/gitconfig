@@ -29,6 +29,8 @@
 	poh = push origin HEAD
 	pohf = push origin HEAD --force-with-lease
 	pot = push origin tag
+	puh = push upstream HEAD
+	puhf = push origin upstream --force-with-lease
 	r1 = reset HEAD~1
 	rbc = rebase --cont
 	related = !git-related-files.rb
