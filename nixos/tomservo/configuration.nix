@@ -115,6 +115,12 @@
     uhubctl # power-cycle G9 USB hub when its USB2 side wedges after KVM switch
   ];
 
+  # Internet-exposed; key-only auth.
+  services.openssh.settings = {
+    PasswordAuthentication = false;
+    KbdInteractiveAuthentication = false;
+  };
+
   environment.enableDebugInfo = true;
   virtualisation.docker.enable = true;
   services.flatpak.enable = true;
