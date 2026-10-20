@@ -112,6 +112,7 @@
     cdrkit
     (blender.override { rocmSupport = true; })
     amdgpu_top
+    uhubctl # power-cycle G9 USB hub when its USB2 side wedges after KVM switch
   ];
 
   environment.enableDebugInfo = true;
