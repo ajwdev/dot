@@ -233,8 +233,9 @@ binds {
     Mod+Equal { set-column-width "+10%"; }
     Mod+Shift+Minus { set-window-height "-10%"; }
     Mod+Shift+Equal { set-window-height "+10%"; }
-    Mod+V       { toggle-window-floating; }
-    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+    // i3/sway-style floating binds; Mod+V freed so macOS paste muscle memory is harmless.
+    Mod+Shift+Space { toggle-window-floating; }
+    Mod+Ctrl+Space  { switch-focus-between-floating-and-tiling; }
 
     // Screenshots — niri built-in.
     Print { screenshot; }
